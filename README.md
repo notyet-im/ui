@@ -1,37 +1,49 @@
 # @notyet/ui
 
-A design system for cross-border capital-flow interfaces, extracted from the
-**Capital Flow Tracker** prototype, plus the tracker itself as its showcase.
+**NotYet UI** — a dense, dark-first React design system in two halves: **UI**
+components for building interfaces, and **Charts** for encoding data.
 
-The system is small and opinionated: it exists to make signed financial flow
-legible. Teal means capital arriving, rust means capital leaving, and every
-figure is set in monospace so signed columns stay optically flush.
+It is deliberately opinionated:
+
+- **Two categories, nothing else.** Every component is `UI` or `Charts`.
+- **Semantic tokens only.** Components never reference a raw colour or a literal
+  pixel. There is no utility-class vocabulary to learn or to fight.
+- **Zero runtime dependencies.** React is a peer; nothing else ships.
+- **Density is the point.** The default control is 34px and the body size is
+  14px, because this system exists for information-dense screens.
 
 ```
 src/
-  styles/tokens.css    every design token, both themes
-  tokens.ts            JS mirror — only what SVG attributes genuinely need
-  lib/                 pure geometry & formatting (no React)
-  components/          the design system
-  hooks.ts             useMeasure, useEscapeKey
-  tracker/             the Capital Flow Tracker, built from the components above
+  components/          the library — one .tsx + .css per component family
+  styles/tokens.css    every design token, the single source of truth
+  styles/base.css      reset, the one focus ring, disabled and reduced motion
+  lib/                 pure layout maths for the charts, plus formatting
+  tracker/             a showcase application built from the components
 ```
 
 ## Quick start
 
-```tsx
-import { ThemeProvider, Panel, StatTile, MacroStrip } from '@notyet/ui'
+```bash
+npm install @notyet/ui
+```
+
+```jsx
+import { ThemeProvider, Container, Grid, GridItem, Panel, Button } from '@notyet/ui'
 import '@notyet/ui/styles.css'
-import '@notyet/ui/fonts.css' // optional — see Fonts below
+import '@notyet/ui/fonts.css' // optional — IBM Plex from Google Fonts
 
 export function App() {
   return (
     <ThemeProvider theme="dark">
-      <Panel>
-        <MacroStrip>
-          <StatTile label="USD/JPY" value="145.9" change="+0.5%" changeValue={0.5} trend={[1, 3, 2, 5]} />
-        </MacroStrip>
-      </Panel>
+      <Container size="lg">
+        <Grid columns={{ base: 1, md: 12 }} gap={16}>
+          <GridItem span={{ base: 1, md: 8 }}>
+            <Panel>
+              <Button variant="primary">Rebalance</Button>
+            </Panel>
+          </GridItem>
+        </Grid>
+      </Container>
     </ThemeProvider>
   )
 }
@@ -39,113 +51,123 @@ export function App() {
 
 ### `ThemeProvider` is required
 
-Every component styles itself from `--ny-*` custom properties, and
-`ThemeProvider` is what defines them. Outside one, components render unstyled —
-transparent backgrounds and browser-default text — because every colour they
-reference resolves to nothing. It also sets `data-theme`, which is how the light
-palette is selected.
+It defines the `--ny-*` custom properties, sets `data-theme`, and scopes the
+reset and the shared focus ring. Outside it, components render with transparent
+backgrounds and browser-default text, because every colour they reference
+resolves to nothing. `useTheme()` reads the current theme; the provider is a
+pure presenter, so theme *state* lives with you.
 
 ### Fonts
 
-The system is set in **IBM Plex Sans** with **IBM Plex Mono** for all figures,
-plus Noto Sans SC/JP/KR for the tracker's Chinese, Japanese and Korean copy.
-Import `fonts.css` to pull them from Google Fonts, or self-host and skip it —
-nothing else in the library depends on how they arrive.
+`styles.css` `@import`s IBM Plex Sans and Mono from Google Fonts. To self-host,
+skip `fonts.css` and redefine `--ny-font-sans` / `--ny-font-mono`.
 
 ## Tokens
 
-| Group | Tokens | Notes |
-| --- | --- | --- |
-| Surfaces | `--ny-bg` `--ny-surface` `--ny-surface-sunken` `--ny-border` | flip with the theme |
-| Text | `--ny-text` `--ny-text-muted` `--ny-text-subtle` | flip with the theme |
-| Flow | `--ny-positive` `--ny-negative` `--ny-neutral` | **theme-invariant** |
-| Type | `--ny-font-size-2xs` … `--ny-font-size-3xl` | 10.5px → 27px |
-| Radii | `--ny-radius-xs` … `--ny-radius-xl` | named for what they wrap |
-| Motion | `--ny-ease-standard` `--ny-duration-slow` `--ny-duration-base` | one easing curve throughout |
+All ~140 tokens live in one file: `src/styles/tokens.css`. Two layers —
+primitives (`--ny-ink-*`, `--ny-paper-*`) exist so the semantic layer has
+something coherent to derive from, and **components may only reference the
+semantic layer.**
 
-Flow colours stay fixed across themes on purpose: the meaning of teal must not
-depend on whether the room lights are on. `deltaColor(value)` returns the right
-one for a signed number.
+| Family | Notes |
+|---|---|
+| Surface / border / text | Flip with the theme |
+| Accent, feedback | `{tone}`, `{tone}-subtle` (tint), `{tone}-text` (ink on tint), `text-on-{tone}` (ink on solid) |
+| Data | `--ny-positive` / `--ny-negative` / `--ny-neutral` — **theme-invariant on purpose**: teal always means up |
+| Spacing | 4px base, **each token named for the pixel value it holds** (`--ny-space-12` is 12px) |
+| Spacing roles | `--ny-inset`, `--ny-inset-compact`, `--ny-stack`, `--ny-gutter` — prefer these for component chrome |
+| Type | 9 steps in `rem`, so the scale honours the reader's browser font size |
+| Radii, elevation, motion, controls, layering | `--ny-radius-*`, `--ny-shadow-*`, `--ny-duration-*`, `--ny-control-height-*`, `--ny-z-*` |
+
+`src/tokens.ts` mirrors the values the charts need as JS strings — SVG `stroke`
+and `fill` attributes cannot read a custom property. `src/tokens.parity.test.ts`
+asserts the two never drift.
+
+**Breakpoints are 480 / 768 / 1024 / 1280.** `--ny-bp-*` exists for JS and
+documentation only: a custom property inside a `@media` condition is invalid CSS
+and fails *silently*, so stylesheets hardcode those four numbers and a test
+enforces it.
+
+## Layout and responsiveness
+
+`Container`, `Grid`, `GridItem` and `Stack` are the whole system. They write
+inline custom properties from their props, which four static media queries read
+— four media queries for the entire library, no per-breakpoint class explosion,
+SSR-safe.
+
+```jsx
+<Grid columns={{ base: 1, md: 12 }} gap={{ base: 8, md: 16 }}>
+  <GridItem span={{ base: 1, md: 8 }}>…</GridItem>
+</Grid>
+```
+
+Components themselves adapt with **container queries**, not media queries: they
+respond to the space they are actually in, so a `HeatGrid` in a narrow panel on
+a wide monitor reflows correctly.
 
 ## Components
 
-**Theme** — `ThemeProvider`, `useTheme`, `ThemeToggle`
+**Charts (6)** — SankeyFlow, RotationRing, Sparkline, HeatGrid, RotationMatrix,
+BreakdownBar.
 
-**Layout** — `Panel`, `PanelHeading`, `PageHeader`
+**UI (47)** — layout (Container, Grid, GridItem, Stack, Panel, PanelHeading,
+PageHeader, Card, MacroStrip), typography (Text, Heading, VisuallyHidden,
+Eyebrow), controls (Button, IconButton, GhostButton, Select, SegmentedControl,
+Tabs, ThemeToggle), forms (Input, Textarea, Checkbox, Radio, RadioGroup, Switch,
+Field, Label, HelpText, ErrorText), overlays (Dialog, Tooltip, Popover, Toast),
+feedback (Badge, Alert, Spinner, Skeleton, Avatar) and data display (StatTile,
+DataRow, NarrativeItem, MomentumCard, Legend, Table, Breadcrumb, Pagination).
 
-**Controls** — `SegmentedControl`, `Tabs`, `Select`, `IconButton`, `GhostButton`,
-`Eyebrow`, `Legend`
+Run `npm run storybook` for the live catalogue.
 
-Use `SegmentedControl` for filters that change *what the data is*, and `Tabs` for
-switching between views of the same data.
+### Conventions worth knowing
 
-**Data display** — `MacroStrip`, `StatTile`, `Sparkline`, `HeatGrid`,
-`RotationMatrix`, `BreakdownBar`, `DataRow`, `NarrativeItem`, `MomentumCard`
-
-**Charts** — `SankeyFlow`, `RotationRing`
-
-Both charts lay out in real CSS pixels rather than a scaled `viewBox`, because
-their labels are HTML and must not scale with the drawing. Give them a measured
-`width` — `useMeasure` returns one:
-
-```tsx
-const [ref, { width }] = useMeasure<HTMLDivElement>()
-return (
-  <div ref={ref}>
-    <SankeyFlow links={links} width={width || 880} selectedId={selected} onSelect={setSelected} />
-  </div>
-)
-```
+- **Form controls take `value` or `defaultValue`** — both work. `Tabs`,
+  `SegmentedControl` and `Select` are controlled-only.
+- **Wrap inputs in `Field`** rather than wiring labels by hand; it generates the
+  ids and the `aria-describedby` / `aria-invalid` links.
+- **Components never format numbers.** Pass a formatted string plus the signed
+  raw value that picks the colour. `formatDelta` and `formatCompact` emit U+2212
+  MINUS so signed columns stay optically flush.
+- **`SankeyFlow` and `RotationRing` need a measured pixel width** — their labels
+  are HTML and must not scale. `useMeasure()` returns one.
+- **`StatTile` only works inside `MacroStrip`.**
 
 ## Utilities
 
-`formatDelta` / `formatCompact` / `formatPercent` format money in millions.
-They use U+2212 MINUS SIGN (`−`), not a hyphen — in IBM Plex Mono the true minus
-aligns with the plus, keeping signed columns flush. It also permits a line break
-before a following `$`, which is why every figure style in the system sets
-`white-space: nowrap`.
-
-`rnd` / `hash` / `walkSeries` / `seriesPath` / `heatStyle` / `sankeyLayout` /
-`ringLayout` are pure and React-free — usable for server rendering, tests, or a
-different view layer.
-
-## The Capital Flow Tracker
-
-`src/tracker/` implements the original prototype on top of the system:
-
-- three hero views — flow ribbons, region × sector grid, rotation ring
-- filters for lookback (1D/5D/15D/30D) and flow source (institutional/ETF/combined)
-- click any bucket to focus it everywhere; Escape clears
-- four languages (en/zh/ja/ko), including per-language narrative copy
-- dark and light themes
-- responsive down to phone width
-
-```tsx
-import { TrackerShowcase } from './tracker/TrackerShowcase'
-
-<TrackerShowcase theme="dark" lang="en" initialRange="15D" metric="combined" heroView="flow" />
-```
-
-Props seed the initial state only; each one is then user-controllable in the page.
-
-> **The data is synthetic.** `src/tracker/data.ts` is hand-written prototype data
-> for design review, not market data. All figures derive from a seeded PRNG, so
-> the same inputs always produce the same chart — no `Math.random()` anywhere.
+`deltaColor` / `deltaColors` · `formatDelta` / `formatCompact` / `formatPercent`
+· `useMeasure` / `useEscapeKey` / `useControllableState` / `useRovingFocus` /
+`useAnchoredPosition` · `sankeyLayout` / `ringLayout` / `heatStyle` /
+`walkSeries` / `seriesPath` · `rnd` / `hash` (seeded PRNG, so the showcase data
+is deterministic).
 
 ## Scripts
 
-| Command | Does |
-| --- | --- |
-| `npm run dev` | Vite dev server for the tracker |
-| `npm run storybook` | Storybook on :6006 |
-| `npm run typecheck` | `tsc --noEmit` |
-| `npm run build:lib` | library → `dist/` (ESM + CJS + types + CSS) |
-| `npm run build:app` | tracker demo → `dist-app/` |
-| `npm run build` | both |
+| | |
+|---|---|
+| `npm run dev` | showcase app on Vite |
+| `npm run storybook` | component catalogue |
+| `npm run build:lib` | the publishable `dist/` |
+| `npm run check` | **the gate** — biome, tsc and vitest, all zero-error |
+| `npm test` | vitest only |
+| `npm run format` | biome autofix |
 
-## Accessibility notes
+`styles.css` is a single stylesheet for the whole library (`cssCodeSplit` is
+off), which is what the design-sync consumer expects. It is ~55 kB raw, ~8.5 kB
+gzipped.
 
-Chart selection is keyboard-reachable: the HTML labels beside Sankey nodes and
-ring bubbles are real `<button>`s, and heat-grid cells are buttons with
-`aria-pressed`. Tabs and segmented controls carry `tablist`/`radiogroup`
-semantics. `prefers-reduced-motion` collapses every transition.
+## Accessibility
+
+- **One focus ring for the system**, in `base.css` behind `--ny-focus-ring`.
+  Components never declare their own.
+- **Disabled is never opacity-based** — opacity compounds through nesting and
+  destroys the contrast the palette was chosen for.
+- **Composite widgets implement roving focus**: `Tabs`, `SegmentedControl`,
+  `RadioGroup` and `Pagination` are one tab stop that arrow keys move within,
+  with Home/End, per the WAI-ARIA APG.
+- **Overlays use the browser top layer** — `Dialog` is a native `<dialog>` with
+  `showModal()`, so the focus trap, Escape handling and scrim are the browser's,
+  not ours. Nothing sets `z-index`.
+- `prefers-reduced-motion` collapses every transition, globally.
+- Every component has an axe assertion in its test. Colour contrast is verified
+  visually instead, because jsdom performs no layout and axe cannot compute it.

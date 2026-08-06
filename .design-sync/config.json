@@ -36,6 +36,9 @@
     },
     "Table": {
       "cardMode": "column"
+    },
+    "Heading": {
+      "cardMode": "column"
     }
   }
 }
