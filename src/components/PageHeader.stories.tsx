@@ -34,7 +34,7 @@ function WithControls() {
       subtitle={
         <>
           Net institutional + ETF flow across US · EU · JP · KR · TW · HK · SG —{' '}
-          <span style={{ fontFamily: 'var(--cf-font-mono)' }}>3 Aug 2026 · 17:00 HKT</span>
+          <span style={{ fontFamily: 'var(--ny-font-mono)' }}>3 Aug 2026 · 17:00 HKT</span>
         </>
       }
       actions={

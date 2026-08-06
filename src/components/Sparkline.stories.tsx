@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { walkSeries } from '../lib/series'
-import { flowColors } from '../tokens'
+import { deltaColors } from '../tokens'
 import { Sparkline } from './Sparkline'
 
 const meta = {
@@ -50,7 +50,7 @@ export const WithBaseline: Story = {
     areaOpacity: 0.12,
     strokeWidth: 1.7,
     baseline: true,
-    color: flowColors.inflow,
+    color: deltaColors.positive,
   },
 }
 

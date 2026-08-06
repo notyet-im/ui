@@ -18,7 +18,7 @@ export function IconButton({ label, onClick, children, className }: IconButtonPr
       type="button"
       aria-label={label}
       onClick={onClick}
-      className={['cf-icon-button', className].filter(Boolean).join(' ')}
+      className={['ny-icon-button', className].filter(Boolean).join(' ')}
     >
       {children}
     </button>
@@ -39,7 +39,7 @@ export function GhostButton({ onClick, children, className }: GhostButtonProps) 
     <button
       type="button"
       onClick={onClick}
-      className={['cf-ghost-button', className].filter(Boolean).join(' ')}
+      className={['ny-ghost-button', className].filter(Boolean).join(' ')}
     >
       {children}
     </button>
@@ -65,9 +65,9 @@ export interface SelectProps<T extends string> {
 /** A native `<select>` restyled to match the control row, with a drawn chevron. */
 export function Select<T extends string>({ options, value, onChange, label, className }: SelectProps<T>) {
   return (
-    <div className={['cf-select', className].filter(Boolean).join(' ')}>
+    <div className={['ny-select', className].filter(Boolean).join(' ')}>
       <select
-        className="cf-select__input"
+        className="ny-select__input"
         value={value}
         aria-label={label}
         onChange={(event) => onChange(event.target.value as T)}
@@ -83,11 +83,11 @@ export function Select<T extends string>({ options, value, onChange, label, clas
         width="13"
         height="13"
         fill="none"
-        stroke="var(--cf-dim)"
+        stroke="var(--ny-text-muted)"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="cf-select__chevron"
+        className="ny-select__chevron"
         aria-hidden="true"
       >
         <path d="M6 9.5l6 6 6-6" />
@@ -114,7 +114,7 @@ export interface EyebrowProps {
 export function Eyebrow({ variant = 'label', children, className, style }: EyebrowProps) {
   return (
     <div
-      className={['cf-eyebrow', `cf-eyebrow--${variant}`, className].filter(Boolean).join(' ')}
+      className={['ny-eyebrow', `ny-eyebrow--${variant}`, className].filter(Boolean).join(' ')}
       style={style}
     >
       {children}
@@ -139,15 +139,15 @@ export interface LegendProps {
 /** Colour key for a chart. */
 export function Legend({ items, note, className }: LegendProps) {
   return (
-    <div className={['cf-legend', className].filter(Boolean).join(' ')}>
+    <div className={['ny-legend', className].filter(Boolean).join(' ')}>
       {items.map((item, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: static non-reordering list; LegendItem has no id, label is a ReactNode, colours are not unique
-        <span key={i} className="cf-legend__item">
-          <span className="cf-legend__swatch" style={{ background: item.color }} />
+        <span key={i} className="ny-legend__item">
+          <span className="ny-legend__swatch" style={{ background: item.color }} />
           {item.label}
         </span>
       ))}
-      {note != null && <span style={{ color: 'var(--cf-dim-2)' }}>{note}</span>}
+      {note != null && <span style={{ color: 'var(--ny-text-subtle)' }}>{note}</span>}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { formatFlow } from '../lib/format'
+import { formatDelta } from '../lib/format'
 import { BreakdownBar } from './Details'
 import { Panel } from './Panel'
 
@@ -48,7 +48,7 @@ export const Stack: Story = {
           <BreakdownBar
             key={name}
             label={name}
-            value={formatFlow(value, true)}
+            value={formatDelta(value, true)}
             fraction={fraction}
             tone={value}
           />

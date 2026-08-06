@@ -1,131 +1,284 @@
 /**
- * Capital Flow design tokens.
+ * NotYet UI design tokens.
  *
- * Every value here is lifted verbatim from the Capital Flow Tracker prototype.
- * Surfaces and text flip with the theme; flow semantics (inflow/outflow) are
- * theme-invariant on purpose — teal always means money arriving, rust always
- * means money leaving, in either theme.
+ * Two layers. **Components may only reference the semantic layer** — never a
+ * primitive, never a literal. Primitives exist so the semantic tokens have
+ * something coherent to derive from, and so a palette change is one edit.
+ *
+ * Surfaces and text flip with the theme. Data semantics (positive/negative) are
+ * theme-invariant on purpose: teal always means up, rust always means down, in
+ * either theme.
  */
+
+/* Primitives — the two neutral ramps ------------------------------------- */
+
+/**
+ * Deliberately two ramps, not one. The dark palette is a cool blue-black and
+ * the light palette is warm paper; collapsing them into one ramp would flatten
+ * the identity. Steps 0-2, 4 and 6-8 are values the system already shipped —
+ * 3 and 5 are new, filling the hover and strong-border gaps that made
+ * interactive states impossible to express.
+ */
+:root {
+  --ny-ink-0: #0b0c0e;
+  --ny-ink-1: #14161a;
+  --ny-ink-2: #1b1e23;
+  --ny-ink-3: #21252c;
+  --ny-ink-4: #252a32;
+  --ny-ink-5: #333a45;
+  --ny-ink-6: #5f6672;
+  --ny-ink-7: #8b929e;
+  --ny-ink-8: #e9ebee;
+
+  --ny-paper-0: #f7f6f3;
+  --ny-paper-1: #ffffff;
+  --ny-paper-2: #f2f1ec;
+  --ny-paper-3: #ecebe4;
+  --ny-paper-4: #e4e1d9;
+  --ny-paper-5: #cfcabd;
+  --ny-paper-6: #9aa0a8;
+  --ny-paper-7: #6c727c;
+  --ny-paper-8: #191b1e;
+}
+
+/* Semantic — dark (the default) ------------------------------------------ */
 
 :root,
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Surfaces */
-  --cf-bg: #0b0c0e;
-  --cf-panel: #14161a;
-  --cf-panel-2: #1b1e23;
-  --cf-line: #252a32;
+  --ny-bg: var(--ny-ink-0);
+  --ny-surface: var(--ny-ink-1);
+  --ny-surface-sunken: var(--ny-ink-2);
+  --ny-surface-raised: var(--ny-ink-2);
+  --ny-surface-hover: var(--ny-ink-3);
+  --ny-surface-active: var(--ny-ink-4);
+  --ny-surface-selected: #12302c;
+  --ny-overlay: rgb(0 0 0 / 0.6);
 
-  /* Text */
-  --cf-text: #e9ebee;
-  --cf-dim: #8b929e;
-  --cf-dim-2: #5f6672;
+  --ny-border: var(--ny-ink-4);
+  --ny-border-strong: var(--ny-ink-5);
+
+  --ny-text: var(--ny-ink-8);
+  --ny-text-muted: var(--ny-ink-7);
+  --ny-text-subtle: var(--ny-ink-6);
+  --ny-text-disabled: #4a515c;
+  --ny-text-inverse: var(--ny-ink-0);
+
+  --ny-accent-subtle: #12302c;
+
+  --ny-success-subtle: #14261d;
+  --ny-warning-subtle: #2b2211;
+  --ny-danger-subtle: #2e1714;
+  --ny-info-subtle: #131f2c;
+
+  --ny-success-text: #6fd39b;
+  --ny-warning-text: #e8bc63;
+  --ny-danger-text: #f0897a;
+  --ny-info-text: #82b4e8;
+
+  --ny-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.16);
+  --ny-shadow-md: 0 4px 12px rgb(0 0 0 / 0.2);
+  --ny-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.28);
 }
+
+/* Semantic — light ------------------------------------------------------- */
 
 [data-theme="light"] {
   color-scheme: light;
 
-  --cf-bg: #f7f6f3;
-  --cf-panel: #ffffff;
-  --cf-panel-2: #f2f1ec;
-  --cf-line: #e4e1d9;
+  --ny-bg: var(--ny-paper-0);
+  --ny-surface: var(--ny-paper-1);
+  --ny-surface-sunken: var(--ny-paper-2);
+  --ny-surface-raised: var(--ny-paper-1);
+  --ny-surface-hover: var(--ny-paper-3);
+  --ny-surface-active: var(--ny-paper-4);
+  --ny-surface-selected: #dff3ef;
+  --ny-overlay: rgb(0 0 0 / 0.4);
 
-  --cf-text: #191b1e;
-  --cf-dim: #6c727c;
-  --cf-dim-2: #9aa0a8;
+  --ny-border: var(--ny-paper-4);
+  --ny-border-strong: var(--ny-paper-5);
+
+  --ny-text: var(--ny-paper-8);
+  --ny-text-muted: var(--ny-paper-7);
+  --ny-text-subtle: var(--ny-paper-6);
+  --ny-text-disabled: #b0b5bb;
+  --ny-text-inverse: var(--ny-paper-1);
+
+  --ny-accent-subtle: #dff3ef;
+
+  --ny-success-subtle: #e6f3ea;
+  --ny-warning-subtle: #faf1dd;
+  --ny-danger-subtle: #fbe9e6;
+  --ny-info-subtle: #e7f0fa;
+
+  --ny-success-text: #23724a;
+  --ny-warning-text: #8a6414;
+  --ny-danger-text: #a63b2f;
+  --ny-info-text: #2a5f96;
+
+  /* Lighter in light theme — the hairline border carries most of the
+     separation, so a heavy shadow reads as dirt rather than as elevation. */
+  --ny-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.08);
+  --ny-shadow-md: 0 4px 12px rgb(0 0 0 / 0.1);
+  --ny-shadow-lg: 0 12px 32px rgb(0 0 0 / 0.14);
 }
+
+/* Theme-invariant -------------------------------------------------------- */
 
 :root {
-  /* Flow semantics — identical in both themes */
-  --cf-inflow: #2fbfa8;
-  --cf-outflow: #e0703f;
-  --cf-neutral: #7f8a99;
+  /* Data semantics — identical in both themes, by design. */
+  --ny-positive: #2fbfa8;
+  --ny-negative: #e0703f;
+  --ny-neutral: #7f8a99;
 
-  /* Typography */
-  --cf-font-sans: "IBM Plex Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", Helvetica, sans-serif;
-  --cf-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* Accent. Shares the positive teal today, but it is its own token so
+     re-theming the brand never moves the data encoding, or vice versa. */
+  --ny-accent: #2fbfa8;
+  --ny-accent-hover: #45cdb7;
+  --ny-accent-active: #26a892;
+  --ny-text-on-accent: #06201c;
 
-  --cf-text-micro: 10.5px;
-  --cf-text-tiny: 11px;
-  --cf-text-xs: 11.5px;
-  --cf-text-sm: 12px;
-  --cf-text-base: 12.5px;
-  --cf-text-md: 13px;
-  --cf-text-lg: 13.5px;
-  --cf-text-xl: 14.5px;
-  --cf-text-2xl: 15px;
-  --cf-text-3xl: 18px;
-  --cf-text-4xl: 25px;
-  --cf-text-5xl: 27px;
+  /* Feedback — solid fills. The `-subtle` and `-text` pairs are per-theme. */
+  --ny-success: #3fa96f;
+  --ny-warning: #d3982f;
+  --ny-danger: #d9584a;
+  --ny-info: #4c8dd0;
 
-  --cf-tracking-kicker: 0.14em;
-  --cf-tracking-label: 0.12em;
-  --cf-tracking-tile: 0.1em;
-  --cf-tracking-title: -0.02em;
+  /* Focus. Its own token rather than the accent inline, so the ring is tunable
+     independently — and so there is exactly one place to change it. */
+  --ny-focus-ring: var(--ny-accent);
+  --ny-focus-ring-width: 2px;
+  --ny-focus-ring-offset: 2px;
 
-  /* Radii — named for what they wrap */
-  --cf-radius-swatch: 2px;
-  --cf-radius-bar: 3px;
-  --cf-radius-cell: 4px;
-  --cf-radius-control: 6px;
-  --cf-radius-field: 8px;
-  --cf-radius-tile: 9px;
-  --cf-radius-strip: 10px;
-  --cf-radius-panel: 12px;
+  --ny-shadow-none: none;
 
-  /* Spacing */
-  --cf-space-1: 3px;
-  --cf-space-2: 5px;
-  --cf-space-3: 7px;
-  --cf-space-4: 9px;
-  --cf-space-5: 11px;
-  --cf-space-6: 14px;
-  --cf-space-7: 16px;
-  --cf-space-8: 18px;
-  --cf-space-9: 24px;
+  /* Typography ----------------------------------------------------------- */
 
-  /* Motion — the prototype's single easing curve */
-  --cf-ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --cf-duration-flow: 0.5s;
-  --cf-duration-fade: 0.3s;
+  --ny-font-sans: "IBM Plex Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", Helvetica, sans-serif;
+  --ny-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ny-font-numeric: var(--ny-font-mono);
 
-  /* Control metrics */
-  --cf-control-height: 34px;
+  /**
+   * `rem`, so the scale honours the reader's browser font-size setting. Steps
+   * are close through the dense tier (11-16px) because data density is this
+   * system's character — a uniform 1.25 ratio would leave only three usable
+   * sizes below 20px — then open up above `lg`, where headings need real
+   * separation.
+   */
+  --ny-font-size-2xs: 0.6875rem; /* 11px — eyebrows, matrix cells */
+  --ny-font-size-xs: 0.75rem; /* 12px — captions, help text */
+  --ny-font-size-sm: 0.8125rem; /* 13px — controls, dense body */
+  --ny-font-size-md: 0.875rem; /* 14px — body, the default */
+  --ny-font-size-lg: 1rem; /* 16px — section titles */
+  --ny-font-size-xl: 1.125rem; /* 18px — panel and dialog titles */
+  --ny-font-size-2xl: 1.375rem; /* 22px */
+  --ny-font-size-3xl: 1.75rem; /* 28px — page title */
+  --ny-font-size-4xl: 2.25rem; /* 36px — display */
+
+  --ny-line-height-tight: 1.2;
+  --ny-line-height-snug: 1.35;
+  --ny-line-height-normal: 1.5;
+
+  --ny-font-weight-regular: 400;
+  --ny-font-weight-medium: 500;
+  --ny-font-weight-semibold: 600;
+
+  --ny-tracking-tight: -0.02em;
+  --ny-tracking-normal: 0;
+  --ny-tracking-wide: 0.08em;
+  --ny-tracking-wider: 0.12em;
+
+  /* Spacing -------------------------------------------------------------- */
+
+  /**
+   * 4px base, each token named for the value it holds. Value-naming is
+   * deliberate: it makes "which token is this literal?" answerable without a
+   * lookup table, which is exactly what stopped the previous odd-numbered
+   * scale (3/5/7/9/11) from ever being adopted — 10 of the 16 pixel values in
+   * use had no token at all.
+   */
+  --ny-space-0: 0;
+  --ny-space-px: 1px;
+  --ny-space-2: 2px;
+  --ny-space-4: 4px;
+  --ny-space-8: 8px;
+  --ny-space-12: 12px;
+  --ny-space-16: 16px;
+  --ny-space-20: 20px;
+  --ny-space-24: 24px;
+  --ny-space-32: 32px;
+  --ny-space-40: 40px;
+  --ny-space-48: 48px;
+  --ny-space-64: 64px;
+
+  /* Roles. Prefer these over raw steps for component chrome — they are what
+     keeps padding, margin and gutter consistent across the system. */
+  --ny-gutter: 24px;
+  --ny-inset: 16px;
+  --ny-inset-compact: 8px;
+  --ny-stack: 12px;
+
+  /* Radii ---------------------------------------------------------------- */
+
+  --ny-radius-none: 0;
+  --ny-radius-xs: 2px;
+  --ny-radius-sm: 4px;
+  --ny-radius-md: 6px;
+  --ny-radius-lg: 8px;
+  --ny-radius-xl: 12px;
+  --ny-radius-full: 9999px;
+
+  /* Layering. Dialog, Popover, Tooltip and Toast are deliberately absent — they
+     use the browser top layer via <dialog> and the popover attribute, so they
+     paint above this stack without participating in it. */
+  --ny-z-base: 0;
+  --ny-z-sticky: 100;
+  --ny-z-dropdown: 200;
+  --ny-z-toast: 300;
+
+  /* Motion, named by speed rather than by use-case. 300ms and 500ms are the
+     values the chart ribbon morphs were tuned to, preserved exactly. */
+  --ny-ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ny-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ny-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ny-duration-fast: 150ms;
+  --ny-duration-base: 300ms;
+  --ny-duration-slow: 500ms;
+
+  /* Control metrics. `md` is the historical 34px and stays the default: WCAG
+     2.5.8 (AA) asks for 24x24, which 34px clears. The 44px `lg` size is for
+     touch-first surfaces and 2.5.5 (AAA), not a global floor — raising every
+     control to 44px would destroy the density this system exists for. */
+  --ny-control-height-sm: 28px;
+  --ny-control-height-md: 34px;
+  --ny-control-height-lg: 44px;
+  --ny-control-padding-x-sm: 8px;
+  --ny-control-padding-x-md: 12px;
+  --ny-control-padding-x-lg: 16px;
+  --ny-icon-size-sm: 14px;
+  --ny-icon-size-md: 16px;
+  --ny-icon-size-lg: 20px;
+
+  /**
+   * Breakpoints — for JS and documentation parity only.
+   *
+   * Custom properties do NOT work inside `@media` conditions:
+   * `@media (min-width: var(--ny-bp-md))` is invalid CSS and fails *silently*.
+   * Media queries in this system hardcode 480 / 768 / 1024 / 1280 and nothing
+   * else; these tokens exist so `tokens.ts` and the docs cannot drift from
+   * those four numbers.
+   */
+  --ny-bp-sm: 480px;
+  --ny-bp-md: 768px;
+  --ny-bp-lg: 1024px;
+  --ny-bp-xl: 1280px;
 }
 
-/* Reset scoped to the DS root so the library never fights a host page. */
-.cf-root {
-  background: var(--cf-bg);
-  color: var(--cf-text);
-  font-family: var(--cf-font-sans);
-  box-sizing: border-box;
-}
-
-.cf-root *,
-.cf-root *::before,
-.cf-root *::after {
-  box-sizing: border-box;
-}
-
-.cf-root a {
-  color: var(--cf-inflow);
-  text-decoration: none;
-}
-
-.cf-root a:hover {
-  color: var(--cf-outflow);
-}
-
-.cf-mono {
-  font-family: var(--cf-font-mono);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cf-root *,
-  .cf-root *::before,
-  .cf-root *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+/* The gutter tightens on small viewports so page chrome doesn't eat the
+   content. The one place a spacing token is breakpoint-dependent. */
+@media (max-width: 767px) {
+  :root {
+    --ny-gutter: 16px;
   }
 }

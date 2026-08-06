@@ -1,64 +1,54 @@
 /* Icon button ------------------------------------------------------------- */
 
-.cf-icon-button {
-  border: 1px solid var(--cf-line);
-  background: var(--cf-panel);
-  color: var(--cf-dim);
+.ny-icon-button {
+  border: 1px solid var(--ny-border);
+  background: var(--ny-surface);
+  color: var(--ny-text-muted);
   cursor: pointer;
-  width: var(--cf-control-height);
-  height: var(--cf-control-height);
-  border-radius: var(--cf-radius-field);
+  width: var(--ny-control-height-md);
+  height: var(--ny-control-height-md);
+  border-radius: var(--ny-radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   transition:
-    color var(--cf-duration-fade),
-    border-color var(--cf-duration-fade);
+    color var(--ny-duration-base),
+    border-color var(--ny-duration-base);
 }
 
-.cf-icon-button:hover {
-  color: var(--cf-text);
-}
-
-.cf-icon-button:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 1px;
+.ny-icon-button:hover {
+  color: var(--ny-text);
 }
 
 /* Select ------------------------------------------------------------------ */
 
 /* `inline-flex` so the wrapper hugs the select — the chevron is positioned
    against the wrapper, so a stretched block wrapper would strand it. */
-.cf-select {
+.ny-select {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
-.cf-select__input {
+.ny-select__input {
   appearance: none;
   -webkit-appearance: none;
   flex: 1 1 auto;
   min-width: 0;
-  border: 1px solid var(--cf-line);
-  background: var(--cf-panel-2);
-  color: var(--cf-text);
+  border: 1px solid var(--ny-border);
+  background: var(--ny-surface-sunken);
+  color: var(--ny-text);
   cursor: pointer;
-  height: var(--cf-control-height);
-  padding: 0 30px 0 11px;
-  border-radius: var(--cf-radius-field);
-  font-size: var(--cf-text-sm);
-  font-weight: 500;
+  height: var(--ny-control-height-md);
+  padding: 0 var(--ny-space-32) 0 var(--ny-space-12);
+  border-radius: var(--ny-radius-lg);
+  font-size: var(--ny-font-size-xs);
+  font-weight: var(--ny-font-weight-medium);
   font-family: inherit;
 }
 
-.cf-select__input:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 1px;
-}
-
-.cf-select__chevron {
+.ny-select__chevron {
   position: absolute;
   right: 9px;
   pointer-events: none;
@@ -66,73 +56,68 @@
 
 /* Ghost button ------------------------------------------------------------ */
 
-.cf-ghost-button {
-  border: 1px solid var(--cf-line);
-  background: var(--cf-panel-2);
-  color: var(--cf-dim);
+.ny-ghost-button {
+  border: 1px solid var(--ny-border);
+  background: var(--ny-surface-sunken);
+  color: var(--ny-text-muted);
   cursor: pointer;
-  border-radius: var(--cf-radius-control);
-  padding: 3px 9px;
-  font-size: var(--cf-text-tiny);
-  font-family: var(--cf-font-mono);
-  transition: color var(--cf-duration-fade);
+  border-radius: var(--ny-radius-md);
+  padding: var(--ny-space-2) var(--ny-space-8);
+  font-size: var(--ny-font-size-2xs);
+  font-family: var(--ny-font-mono);
+  transition: color var(--ny-duration-base);
 }
 
-.cf-ghost-button:hover {
-  color: var(--cf-text);
-}
-
-.cf-ghost-button:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 1px;
+.ny-ghost-button:hover {
+  color: var(--ny-text);
 }
 
 /* Eyebrow ----------------------------------------------------------------- */
 
-.cf-eyebrow {
+.ny-eyebrow {
   text-transform: uppercase;
-  color: var(--cf-dim-2);
-  font-family: var(--cf-font-mono);
-  line-height: 1.2;
+  color: var(--ny-text-subtle);
+  font-family: var(--ny-font-mono);
+  line-height: var(--ny-line-height-tight);
 }
 
-.cf-eyebrow--kicker {
-  font-size: var(--cf-text-tiny);
-  letter-spacing: var(--cf-tracking-kicker);
+.ny-eyebrow--kicker {
+  font-size: var(--ny-font-size-2xs);
+  letter-spacing: var(--ny-tracking-wider);
 }
 
-.cf-eyebrow--label {
-  font-size: var(--cf-text-micro);
-  letter-spacing: var(--cf-tracking-label);
+.ny-eyebrow--label {
+  font-size: var(--ny-font-size-2xs);
+  letter-spacing: var(--ny-tracking-wider);
 }
 
-.cf-eyebrow--tile {
-  font-size: var(--cf-text-micro);
-  letter-spacing: var(--cf-tracking-tile);
+.ny-eyebrow--tile {
+  font-size: var(--ny-font-size-2xs);
+  letter-spacing: var(--ny-tracking-wide);
 }
 
 /* Legend ------------------------------------------------------------------ */
 
-.cf-legend {
+.ny-legend {
   display: flex;
   align-items: center;
-  gap: var(--cf-space-6);
-  font-size: var(--cf-text-xs);
-  color: var(--cf-dim);
-  font-family: var(--cf-font-mono);
+  gap: var(--ny-space-12);
+  font-size: var(--ny-font-size-xs);
+  color: var(--ny-text-muted);
+  font-family: var(--ny-font-mono);
   flex-wrap: wrap;
 }
 
-.cf-legend__item {
+.ny-legend__item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--ny-space-4);
 }
 
-.cf-legend__swatch {
+.ny-legend__swatch {
   width: 9px;
   height: 9px;
-  border-radius: var(--cf-radius-swatch);
+  border-radius: var(--ny-radius-xs);
   display: inline-block;
   flex: none;
 }

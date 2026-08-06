@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { formatFlow } from '../lib/format'
+import { formatDelta } from '../lib/format'
 import { walkSeries } from '../lib/series'
 import { MomentumCard } from './Details'
 
@@ -59,7 +59,7 @@ export const Grid: Story = {
         <MomentumCard
           key={name}
           name={name}
-          value={formatFlow(value, true)}
+          value={formatDelta(value, true)}
           share={share}
           tone={value}
           trend={walkSeries(name, 22, value)}

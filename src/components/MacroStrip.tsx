@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { flowColor } from '../tokens'
+import { deltaColor } from '../tokens'
 import { Eyebrow } from './Controls'
 import { Sparkline } from './Sparkline'
 import './MacroStrip.css'
@@ -19,15 +19,15 @@ export interface StatTileProps {
 
 /** One reading in the macro strip: label, figure, change, trend. */
 export function StatTile({ label, value, change, changeValue = 0, trend, className }: StatTileProps) {
-  const accent = flowColor(changeValue)
+  const accent = deltaColor(changeValue)
   return (
-    <div className={['cf-stat-tile', className].filter(Boolean).join(' ')}>
-      <div className="cf-stat-tile__body">
+    <div className={['ny-stat-tile', className].filter(Boolean).join(' ')}>
+      <div className="ny-stat-tile__body">
         <Eyebrow variant="tile">{label}</Eyebrow>
-        <div className="cf-stat-tile__figures">
-          <span className="cf-stat-tile__value">{value}</span>
+        <div className="ny-stat-tile__figures">
+          <span className="ny-stat-tile__value">{value}</span>
           {change != null && (
-            <span className="cf-stat-tile__change" style={{ color: accent }}>
+            <span className="ny-stat-tile__change" style={{ color: accent }}>
               {change}
             </span>
           )}
@@ -40,7 +40,7 @@ export function StatTile({ label, value, change, changeValue = 0, trend, classNa
           width={60}
           height={24}
           pad={3}
-          className="cf-stat-tile__spark"
+          className="ny-stat-tile__spark"
         />
       )}
     </div>
@@ -56,7 +56,7 @@ export interface MacroStripProps {
 /** Edge-to-edge row of `StatTile`s divided by hairlines. */
 export function MacroStrip({ children, className, style }: MacroStripProps) {
   return (
-    <div className={['cf-macro-strip', className].filter(Boolean).join(' ')} style={style}>
+    <div className={['ny-macro-strip', className].filter(Boolean).join(' ')} style={style}>
       {children}
     </div>
   )

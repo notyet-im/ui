@@ -1,31 +1,31 @@
-.cf-page-header {
+.ny-page-header {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: var(--cf-space-9);
+  gap: var(--ny-space-24);
   flex-wrap: wrap;
 }
 
-.cf-page-header__titles {
+.ny-page-header__titles {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--ny-space-4);
 }
 
-.cf-page-header__title {
-  font-size: var(--cf-text-5xl);
-  font-weight: 600;
-  letter-spacing: var(--cf-tracking-title);
+.ny-page-header__title {
+  font-size: var(--ny-font-size-3xl);
+  font-weight: var(--ny-font-weight-semibold);
+  letter-spacing: var(--ny-tracking-tight);
 }
 
-.cf-page-header__subtitle {
-  font-size: var(--cf-text-base);
-  color: var(--cf-dim);
+.ny-page-header__subtitle {
+  font-size: var(--ny-font-size-sm);
+  color: var(--ny-text-muted);
 }
 
-.cf-page-header__actions {
+.ny-page-header__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--ny-space-8);
   flex-wrap: wrap;
 }

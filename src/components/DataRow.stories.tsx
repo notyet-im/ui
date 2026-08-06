@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { flowColors } from '../tokens'
+import { deltaColors } from '../tokens'
 import { DataRow } from './Details'
 import { Panel } from './Panel'
 
@@ -35,7 +35,7 @@ export const Stacked: Story = {
     label: '9988.HK',
     caption: 'Alibaba',
     value: '$2.1B',
-    valueColor: flowColors.inflow,
+    valueColor: deltaColors.positive,
   },
 }
 
@@ -63,7 +63,7 @@ export const TickerList: Story = {
           label="9988.HK"
           caption="Alibaba"
           value="$2.1B"
-          valueColor={flowColors.inflow}
+          valueColor={deltaColors.positive}
         />
         <DataRow
           layout="stacked"
@@ -71,7 +71,7 @@ export const TickerList: Story = {
           label="0700.HK"
           caption="Tencent"
           value="$2.0B"
-          valueColor={flowColors.inflow}
+          valueColor={deltaColors.positive}
         />
         <DataRow
           layout="stacked"
@@ -79,7 +79,7 @@ export const TickerList: Story = {
           label="3690.HK"
           caption="Meituan"
           value="$1.3B"
-          valueColor={flowColors.inflow}
+          valueColor={deltaColors.positive}
         />
       </div>
     </Panel>

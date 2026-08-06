@@ -26,11 +26,11 @@ const ALPHA_RANGE = 0.72
  */
 export function heatStyle(value: number, max: number): HeatStyle {
   if (!value) {
-    return { background: 'var(--cf-panel-2)', color: 'var(--cf-dim-2)' }
+    return { background: 'var(--ny-surface-sunken)', color: 'var(--ny-text-subtle)' }
   }
   const alpha = ALPHA_FLOOR + ALPHA_RANGE * Math.min(1, Math.abs(value) / (max || 1))
   return {
     background: `rgba(${value > 0 ? INFLOW_RGB : OUTFLOW_RGB},${alpha.toFixed(2)})`,
-    color: 'var(--cf-text)',
+    color: 'var(--ny-text)',
   }
 }

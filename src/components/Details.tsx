@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { flowColor } from '../tokens'
+import { deltaColor } from '../tokens'
 import { Sparkline } from './Sparkline'
 import './Details.css'
 
@@ -27,18 +27,18 @@ export function BreakdownBar({
   align = 'start',
   className,
 }: BreakdownBarProps) {
-  const color = flowColor(tone)
+  const color = deltaColor(tone)
   const width = `${(Math.max(0, Math.min(1, fraction)) * 100).toFixed(0)}%`
   return (
-    <div className={['cf-breakdown', className].filter(Boolean).join(' ')}>
-      <div className="cf-breakdown__head">
+    <div className={['ny-breakdown', className].filter(Boolean).join(' ')}>
+      <div className="ny-breakdown__head">
         <span>{label}</span>
-        <span className="cf-breakdown__value" style={{ color }}>
+        <span className="ny-breakdown__value" style={{ color }}>
           {value}
         </span>
       </div>
-      <div className={`cf-breakdown__track${align === 'end' ? ' cf-breakdown__track--end' : ''}`}>
-        <div className="cf-breakdown__fill" style={{ width, background: color }} />
+      <div className={`ny-breakdown__track${align === 'end' ? ' ny-breakdown__track--end' : ''}`}>
+        <div className="ny-breakdown__fill" style={{ width, background: color }} />
       </div>
     </div>
   )
@@ -77,19 +77,19 @@ export function DataRow({
   layout = 'inline',
   className,
 }: DataRowProps) {
-  const color = valueColor ?? (tone === undefined ? undefined : flowColor(tone))
+  const color = valueColor ?? (tone === undefined ? undefined : deltaColor(tone))
   return (
-    <div className={['cf-data-row', `cf-data-row--${layout}`, className].filter(Boolean).join(' ')}>
-      <span className="cf-data-row__main">
+    <div className={['ny-data-row', `ny-data-row--${layout}`, className].filter(Boolean).join(' ')}>
+      <span className="ny-data-row__main">
         {leading != null && (
-          <span className="cf-data-row__leading" style={{ color }}>
+          <span className="ny-data-row__leading" style={{ color }}>
             {leading}
           </span>
         )}
-        <span className={`cf-data-row__label${monoLabel ? ' cf-data-row__label--mono' : ''}`}>{label}</span>
-        {caption != null && <span className="cf-data-row__caption">{caption}</span>}
+        <span className={`ny-data-row__label${monoLabel ? ' ny-data-row__label--mono' : ''}`}>{label}</span>
+        {caption != null && <span className="ny-data-row__caption">{caption}</span>}
       </span>
-      <span className="cf-data-row__value" style={{ color }}>
+      <span className="ny-data-row__value" style={{ color }}>
         {value}
       </span>
     </div>
@@ -112,20 +112,20 @@ export interface NarrativeItemProps {
 
 /** A plain-language annotation with a coloured rail. */
 export function NarrativeItem({ title, value, children, tone = 1, color, className }: NarrativeItemProps) {
-  const accent = color ?? flowColor(tone)
+  const accent = color ?? deltaColor(tone)
   return (
-    <div className={['cf-narrative', className].filter(Boolean).join(' ')}>
-      <div className="cf-narrative__rail" style={{ background: accent }} />
-      <div className="cf-narrative__body">
-        <div className="cf-narrative__head">
-          <span className="cf-narrative__title">{title}</span>
+    <div className={['ny-narrative', className].filter(Boolean).join(' ')}>
+      <div className="ny-narrative__rail" style={{ background: accent }} />
+      <div className="ny-narrative__body">
+        <div className="ny-narrative__head">
+          <span className="ny-narrative__title">{title}</span>
           {value != null && (
-            <span className="cf-narrative__value" style={{ color: accent }}>
+            <span className="ny-narrative__value" style={{ color: accent }}>
               {value}
             </span>
           )}
         </div>
-        <div className="cf-narrative__text">{children}</div>
+        <div className="ny-narrative__text">{children}</div>
       </div>
     </div>
   )
@@ -149,15 +149,15 @@ export interface MomentumCardProps {
 
 /** A clickable tile pairing a headline figure with its path over time. */
 export function MomentumCard({ name, value, share, tone, trend, onClick, className }: MomentumCardProps) {
-  const color = flowColor(tone)
+  const color = deltaColor(tone)
   return (
-    <button type="button" onClick={onClick} className={['cf-momentum', className].filter(Boolean).join(' ')}>
-      <div className="cf-momentum__name">{name}</div>
-      <div className="cf-momentum__figures">
-        <span className="cf-momentum__value" style={{ color }}>
+    <button type="button" onClick={onClick} className={['ny-momentum', className].filter(Boolean).join(' ')}>
+      <div className="ny-momentum__name">{name}</div>
+      <div className="ny-momentum__figures">
+        <span className="ny-momentum__value" style={{ color }}>
           {value}
         </span>
-        {share != null && <span className="cf-momentum__share">{share}</span>}
+        {share != null && <span className="ny-momentum__share">{share}</span>}
       </div>
       <Sparkline
         values={trend}

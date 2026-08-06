@@ -1,7 +1,7 @@
 {
-  "name": "@notyet/capital-flow-ds",
+  "name": "@notyet/ui",
   "version": "0.1.0",
-  "description": "Design system extracted from the Capital Flow Tracker prototype — cross-border equity flow visualisation primitives.",
+  "description": "NotYet UI — a dense, dark-first React design system: UI components and data-visualisation charts.",
   "type": "module",
   "license": "UNLICENSED",
   "files": [

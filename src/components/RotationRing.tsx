@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { formatFlow } from '../lib/format'
+import { formatDelta } from '../lib/format'
 import type { RingNodeInput, RingPairInput } from '../lib/ring'
 import { ringLayout } from '../lib/ring'
-import { flowColor, flowColors } from '../tokens'
+import { deltaColor, deltaColors } from '../tokens'
 import './FlowChart.css'
 
 export interface RotationRingProps {
@@ -40,24 +40,24 @@ export function RotationRing({
   selectedId = null,
   onSelect,
   renderLabel = (id) => id,
-  formatValue = (value) => formatFlow(value, true),
+  formatValue = (value) => formatDelta(value, true),
   className,
 }: RotationRingProps) {
   const layout = ringLayout(nodes, pairs, { width, height })
 
   return (
-    <div className={['cf-flow', className].filter(Boolean).join(' ')} style={{ height }}>
+    <div className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
       {/* Decorative: the accessible representation is the label buttons below,
           which carry each node's name and value and are keyboard-reachable. */}
-      <svg width="100%" height={height} className="cf-flow__svg" aria-hidden="true">
+      <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">
         {layout.chords.map((chord) => {
           const unrelated = selectedId != null && chord.from !== selectedId && chord.to !== selectedId
           const color =
             chord.to === selectedId
-              ? flowColors.inflow
+              ? deltaColors.positive
               : chord.from === selectedId
-                ? flowColors.outflow
-                : flowColors.neutral
+                ? deltaColors.negative
+                : deltaColors.neutral
           return (
             <path
               key={chord.key}
@@ -67,7 +67,7 @@ export function RotationRing({
               strokeWidth={chord.width.toFixed(1)}
               opacity={unrelated ? DIMMED : selectedId ? FOCUSED : RESTING}
               strokeLinecap="round"
-              className="cf-flow__ribbon"
+              className="ny-flow__ribbon"
             />
           )
         })}
@@ -78,9 +78,9 @@ export function RotationRing({
             cx={node.x.toFixed(1)}
             cy={node.y.toFixed(1)}
             r={node.r.toFixed(1)}
-            fill={flowColor(node.net)}
+            fill={deltaColor(node.net)}
             opacity={0.9}
-            className="cf-flow__bubble"
+            className="ny-flow__bubble"
             onClick={() => onSelect?.(node.id)}
           />
         ))}
@@ -90,7 +90,7 @@ export function RotationRing({
         <button
           type="button"
           key={label.key}
-          className="cf-flow__label"
+          className="ny-flow__label"
           onClick={() => onSelect?.(label.id)}
           style={{
             maxWidth: label.maxWidth,
@@ -100,10 +100,10 @@ export function RotationRing({
             textAlign: label.textAlign,
           }}
         >
-          <div className="cf-flow__label-name cf-flow__label-name--ring">{renderLabel(label.id)}</div>
+          <div className="ny-flow__label-name ny-flow__label-name--ring">{renderLabel(label.id)}</div>
           <div
-            className="cf-flow__label-value cf-flow__label-value--ring"
-            style={{ color: flowColor(label.net) }}
+            className="ny-flow__label-value ny-flow__label-value--ring"
+            style={{ color: deltaColor(label.net) }}
           >
             {formatValue(label.net)}
           </div>

@@ -1,14 +1,16 @@
 /**
- * @notyet/capital-flow-ds
+ * NotYet UI — `@notyet/ui`
  *
- * A design system for cross-border capital-flow interfaces, extracted from the
- * Capital Flow Tracker prototype.
+ * A dense, dark-first design system in two halves: **UI** components for
+ * building interfaces, and **Charts** for encoding data.
  *
- * Everything renders inside `<ThemeProvider>` — it defines the `--cf-*` custom
- * properties the components style themselves with.
+ * Everything renders inside `<ThemeProvider>` — it defines the `--ny-*` custom
+ * properties the components style themselves with, and scopes the reset and the
+ * shared focus ring.
  */
 
 import './styles/tokens.css'
+import './styles/base.css'
 
 export type {
   EyebrowProps,
@@ -58,7 +60,7 @@ export type { Measurements } from './hooks'
 export { useEscapeKey, useMeasure } from './hooks'
 
 /* Utilities --------------------------------------------------------------- */
-export { formatBillions, formatFlow, formatPercent, MINUS } from './lib/format'
+export { formatCompact, formatDelta, formatPercent, MINUS } from './lib/format'
 export type { HeatStyle } from './lib/heat'
 export { heatStyle } from './lib/heat'
 export { hash, rnd } from './lib/prng'
@@ -83,6 +85,6 @@ export type {
 export { sankeyLayout } from './lib/sankey'
 export type { SeriesPath } from './lib/series'
 export { seriesPath, walkSeries } from './lib/series'
-export type { FlowDirection, ThemeName } from './tokens'
+export type { DeltaDirection, ThemeName } from './tokens'
 /* Tokens ------------------------------------------------------------------ */
-export { flowColor, flowColors, fonts, motion, surfaces } from './tokens'
+export { deltaColor, deltaColors, fonts, motion, surfaces } from './tokens'

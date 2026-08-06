@@ -1,34 +1,29 @@
-.cf-tabs {
+.ny-tabs {
   display: flex;
-  gap: var(--cf-space-7);
+  gap: var(--ny-space-16);
   align-items: baseline;
 }
 
-.cf-tabs__tab {
+.ny-tabs__tab {
   border: 0;
   background: none;
   cursor: pointer;
-  padding: 0 0 7px;
-  font-family: var(--cf-font-sans);
-  font-size: var(--cf-text-lg);
-  font-weight: 500;
-  color: var(--cf-dim);
+  padding: 0 0 var(--ny-space-8);
+  font-family: var(--ny-font-sans);
+  font-size: var(--ny-font-size-md);
+  font-weight: var(--ny-font-weight-medium);
+  color: var(--ny-text-muted);
   border-bottom: 2px solid transparent;
   transition:
-    color var(--cf-duration-fade),
-    border-color var(--cf-duration-fade);
+    color var(--ny-duration-base),
+    border-color var(--ny-duration-base);
 }
 
-.cf-tabs__tab:hover {
-  color: var(--cf-text);
+.ny-tabs__tab:hover {
+  color: var(--ny-text);
 }
 
-.cf-tabs__tab[aria-selected="true"] {
-  color: var(--cf-text);
-  border-bottom-color: var(--cf-text);
-}
-
-.cf-tabs__tab:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 2px;
+.ny-tabs__tab[aria-selected="true"] {
+  color: var(--ny-text);
+  border-bottom-color: var(--ny-text);
 }

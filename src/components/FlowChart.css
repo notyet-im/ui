@@ -1,34 +1,34 @@
-.cf-flow {
+.ny-flow {
   position: relative;
   width: 100%;
 }
 
-.cf-flow__svg {
+.ny-flow__svg {
   overflow: visible;
   display: block;
 }
 
-.cf-flow__ribbon {
+.ny-flow__ribbon {
   transition:
-    stroke-width var(--cf-duration-flow) var(--cf-ease),
-    opacity var(--cf-duration-fade);
+    stroke-width var(--ny-duration-slow) var(--ny-ease-standard),
+    opacity var(--ny-duration-base);
 }
 
-.cf-flow__node {
+.ny-flow__node {
   cursor: pointer;
-  transition: all var(--cf-duration-flow) var(--cf-ease);
+  transition: all var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
-.cf-flow__bubble {
+.ny-flow__bubble {
   cursor: pointer;
-  transition: r var(--cf-duration-flow) var(--cf-ease);
+  transition: r var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
 /*
  * Labels are real buttons so the chart is reachable by keyboard — the SVG
  * shapes alone would leave selection mouse-only.
  */
-.cf-flow__label {
+.ny-flow__label {
   position: absolute;
   cursor: pointer;
   overflow-wrap: break-word;
@@ -38,49 +38,49 @@
   margin: 0;
   /* `font` is a shorthand and resets line-height — it must precede it. */
   font: inherit;
-  line-height: 1.28;
+  line-height: var(--ny-line-height-snug);
   color: inherit;
 }
 
-.cf-flow__label:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 3px;
-  border-radius: var(--cf-radius-swatch);
+.ny-flow__label:focus-visible {
+  /* Wider offset and a radius: the label is free text over the drawing. */
+  --ny-focus-ring-offset: 3px;
+  border-radius: var(--ny-radius-xs);
 }
 
-.cf-flow__label-name {
-  font-size: var(--cf-text-base);
-  font-weight: 500;
+.ny-flow__label-name {
+  font-size: var(--ny-font-size-sm);
+  font-weight: var(--ny-font-weight-medium);
 }
 
-.cf-flow__label-name--ring {
-  font-size: var(--cf-text-md);
-  font-weight: 600;
+.ny-flow__label-name--ring {
+  font-size: var(--ny-font-size-sm);
+  font-weight: var(--ny-font-weight-semibold);
 }
 
-.cf-flow__label-value {
-  font-size: var(--cf-text-tiny);
-  font-family: var(--cf-font-mono);
+.ny-flow__label-value {
+  font-size: var(--ny-font-size-2xs);
+  font-family: var(--ny-font-mono);
   white-space: nowrap;
 }
 
-.cf-flow__label-value--ring {
-  font-size: var(--cf-text-xs);
+.ny-flow__label-value--ring {
+  font-size: var(--ny-font-size-xs);
 }
 
-.cf-flow__caption {
+.ny-flow__caption {
   position: absolute;
   top: 0;
-  font-size: var(--cf-text-micro);
-  letter-spacing: var(--cf-tracking-kicker);
-  font-family: var(--cf-font-mono);
-  color: var(--cf-dim-2);
+  font-size: var(--ny-font-size-2xs);
+  letter-spacing: var(--ny-tracking-wider);
+  font-family: var(--ny-font-mono);
+  color: var(--ny-text-subtle);
 }
 
-.cf-flow__caption--start {
+.ny-flow__caption--start {
   left: 0;
 }
 
-.cf-flow__caption--end {
+.ny-flow__caption--end {
   right: 0;
 }

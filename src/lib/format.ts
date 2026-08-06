@@ -14,7 +14,7 @@ const MINUS = '−'
  * @param value  Amount in millions.
  * @param signed When true, positive values are prefixed with `+`.
  */
-export function formatFlow(value: number, signed = false): string {
+export function formatDelta(value: number, signed = false): string {
   const abs = Math.abs(value)
   const sign = value < 0 ? MINUS : signed ? '+' : ''
   if (abs >= 1000) {
@@ -28,7 +28,7 @@ export function formatFlow(value: number, signed = false): string {
  * Formats a value in millions as a bare signed number of billions — for dense
  * grid cells where a `$` and a `B` on every cell would be noise.
  */
-export function formatBillions(value: number): string {
+export function formatCompact(value: number): string {
   const sign = value > 0 ? '+' : value < 0 ? MINUS : ''
   const abs = Math.abs(value)
   return sign + (abs / 1000).toFixed(abs >= 9950 ? 0 : 1)

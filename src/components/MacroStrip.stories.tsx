@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Edge-to-edge row of readings. The hairlines between tiles come from a 1px grid gap over a `--cf-line` background, so they never double up.',
+          'Edge-to-edge row of readings. The hairlines between tiles come from a 1px grid gap over a `--ny-border` background, so they never double up.',
       },
     },
   },

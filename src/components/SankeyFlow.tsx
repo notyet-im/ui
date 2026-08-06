@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { formatFlow } from '../lib/format'
+import { formatDelta } from '../lib/format'
 import type { FlowLink } from '../lib/sankey'
 import { sankeyLayout } from '../lib/sankey'
-import { flowColors } from '../tokens'
+import { deltaColors } from '../tokens'
 import './FlowChart.css'
 
 export interface SankeyFlowProps {
@@ -21,7 +21,7 @@ export interface SankeyFlowProps {
   onSelect?: (id: string) => void
   /** Renders a bucket id as display text. Defaults to the raw id. */
   renderLabel?: (id: string) => ReactNode
-  /** Formats a node's signed total. Defaults to `formatFlow(value, true)`. */
+  /** Formats a node's signed total. Defaults to `formatDelta(value, true)`. */
   formatValue?: (value: number) => ReactNode
   /** Caption over the left column. */
   startCaption?: ReactNode
@@ -51,7 +51,7 @@ export function SankeyFlow({
   selectedId = null,
   onSelect,
   renderLabel = (id) => id,
-  formatValue = (value) => formatFlow(value, true),
+  formatValue = (value) => formatDelta(value, true),
   startCaption,
   endCaption,
   className,
@@ -59,18 +59,18 @@ export function SankeyFlow({
   const layout = sankeyLayout(links, { width, height: fieldHeight, narrow })
 
   return (
-    <div className={['cf-flow', className].filter(Boolean).join(' ')} style={{ height }}>
+    <div className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
       {/* Decorative: the accessible representation is the label buttons below,
           which carry each node's name and value and are keyboard-reachable. */}
-      <svg width="100%" height={height} className="cf-flow__svg" aria-hidden="true">
+      <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">
         {layout.ribbons.map((ribbon) => {
           const unrelated = selectedId != null && ribbon.from !== selectedId && ribbon.to !== selectedId
           const color =
             ribbon.to === selectedId
-              ? flowColors.inflow
+              ? deltaColors.positive
               : ribbon.from === selectedId
-                ? flowColors.outflow
-                : flowColors.neutral
+                ? deltaColors.negative
+                : deltaColors.neutral
           return (
             <path
               key={ribbon.key}
@@ -79,7 +79,7 @@ export function SankeyFlow({
               stroke={color}
               strokeWidth={ribbon.width.toFixed(1)}
               opacity={unrelated ? DIMMED : selectedId ? FOCUSED : RESTING}
-              className="cf-flow__ribbon"
+              className="ny-flow__ribbon"
             />
           )
         })}
@@ -92,20 +92,20 @@ export function SankeyFlow({
             width={layout.nodeWidth}
             height={node.height.toFixed(1)}
             rx="2"
-            fill={node.side === 'source' ? flowColors.outflow : flowColors.inflow}
-            className="cf-flow__node"
+            fill={node.side === 'source' ? deltaColors.negative : deltaColors.positive}
+            className="ny-flow__node"
             onClick={() => onSelect?.(node.id)}
           />
         ))}
       </svg>
 
       {layout.labels.map((label) => {
-        const color = label.side === 'source' ? flowColors.outflow : flowColors.inflow
+        const color = label.side === 'source' ? deltaColors.negative : deltaColors.positive
         return (
           <button
             type="button"
             key={label.key}
-            className="cf-flow__label"
+            className="ny-flow__label"
             onClick={() => onSelect?.(label.id)}
             style={{
               maxWidth: label.maxWidth,
@@ -115,16 +115,16 @@ export function SankeyFlow({
               textAlign: label.textAlign,
             }}
           >
-            <div className="cf-flow__label-name">{renderLabel(label.id)}</div>
-            <div className="cf-flow__label-value" style={{ color }}>
+            <div className="ny-flow__label-name">{renderLabel(label.id)}</div>
+            <div className="ny-flow__label-value" style={{ color }}>
               {formatValue(label.value)}
             </div>
           </button>
         )
       })}
 
-      {startCaption != null && <div className="cf-flow__caption cf-flow__caption--start">{startCaption}</div>}
-      {endCaption != null && <div className="cf-flow__caption cf-flow__caption--end">{endCaption}</div>}
+      {startCaption != null && <div className="ny-flow__caption ny-flow__caption--start">{startCaption}</div>}
+      {endCaption != null && <div className="ny-flow__caption ny-flow__caption--end">{endCaption}</div>}
     </div>
   )
 }

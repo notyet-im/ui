@@ -23,7 +23,7 @@ export default defineConfig({
     cssCodeSplit: false,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'CapitalFlowDS',
+      name: 'NotYetUI',
       formats: ['es', 'cjs'],
       fileName: (format) => (format === 'es' ? 'index.js' : 'index.cjs'),
     },

@@ -1,53 +1,53 @@
-.cf-panel {
-  background: var(--cf-panel);
-  border: 1px solid var(--cf-line);
-  border-radius: var(--cf-radius-panel);
+.ny-panel {
+  background: var(--ny-surface);
+  border: 1px solid var(--ny-border);
+  border-radius: var(--ny-radius-xl);
   min-width: 0;
 }
 
-.cf-panel--default {
-  padding: 16px 18px;
+.ny-panel--default {
+  padding: var(--ny-inset);
 }
 
 /* Chart panels give the plot a little extra room by trimming the bottom pad. */
-.cf-panel--chart {
-  padding: 16px 18px 12px;
+.ny-panel--chart {
+  padding: var(--ny-inset) var(--ny-inset) var(--ny-stack);
 }
 
-.cf-panel--none {
+.ny-panel--none {
   padding: 0;
 }
 
-.cf-panel--column {
+.ny-panel--column {
   display: flex;
   flex-direction: column;
 }
 
-.cf-panel-heading {
+.ny-panel-heading {
   display: flex;
   flex-direction: column;
-  margin-bottom: 13px;
+  margin-bottom: var(--ny-stack);
 }
 
-.cf-panel-heading__title {
-  font-size: var(--cf-text-lg);
-  font-weight: 600;
-  margin-bottom: 3px;
+.ny-panel-heading__title {
+  font-size: var(--ny-font-size-md);
+  font-weight: var(--ny-font-weight-semibold);
+  margin-bottom: var(--ny-space-2);
 }
 
-.cf-panel-heading__subtitle {
-  font-size: var(--cf-text-xs);
-  color: var(--cf-dim);
+.ny-panel-heading__subtitle {
+  font-size: var(--ny-font-size-xs);
+  color: var(--ny-text-muted);
 }
 
-.cf-panel-heading--inline {
+.ny-panel-heading--inline {
   flex-direction: row;
   justify-content: space-between;
   align-items: baseline;
-  gap: var(--cf-space-7);
+  gap: var(--ny-space-16);
   flex-wrap: wrap;
 }
 
-.cf-panel-heading--inline .cf-panel-heading__title {
+.ny-panel-heading--inline .ny-panel-heading__title {
   margin-bottom: 0;
 }

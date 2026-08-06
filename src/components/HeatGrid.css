@@ -1,141 +1,136 @@
-.cf-heat-grid {
+.ny-heat-grid {
   display: flex;
   flex-direction: column;
-  gap: var(--cf-space-1);
-  padding: 6px 0 var(--cf-space-6);
+  gap: var(--ny-space-4);
+  padding: 6px 0 var(--ny-space-12);
   min-width: 0;
   flex: 1;
 }
 
-.cf-heat-grid__header,
-.cf-heat-grid__row {
+.ny-heat-grid__header,
+.ny-heat-grid__row {
   display: flex;
-  gap: var(--cf-space-1);
+  gap: var(--ny-space-4);
 }
 
-.cf-heat-grid__header {
+.ny-heat-grid__header {
   align-items: flex-end;
   flex: none;
 }
 
-.cf-heat-grid__row {
+.ny-heat-grid__row {
   align-items: stretch;
   flex: 1 1 0;
   min-height: 0;
 }
 
-.cf-heat-grid__corner,
-.cf-heat-grid__row-label {
+.ny-heat-grid__corner,
+.ny-heat-grid__row-label {
   flex: none;
 }
 
-.cf-heat-grid__column-label {
+.ny-heat-grid__column-label {
   box-sizing: border-box;
   flex: 1 1 0;
   min-width: 0;
-  line-height: 1.2;
-  color: var(--cf-dim);
-  font-family: var(--cf-font-mono);
+  line-height: var(--ny-line-height-tight);
+  color: var(--ny-text-muted);
+  font-family: var(--ny-font-mono);
   text-align: center;
-  padding-bottom: var(--cf-space-2);
-  letter-spacing: -0.01em;
+  padding-bottom: var(--ny-space-4);
+  letter-spacing: var(--ny-tracking-tight);
 }
 
-.cf-heat-grid__row-label {
+.ny-heat-grid__row-label {
   display: flex;
   align-items: center;
-  gap: var(--cf-space-3);
-  font-size: var(--cf-text-base);
-  font-weight: 500;
+  gap: var(--ny-space-8);
+  font-size: var(--ny-font-size-sm);
+  font-weight: var(--ny-font-weight-medium);
   overflow: hidden;
 }
 
-.cf-heat-grid__row-code {
-  font-family: var(--cf-font-mono);
-  color: var(--cf-dim-2);
-  font-size: var(--cf-text-tiny);
+.ny-heat-grid__row-code {
+  font-family: var(--ny-font-mono);
+  color: var(--ny-text-subtle);
+  font-size: var(--ny-font-size-2xs);
 }
 
-.cf-heat-grid__cell {
+.ny-heat-grid__cell {
   box-sizing: border-box;
   flex: 1 1 0;
   min-width: 0;
   height: 100%;
-  border-radius: var(--cf-radius-cell);
+  border-radius: var(--ny-radius-sm);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--cf-font-mono);
+  font-family: var(--ny-font-mono);
   border: 1px solid transparent;
   padding: 0;
-  transition: background var(--cf-duration-flow) var(--cf-ease);
+  transition: background var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
-.cf-heat-grid__cell:focus-visible {
-  outline: 2px solid var(--cf-inflow);
-  outline-offset: 1px;
-}
-
-.cf-heat-grid__cell--selected {
-  border-color: var(--cf-text);
+.ny-heat-grid__cell--selected {
+  border-color: var(--ny-text);
 }
 
 /* Rotation matrix --------------------------------------------------------- */
 
-.cf-matrix {
+.ny-matrix {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--ny-space-2);
   flex: 1;
   min-height: 0;
 }
 
-.cf-matrix__header,
-.cf-matrix__row {
+.ny-matrix__header,
+.ny-matrix__row {
   display: flex;
-  gap: 2px;
+  gap: var(--ny-space-2);
 }
 
-.cf-matrix__row {
+.ny-matrix__row {
   align-items: stretch;
   flex: 1 1 0;
   min-height: 26px;
 }
 
-.cf-matrix__corner,
-.cf-matrix__row-label {
+.ny-matrix__corner,
+.ny-matrix__row-label {
   width: 34px;
   flex: none;
 }
 
-.cf-matrix__row-label {
+.ny-matrix__row-label {
   display: flex;
   align-items: center;
-  font-size: var(--cf-text-micro);
-  font-family: var(--cf-font-mono);
-  color: var(--cf-dim);
+  font-size: var(--ny-font-size-2xs);
+  font-family: var(--ny-font-mono);
+  color: var(--ny-text-muted);
 }
 
-.cf-matrix__column-label {
+.ny-matrix__column-label {
   flex: 1;
   text-align: center;
-  font-size: var(--cf-text-micro);
-  font-family: var(--cf-font-mono);
-  color: var(--cf-dim);
-  padding-bottom: 4px;
+  font-size: var(--ny-font-size-2xs);
+  font-family: var(--ny-font-mono);
+  color: var(--ny-text-muted);
+  padding-bottom: var(--ny-space-4);
 }
 
-.cf-matrix__cell {
+.ny-matrix__cell {
   box-sizing: border-box;
   flex: 1 1 0;
   min-width: 0;
   height: 100%;
-  border-radius: var(--cf-radius-bar);
+  border-radius: var(--ny-radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--cf-text-micro);
-  font-family: var(--cf-font-mono);
-  transition: background var(--cf-duration-flow);
+  font-size: var(--ny-font-size-2xs);
+  font-family: var(--ny-font-mono);
+  transition: background var(--ny-duration-slow);
 }

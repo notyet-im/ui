@@ -25,7 +25,7 @@ function Example({ initial }: { initial: ThemeName }) {
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
       <ThemeToggle theme={theme} onChange={setTheme} />
-      <span style={{ fontSize: 'var(--cf-text-base)', color: 'var(--cf-dim)' }}>
+      <span style={{ fontSize: 'var(--ny-font-size-sm)', color: 'var(--ny-text-muted)' }}>
         local state: {theme} (the surrounding page keeps the Storybook toolbar theme)
       </span>
     </div>

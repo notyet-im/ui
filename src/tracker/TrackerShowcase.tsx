@@ -3,9 +3,9 @@ import type { ThemeName } from '..'
 import {
   BreakdownBar,
   DataRow,
+  deltaColors,
   Eyebrow,
-  flowColors,
-  formatFlow,
+  formatDelta,
   GhostButton,
   HeatGrid,
   Legend,
@@ -45,7 +45,7 @@ import {
 } from './model'
 import './tracker.css'
 
-export interface CapitalFlowTrackerProps {
+export interface TrackerShowcaseProps {
   /** Initial palette. The in-page toggle takes over from here. */
   theme?: ThemeName
   /** Initial interface language. */
@@ -70,13 +70,13 @@ const LANGUAGE_LABELS: Record<LangKey, string> = {
 /** Display order for the language picker, which differs from `LANG_KEYS`. */
 const LANGUAGE_ORDER: LangKey[] = ['en', 'zh', 'ko', 'ja']
 
-export function CapitalFlowTracker({
+export function TrackerShowcase({
   theme: initialTheme = 'dark',
   lang: initialLang = 'en',
   initialRange = '15D',
   metric: initialMetric = 'combined',
   heroView = 'flow',
-}: CapitalFlowTrackerProps) {
+}: TrackerShowcaseProps) {
   const [theme, setTheme] = useState<ThemeName>(initialTheme)
   const [lang, setLang] = useState<LangKey>(initialLang)
   const [range, setRange] = useState<RangeKey>(initialRange)
@@ -158,16 +158,16 @@ export function CapitalFlowTracker({
   return (
     <ThemeProvider
       theme={theme}
-      className="cft-page"
+      className="ny-showcase-page"
       style={{ padding: tiny ? '16px 12px 28px' : narrow ? '18px 16px 32px' : '22px 26px 40px' }}
     >
-      <div className="cft-shell">
+      <div className="ny-showcase-shell">
         <PageHeader
           kicker={ui.kicker}
           title={ui.title}
           subtitle={
             <>
-              {ui.sub} <span className="cft-title-time">{ui.asOf}</span>
+              {ui.sub} <span className="ny-showcase-title-time">{ui.asOf}</span>
             </>
           }
           actions={
@@ -210,11 +210,11 @@ export function CapitalFlowTracker({
         </MacroStrip>
 
         <div
-          className="cft-main-grid"
+          className="ny-showcase-main-grid"
           style={{ gridTemplateColumns: narrow ? 'minmax(0,1fr)' : 'minmax(0,1fr) 372px' }}
         >
           <Panel padding="chart" column>
-            <div className="cft-hero-head">
+            <div className="ny-showcase-hero-head">
               <Tabs
                 label={ui.title}
                 items={VIEW_KEYS.map((key, i) => ({ value: key, label: ui.tabs[i] }))}
@@ -223,16 +223,16 @@ export function CapitalFlowTracker({
               />
               <Legend
                 items={[
-                  { color: flowColors.inflow, label: ui.inflow },
-                  { color: flowColors.outflow, label: ui.outflow },
+                  { color: deltaColors.positive, label: ui.inflow },
+                  { color: deltaColors.negative, label: ui.outflow },
                 ]}
-                note={`${formatFlow(total)} ${ui.rotated}`}
+                note={`${formatDelta(total)} ${ui.rotated}`}
               />
             </div>
 
-            <div className="cft-hint">{ui.hints[VIEW_KEYS.indexOf(view)]}</div>
+            <div className="ny-showcase-hint">{ui.hints[VIEW_KEYS.indexOf(view)]}</div>
 
-            <div className="cft-chart-frame" ref={chartRef}>
+            <div className="ny-showcase-chart-frame" ref={chartRef}>
               {view === 'flow' && (
                 <SankeyFlow
                   links={ribbonLinks}
@@ -278,25 +278,25 @@ export function CapitalFlowTracker({
             </div>
           </Panel>
 
-          <Panel column className="cft-detail">
-            <div className="cft-detail__head">
-              <div className="cft-detail__head-row">
+          <Panel column className="ny-showcase-detail">
+            <div className="ny-showcase-detail__head">
+              <div className="ny-showcase-detail__head-row">
                 <Eyebrow>{ui.selected}</Eyebrow>
                 {selected != null && <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>}
               </div>
-              <div className="cft-detail__title">{detail.title}</div>
-              <div className="cft-detail__figures">
+              <div className="ny-showcase-detail__title">{detail.title}</div>
+              <div className="ny-showcase-detail__figures">
                 <span
-                  className="cft-detail__net"
-                  style={{ color: detail.net >= 0 ? flowColors.inflow : flowColors.outflow }}
+                  className="ny-showcase-detail__net"
+                  style={{ color: detail.net >= 0 ? deltaColors.positive : deltaColors.negative }}
                 >
-                  {formatFlow(detail.net, true)}
+                  {formatDelta(detail.net, true)}
                 </span>
-                <span className="cft-detail__net-caption">
+                <span className="ny-showcase-detail__net-caption">
                   {ui.netOver} {locale.rlab[range]}
                 </span>
               </div>
-              {selected == null && <div className="cft-detail__auto">{ui.auto}</div>}
+              {selected == null && <div className="ny-showcase-detail__auto">{ui.auto}</div>}
             </div>
 
             <div>
@@ -305,46 +305,46 @@ export function CapitalFlowTracker({
                 width={330}
                 height={74}
                 pad={8}
-                color={detail.net >= 0 ? flowColors.inflow : flowColors.outflow}
+                color={detail.net >= 0 ? deltaColors.positive : deltaColors.negative}
                 area
                 areaOpacity={0.12}
                 strokeWidth={1.7}
                 baseline
                 fluid
               />
-              <div className="cft-detail__chart-caption">
+              <div className="ny-showcase-detail__chart-caption">
                 <span>{ui.cumFlow}</span>
                 <span>{ui.asOfShort}</span>
               </div>
             </div>
 
-            <div className="cft-detail__section cft-detail__section--breakdown">
+            <div className="ny-showcase-detail__section ny-showcase-detail__section--breakdown">
               <Eyebrow>{detail.breakdownLabel}</Eyebrow>
               {detail.breakdown.map((entry) => (
                 <BreakdownBar
                   key={entry.name}
                   label={entry.name}
-                  value={formatFlow(entry.value, true)}
+                  value={formatDelta(entry.value, true)}
                   fraction={entry.fraction}
                   tone={entry.value}
                 />
               ))}
             </div>
 
-            <div className="cft-detail__section cft-detail__section--divided">
+            <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
               <Eyebrow>{ui.counterparties}</Eyebrow>
               {detail.counterparties.map((entry) => (
                 <DataRow
                   key={entry.key}
                   leading={entry.arrow}
                   label={entry.name}
-                  value={formatFlow(entry.value, true)}
+                  value={formatDelta(entry.value, true)}
                   tone={entry.value}
                 />
               ))}
             </div>
 
-            <div className="cft-detail__section cft-detail__section--divided">
+            <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
               <Eyebrow>{ui.topNames}</Eyebrow>
               {detail.names.map((entry) => (
                 <DataRow
@@ -352,7 +352,7 @@ export function CapitalFlowTracker({
                   monoLabel
                   label={entry.symbol}
                   caption={entry.name}
-                  value={formatFlow(entry.value, true)}
+                  value={formatDelta(entry.value, true)}
                   tone={entry.value}
                 />
               ))}
@@ -361,14 +361,14 @@ export function CapitalFlowTracker({
         </div>
 
         <div
-          className="cft-bottom-grid"
+          className="ny-showcase-bottom-grid"
           style={{ gridTemplateColumns: narrow ? 'minmax(0,1fr)' : '1.05fr .95fr 1.15fr' }}
         >
           <Panel column>
             <PanelHeading title={ui.tickerTitle} subtitle={`${ui.tickerSub} ${locale.rlab[range]}`} />
-            <div className="cft-ticker-grid">
-              <div className="cft-ticker-column">
-                <Eyebrow variant="tile" style={{ color: flowColors.inflow }}>
+            <div className="ny-showcase-ticker-grid">
+              <div className="ny-showcase-ticker-column">
+                <Eyebrow variant="tile" style={{ color: deltaColors.positive }}>
                   {ui.bought}
                 </Eyebrow>
                 {extremes.bought.map((entry) => (
@@ -378,13 +378,13 @@ export function CapitalFlowTracker({
                     monoLabel
                     label={entry.symbol}
                     caption={entry.name}
-                    value={formatFlow(entry.value)}
-                    valueColor={flowColors.inflow}
+                    value={formatDelta(entry.value)}
+                    valueColor={deltaColors.positive}
                   />
                 ))}
               </div>
-              <div className="cft-ticker-column">
-                <Eyebrow variant="tile" style={{ color: flowColors.outflow }}>
+              <div className="ny-showcase-ticker-column">
+                <Eyebrow variant="tile" style={{ color: deltaColors.negative }}>
                   {ui.sold}
                 </Eyebrow>
                 {extremes.sold.map((entry) => (
@@ -394,8 +394,8 @@ export function CapitalFlowTracker({
                     monoLabel
                     label={entry.symbol}
                     caption={entry.name}
-                    value={formatFlow(-entry.value)}
-                    valueColor={flowColors.outflow}
+                    value={formatDelta(-entry.value)}
+                    valueColor={deltaColors.negative}
                   />
                 ))}
               </div>
@@ -413,7 +413,7 @@ export function CapitalFlowTracker({
 
           <Panel column>
             <PanelHeading title={ui.narrTitle} subtitle={ui.narrSub} />
-            <div className="cft-narrative-list">
+            <div className="ny-showcase-narrative-list">
               {stories.map((story) => (
                 <NarrativeItem key={story.key} title={story.title} value={story.value} tone={story.tone}>
                   {story.body}
@@ -429,12 +429,12 @@ export function CapitalFlowTracker({
             title={ui.momTitle}
             subtitle={`${ui.momSub} ${locale.rlab[range]} ${ui.momSub2}`}
           />
-          <div className="cft-momentum-grid">
+          <div className="ny-showcase-momentum-grid">
             {momentum.map((sector) => (
               <MomentumCard
                 key={sector.key}
                 name={sector.name}
-                value={formatFlow(sector.value, true)}
+                value={formatDelta(sector.value, true)}
                 share={sector.share}
                 tone={sector.value}
                 trend={sector.series}
@@ -444,7 +444,7 @@ export function CapitalFlowTracker({
           </div>
         </Panel>
 
-        <div className="cft-footer">{ui.footer}</div>
+        <div className="ny-showcase-footer">{ui.footer}</div>
       </div>
     </ThemeProvider>
   )

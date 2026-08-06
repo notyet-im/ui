@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react'
-import { formatBillions } from '../lib/format'
+import { formatCompact } from '../lib/format'
 import { heatStyle } from '../lib/heat'
 import './HeatGrid.css'
 
@@ -27,7 +27,7 @@ export interface HeatGridProps {
   cellKey?: (rowKey: string, columnKey: string) => string
   selectedKey?: string | null
   onSelect?: (cellKey: string, rowKey: string, columnKey: string) => void
-  /** Formats a non-zero cell. Default `formatBillions`. */
+  /** Formats a non-zero cell. Default `formatCompact`. */
   format?: (value: number) => string
   /** Placeholder for a zero/absent cell. Default `·`. */
   emptyText?: string
@@ -52,11 +52,11 @@ export function HeatGrid({
   cellKey = (rowKey, columnKey) => `${rowKey}|${columnKey}`,
   selectedKey = null,
   onSelect,
-  format = formatBillions,
+  format = formatCompact,
   emptyText = '·',
   rowLabelWidth = 92,
-  headerFontSize = 'var(--cf-text-micro)',
-  cellFontSize = 'var(--cf-text-xs)',
+  headerFontSize = 'var(--ny-font-size-2xs)',
+  cellFontSize = 'var(--ny-font-size-xs)',
   minHeight,
   className,
   style,
@@ -70,20 +70,20 @@ export function HeatGrid({
     )
 
   return (
-    <div className={['cf-heat-grid', className].filter(Boolean).join(' ')} style={{ minHeight, ...style }}>
-      <div className="cf-heat-grid__header">
-        <div className="cf-heat-grid__corner" style={{ width: rowLabelWidth }} />
+    <div className={['ny-heat-grid', className].filter(Boolean).join(' ')} style={{ minHeight, ...style }}>
+      <div className="ny-heat-grid__header">
+        <div className="ny-heat-grid__corner" style={{ width: rowLabelWidth }} />
         {columns.map((column) => (
-          <div key={column.key} className="cf-heat-grid__column-label" style={{ fontSize: headerFontSize }}>
+          <div key={column.key} className="ny-heat-grid__column-label" style={{ fontSize: headerFontSize }}>
             {column.label}
           </div>
         ))}
       </div>
 
       {rows.map((row) => (
-        <div key={row.key} className="cf-heat-grid__row">
-          <div className="cf-heat-grid__row-label" style={{ width: rowLabelWidth }}>
-            <span className="cf-heat-grid__row-code">{row.code}</span>
+        <div key={row.key} className="ny-heat-grid__row">
+          <div className="ny-heat-grid__row-label" style={{ width: rowLabelWidth }}>
+            <span className="ny-heat-grid__row-code">{row.code}</span>
             {row.name}
           </div>
           {columns.map((column) => {
@@ -97,7 +97,7 @@ export function HeatGrid({
                 key={key}
                 aria-pressed={selected}
                 aria-label={`${row.code} ${column.label}`}
-                className={`cf-heat-grid__cell${selected ? ' cf-heat-grid__cell--selected' : ''}`}
+                className={`ny-heat-grid__cell${selected ? ' ny-heat-grid__cell--selected' : ''}`}
                 style={{ background: tone.background, color: tone.color, fontSize: cellFontSize }}
                 onClick={() => onSelect?.(key, row.key, column.key)}
               >
@@ -144,18 +144,18 @@ export function RotationMatrix({
     max ?? codes.reduce((acc, from) => codes.reduce((inner, to) => Math.max(inner, value(from, to)), acc), 0)
 
   return (
-    <div className={['cf-matrix', className].filter(Boolean).join(' ')}>
-      <div className="cf-matrix__header">
-        <div className="cf-matrix__corner" />
+    <div className={['ny-matrix', className].filter(Boolean).join(' ')}>
+      <div className="ny-matrix__header">
+        <div className="ny-matrix__corner" />
         {codes.map((code) => (
-          <div key={code} className="cf-matrix__column-label">
+          <div key={code} className="ny-matrix__column-label">
             {code}
           </div>
         ))}
       </div>
       {codes.map((from) => (
-        <div key={from} className="cf-matrix__row">
-          <div className="cf-matrix__row-label">{from}</div>
+        <div key={from} className="ny-matrix__row">
+          <div className="ny-matrix__row-label">{from}</div>
           {codes.map((to) => {
             const cellValue = value(from, to)
             const diagonal = from === to
@@ -163,10 +163,10 @@ export function RotationMatrix({
             return (
               <div
                 key={`${from}->${to}`}
-                className="cf-matrix__cell"
+                className="ny-matrix__cell"
                 style={{
-                  background: diagonal ? 'var(--cf-panel-2)' : tone.background,
-                  color: diagonal ? 'var(--cf-dim-2)' : tone.color,
+                  background: diagonal ? 'var(--ny-surface-sunken)' : tone.background,
+                  color: diagonal ? 'var(--ny-text-subtle)' : tone.color,
                 }}
               >
                 {diagonal ? diagonalText : cellValue ? format(cellValue) : emptyText}

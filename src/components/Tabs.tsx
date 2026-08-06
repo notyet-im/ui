@@ -23,14 +23,14 @@ export interface TabsProps<T extends string> {
  */
 export function Tabs<T extends string>({ items, value, onChange, label, className }: TabsProps<T>) {
   return (
-    <div className={['cf-tabs', className].filter(Boolean).join(' ')} role="tablist" aria-label={label}>
+    <div className={['ny-tabs', className].filter(Boolean).join(' ')} role="tablist" aria-label={label}>
       {items.map((item) => (
         <button
           key={item.value}
           type="button"
           role="tab"
           aria-selected={value === item.value}
-          className="cf-tabs__tab"
+          className="ny-tabs__tab"
           onClick={() => onChange(item.value)}
         >
           {item.label}

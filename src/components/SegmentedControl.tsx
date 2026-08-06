@@ -32,7 +32,7 @@ export function SegmentedControl<T extends string>({
 }: SegmentedControlProps<T>) {
   return (
     <div
-      className={['cf-segmented', className].filter(Boolean).join(' ')}
+      className={['ny-segmented', className].filter(Boolean).join(' ')}
       role="radiogroup"
       aria-label={label}
     >
@@ -42,7 +42,7 @@ export function SegmentedControl<T extends string>({
           type="button"
           role="radio"
           aria-checked={value === item.value}
-          className={`cf-segmented__item cf-segmented__item--${variant}`}
+          className={`ny-segmented__item ny-segmented__item--${variant}`}
           onClick={() => onChange(item.value)}
         >
           {item.label}

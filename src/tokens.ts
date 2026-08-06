@@ -5,42 +5,45 @@
  * strokes and fills can't read a CSS custom property through an attribute, so
  * chart colours must be real strings. Anything a stylesheet can express stays
  * in CSS.
+ *
+ * `tokens.parity.test.ts` asserts every value below still matches its CSS twin.
+ * Change one, change both.
  */
 
-export const flowColors = {
-  /** Capital arriving. */
-  inflow: '#2fbfa8',
-  /** Capital leaving. */
-  outflow: '#e0703f',
-  /** Unselected / unattributed flow. */
+export const deltaColors = {
+  /** Value moved up. */
+  positive: '#2fbfa8',
+  /** Value moved down. */
+  negative: '#e0703f',
+  /** Unselected, unattributed, or exactly flat. */
   neutral: '#7f8a99',
 } as const
 
-export type FlowDirection = 'inflow' | 'outflow'
+export type DeltaDirection = 'positive' | 'negative'
 
-/** Picks the flow colour for a signed value. Zero counts as inflow. */
-export function flowColor(value: number): string {
-  return value >= 0 ? flowColors.inflow : flowColors.outflow
+/** Picks the delta colour for a signed value. Zero counts as positive. */
+export function deltaColor(value: number): string {
+  return value >= 0 ? deltaColors.positive : deltaColors.negative
 }
 
 export const surfaces = {
   dark: {
     bg: '#0b0c0e',
-    panel: '#14161a',
-    panel2: '#1b1e23',
-    line: '#252a32',
+    surface: '#14161a',
+    surfaceSunken: '#1b1e23',
+    border: '#252a32',
     text: '#e9ebee',
-    dim: '#8b929e',
-    dim2: '#5f6672',
+    textMuted: '#8b929e',
+    textSubtle: '#5f6672',
   },
   light: {
     bg: '#f7f6f3',
-    panel: '#ffffff',
-    panel2: '#f2f1ec',
-    line: '#e4e1d9',
+    surface: '#ffffff',
+    surfaceSunken: '#f2f1ec',
+    border: '#e4e1d9',
     text: '#191b1e',
-    dim: '#6c727c',
-    dim2: '#9aa0a8',
+    textMuted: '#6c727c',
+    textSubtle: '#9aa0a8',
   },
 } as const
 
@@ -52,7 +55,55 @@ export const fonts = {
 } as const
 
 export const motion = {
-  ease: 'cubic-bezier(0.4, 0, 0.2, 1)',
-  flow: '0.5s',
-  fade: '0.3s',
+  easeStandard: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  durationFast: '150ms',
+  durationBase: '300ms',
+  durationSlow: '500ms',
 } as const
+
+/**
+ * Breakpoints in CSS pixels.
+ *
+ * These exist for JS-side decisions and documentation. They cannot be used in
+ * `@media` conditions — a custom property there is invalid CSS and fails
+ * silently — so stylesheets hardcode these same four numbers.
+ */
+export const breakpoints = {
+  sm: 480,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+} as const
+
+export type Breakpoint = keyof typeof breakpoints
+
+/**
+ * Layer stack. Dialog, Popover, Tooltip and Toast are absent on purpose: they
+ * render in the browser top layer via `<dialog>` and the `popover` attribute,
+ * so they sit above all of this without competing for a number.
+ */
+export const zIndex = {
+  base: 0,
+  sticky: 100,
+  dropdown: 200,
+  toast: 300,
+} as const
+
+/** The spacing scale, in CSS pixels. Each key is the value it holds. */
+export const space = {
+  0: 0,
+  px: 1,
+  2: 2,
+  4: 4,
+  8: 8,
+  12: 12,
+  16: 16,
+  20: 20,
+  24: 24,
+  32: 32,
+  40: 40,
+  48: 48,
+  64: 64,
+} as const
+
+export type SpaceToken = keyof typeof space

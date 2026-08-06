@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { CapitalFlowTracker } from './CapitalFlowTracker'
+import { TrackerShowcase } from './TrackerShowcase'
 
 const meta = {
-  title: 'Showcase/Capital Flow Tracker',
-  component: CapitalFlowTracker,
+  title: 'Showcase/TrackerShowcase',
+  component: TrackerShowcase,
   parameters: {
     layout: 'fullscreen',
     docs: {
@@ -15,7 +15,7 @@ const meta = {
   },
   // The tracker renders its own ThemeProvider, so bypass the global decorator.
   decorators: [(Story) => <Story />],
-} satisfies Meta<typeof CapitalFlowTracker>
+} satisfies Meta<typeof TrackerShowcase>
 
 export default meta
 type Story = StoryObj<typeof meta>

@@ -1,4 +1,4 @@
-# @notyet/capital-flow-ds
+# @notyet/ui
 
 A design system for cross-border capital-flow interfaces, extracted from the
 **Capital Flow Tracker** prototype, plus the tracker itself as its showcase.
@@ -20,9 +20,9 @@ src/
 ## Quick start
 
 ```tsx
-import { ThemeProvider, Panel, StatTile, MacroStrip } from '@notyet/capital-flow-ds'
-import '@notyet/capital-flow-ds/styles.css'
-import '@notyet/capital-flow-ds/fonts.css' // optional — see Fonts below
+import { ThemeProvider, Panel, StatTile, MacroStrip } from '@notyet/ui'
+import '@notyet/ui/styles.css'
+import '@notyet/ui/fonts.css' // optional — see Fonts below
 
 export function App() {
   return (
@@ -39,7 +39,7 @@ export function App() {
 
 ### `ThemeProvider` is required
 
-Every component styles itself from `--cf-*` custom properties, and
+Every component styles itself from `--ny-*` custom properties, and
 `ThemeProvider` is what defines them. Outside one, components render unstyled —
 transparent backgrounds and browser-default text — because every colour they
 reference resolves to nothing. It also sets `data-theme`, which is how the light
@@ -56,15 +56,15 @@ nothing else in the library depends on how they arrive.
 
 | Group | Tokens | Notes |
 | --- | --- | --- |
-| Surfaces | `--cf-bg` `--cf-panel` `--cf-panel-2` `--cf-line` | flip with the theme |
-| Text | `--cf-text` `--cf-dim` `--cf-dim-2` | flip with the theme |
-| Flow | `--cf-inflow` `--cf-outflow` `--cf-neutral` | **theme-invariant** |
-| Type | `--cf-text-micro` … `--cf-text-5xl` | 10.5px → 27px |
-| Radii | `--cf-radius-swatch` … `--cf-radius-panel` | named for what they wrap |
-| Motion | `--cf-ease` `--cf-duration-flow` `--cf-duration-fade` | one easing curve throughout |
+| Surfaces | `--ny-bg` `--ny-surface` `--ny-surface-sunken` `--ny-border` | flip with the theme |
+| Text | `--ny-text` `--ny-text-muted` `--ny-text-subtle` | flip with the theme |
+| Flow | `--ny-positive` `--ny-negative` `--ny-neutral` | **theme-invariant** |
+| Type | `--ny-font-size-2xs` … `--ny-font-size-3xl` | 10.5px → 27px |
+| Radii | `--ny-radius-xs` … `--ny-radius-xl` | named for what they wrap |
+| Motion | `--ny-ease-standard` `--ny-duration-slow` `--ny-duration-base` | one easing curve throughout |
 
 Flow colours stay fixed across themes on purpose: the meaning of teal must not
-depend on whether the room lights are on. `flowColor(value)` returns the right
+depend on whether the room lights are on. `deltaColor(value)` returns the right
 one for a signed number.
 
 ## Components
@@ -99,7 +99,7 @@ return (
 
 ## Utilities
 
-`formatFlow` / `formatBillions` / `formatPercent` format money in millions.
+`formatDelta` / `formatCompact` / `formatPercent` format money in millions.
 They use U+2212 MINUS SIGN (`−`), not a hyphen — in IBM Plex Mono the true minus
 aligns with the plus, keeping signed columns flush. It also permits a line break
 before a following `$`, which is why every figure style in the system sets
@@ -121,9 +121,9 @@ different view layer.
 - responsive down to phone width
 
 ```tsx
-import { CapitalFlowTracker } from './tracker/CapitalFlowTracker'
+import { TrackerShowcase } from './tracker/TrackerShowcase'
 
-<CapitalFlowTracker theme="dark" lang="en" initialRange="15D" metric="combined" heroView="flow" />
+<TrackerShowcase theme="dark" lang="en" initialRange="15D" metric="combined" heroView="flow" />
 ```
 
 Props seed the initial state only; each one is then user-controllable in the page.

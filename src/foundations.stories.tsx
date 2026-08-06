@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Eyebrow } from './components/Controls'
 import { Panel } from './components/Panel'
-import { flowColors } from './tokens'
+import { deltaColors } from './tokens'
 
 const meta = {
   title: 'Foundations/Tokens',
@@ -19,31 +19,31 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const SURFACE_TOKENS = [
-  ['--cf-bg', 'Page background'],
-  ['--cf-panel', 'Panel surface'],
-  ['--cf-panel-2', 'Recessed surface — tracks, tiles, controls'],
-  ['--cf-line', 'Hairlines and borders'],
+  ['--ny-bg', 'Page background'],
+  ['--ny-surface', 'Panel surface'],
+  ['--ny-surface-sunken', 'Recessed surface — tracks, tiles, controls'],
+  ['--ny-border', 'Hairlines and borders'],
 ]
 
 const TEXT_TOKENS = [
-  ['--cf-text', 'Primary text'],
-  ['--cf-dim', 'Secondary text'],
-  ['--cf-dim-2', 'Tertiary text — eyebrows, captions'],
+  ['--ny-text', 'Primary text'],
+  ['--ny-text-muted', 'Secondary text'],
+  ['--ny-text-subtle', 'Tertiary text — eyebrows, captions'],
 ]
 
 const TYPE_SCALE = [
-  ['--cf-text-micro', '10.5px', 'Eyebrows, matrix cells'],
-  ['--cf-text-tiny', '11px', 'Kickers, footers'],
-  ['--cf-text-xs', '11.5px', 'Panel subtitles'],
-  ['--cf-text-sm', '12px', 'Controls'],
-  ['--cf-text-base', '12.5px', 'Body and list rows'],
-  ['--cf-text-md', '13px', 'Ring labels'],
-  ['--cf-text-lg', '13.5px', 'Panel titles, tabs'],
-  ['--cf-text-xl', '14.5px', 'Momentum figures'],
-  ['--cf-text-2xl', '15px', 'Stat tile figures'],
-  ['--cf-text-3xl', '18px', 'Selection title'],
-  ['--cf-text-4xl', '25px', 'Selection net'],
-  ['--cf-text-5xl', '27px', 'Page title'],
+  ['--ny-font-size-2xs', '10.5px', 'Eyebrows, matrix cells'],
+  ['--ny-font-size-2xs', '11px', 'Kickers, footers'],
+  ['--ny-font-size-xs', '11.5px', 'Panel subtitles'],
+  ['--ny-font-size-xs', '12px', 'Controls'],
+  ['--ny-font-size-sm', '12.5px', 'Body and list rows'],
+  ['--ny-font-size-sm', '13px', 'Ring labels'],
+  ['--ny-font-size-md', '13.5px', 'Panel titles, tabs'],
+  ['--ny-font-size-md', '14.5px', 'Momentum figures'],
+  ['--ny-font-size-lg', '15px', 'Stat tile figures'],
+  ['--ny-font-size-xl', '18px', 'Selection title'],
+  ['--ny-font-size-2xl', '25px', 'Selection net'],
+  ['--ny-font-size-3xl', '27px', 'Page title'],
 ]
 
 function Swatch({ token, note, color }: { token: string; note: string; color?: string }) {
@@ -53,15 +53,15 @@ function Swatch({ token, note, color }: { token: string; note: string; color?: s
         style={{
           width: 44,
           height: 44,
-          borderRadius: 'var(--cf-radius-control)',
-          border: '1px solid var(--cf-line)',
+          borderRadius: 'var(--ny-radius-md)',
+          border: '1px solid var(--ny-border)',
           background: color ?? `var(${token})`,
           flex: 'none',
         }}
       />
       <div style={{ minWidth: 0 }}>
-        <div style={{ fontFamily: 'var(--cf-font-mono)', fontSize: 'var(--cf-text-base)' }}>{token}</div>
-        <div style={{ fontSize: 'var(--cf-text-xs)', color: 'var(--cf-dim)' }}>{note}</div>
+        <div style={{ fontFamily: 'var(--ny-font-mono)', fontSize: 'var(--ny-font-size-sm)' }}>{token}</div>
+        <div style={{ fontSize: 'var(--ny-font-size-xs)', color: 'var(--ny-text-muted)' }}>{note}</div>
       </div>
     </div>
   )
@@ -89,9 +89,9 @@ export const Colors: Story = {
       <Panel>
         <Eyebrow>Flow semantics — theme-invariant</Eyebrow>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-          <Swatch token="--cf-inflow" note={`Capital arriving · ${flowColors.inflow}`} />
-          <Swatch token="--cf-outflow" note={`Capital leaving · ${flowColors.outflow}`} />
-          <Swatch token="--cf-neutral" note={`Unattributed flow · ${flowColors.neutral}`} />
+          <Swatch token="--ny-positive" note={`Capital arriving · ${deltaColors.positive}`} />
+          <Swatch token="--ny-negative" note={`Capital leaving · ${deltaColors.negative}`} />
+          <Swatch token="--ny-neutral" note={`Unattributed flow · ${deltaColors.neutral}`} />
         </div>
       </Panel>
     </div>
@@ -108,15 +108,15 @@ export const Typography: Story = {
             <span style={{ fontSize: `var(${token})`, fontWeight: 600, minWidth: 130 }}>{size}</span>
             <span
               style={{
-                fontFamily: 'var(--cf-font-mono)',
-                fontSize: 'var(--cf-text-xs)',
-                color: 'var(--cf-dim)',
+                fontFamily: 'var(--ny-font-mono)',
+                fontSize: 'var(--ny-font-size-xs)',
+                color: 'var(--ny-text-muted)',
                 minWidth: 150,
               }}
             >
               {token}
             </span>
-            <span style={{ fontSize: 'var(--cf-text-xs)', color: 'var(--cf-dim-2)' }}>{note}</span>
+            <span style={{ fontSize: 'var(--ny-font-size-xs)', color: 'var(--ny-text-subtle)' }}>{note}</span>
           </div>
         ))}
       </div>
@@ -130,30 +130,30 @@ export const Radii: Story = {
       <Eyebrow>Radii — named for what they wrap</Eyebrow>
       <div style={{ display: 'flex', gap: 16, marginTop: 14, flexWrap: 'wrap' }}>
         {[
-          ['--cf-radius-swatch', '2px'],
-          ['--cf-radius-bar', '3px'],
-          ['--cf-radius-cell', '4px'],
-          ['--cf-radius-control', '6px'],
-          ['--cf-radius-field', '8px'],
-          ['--cf-radius-tile', '9px'],
-          ['--cf-radius-strip', '10px'],
-          ['--cf-radius-panel', '12px'],
+          ['--ny-radius-xs', '2px'],
+          ['--ny-radius-sm', '3px'],
+          ['--ny-radius-sm', '4px'],
+          ['--ny-radius-md', '6px'],
+          ['--ny-radius-lg', '8px'],
+          ['--ny-radius-lg', '9px'],
+          ['--ny-radius-xl', '10px'],
+          ['--ny-radius-xl', '12px'],
         ].map(([token, value]) => (
           <div key={token} style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
             <div
               style={{
                 width: 68,
                 height: 68,
-                background: 'var(--cf-panel-2)',
-                border: '1px solid var(--cf-line)',
+                background: 'var(--ny-surface-sunken)',
+                border: '1px solid var(--ny-border)',
                 borderRadius: `var(${token})`,
               }}
             />
             <div
               style={{
-                fontFamily: 'var(--cf-font-mono)',
-                fontSize: 'var(--cf-text-micro)',
-                color: 'var(--cf-dim)',
+                fontFamily: 'var(--ny-font-mono)',
+                fontSize: 'var(--ny-font-size-2xs)',
+                color: 'var(--ny-text-muted)',
               }}
             >
               {value}

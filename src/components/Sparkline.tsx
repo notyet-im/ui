@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
 import { seriesPath } from '../lib/series'
-import { flowColor } from '../tokens'
+import { deltaColor } from '../tokens'
 
 export interface SparklineProps {
   /** Raw values. The path is fitted to these, always including zero. */
@@ -47,7 +47,7 @@ export function Sparkline({
   style,
 }: SparklineProps) {
   const path = seriesPath(values, width, height, pad)
-  const stroke = color ?? flowColor(values[values.length - 1] ?? 0)
+  const stroke = color ?? deltaColor(values[values.length - 1] ?? 0)
 
   return (
     <svg
@@ -67,7 +67,7 @@ export function Sparkline({
           y1={path.zeroY}
           x2={width}
           y2={path.zeroY}
-          stroke="var(--cf-line)"
+          stroke="var(--ny-border)"
           strokeDasharray="3 3"
         />
       )}

@@ -1,4 +1,4 @@
-import { formatFlow } from '../lib/format'
+import { formatDelta } from '../lib/format'
 import { hash, rnd } from '../lib/prng'
 import { walkSeries } from '../lib/series'
 import type { BucketKey, MetricKey, RangeKey, RegionCode, SectorKey } from './data'
@@ -335,7 +335,7 @@ export function narrative(edges: Edge[], locale: Locale, why: string[] | undefin
   return edges.slice(0, 4).map((edge, i) => ({
     key: `narrative:${i}`,
     title: `${label(edge.from)} → ${label(edge.to)}`,
-    value: formatFlow(edge.value),
+    value: formatDelta(edge.value),
     body: why?.[edge.sourceIndex] ?? edge.why,
     tone: i % 2 ? -1 : 1,
   }))

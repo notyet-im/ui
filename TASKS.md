@@ -47,33 +47,42 @@ in the plan before touching a shared file.
   already documents that the accessible, keyboard-reachable path is the label `<button>`s.
 - `IconButton.stories.tsx` decorative icons given `aria-hidden`.
 
-## Phase 1 — Token foundation (serial, 1 owner)
+## Phase 1 — Token foundation (serial, 1 owner) — **done**
 
-Owns `src/styles/tokens.css`, new `src/styles/base.css`, `src/tokens.ts`, `src/tokens.parity.test.ts`.
+Merged with Phase 2 into one push: both were single-owner and splitting them would
+have meant writing throwaway intermediate code (a compat shim used for one commit).
 
-- [ ] Spacing: 4px base, value-named `--ny-space-{0,2,4,8,12,16,20,24,32,40,48,64}`
-- [ ] Aliases: `--ny-gutter` / `--ny-inset` / `--ny-inset-compact` / `--ny-stack`
-- [ ] Type: 9 steps in `rem`, + line-height / font-weight / tracking tokens
-- [ ] Color: primitives (ink/paper) + ~34 semantic tokens + 12 feedback
-- [ ] Focus: `--ny-focus-ring{,-width,-offset}`, one rule in `base.css`, delete 8 hardcoded blocks
-- [ ] Radii 8→7 (`none`…`full`), elevation ×4, z-index ×4, motion renamed by speed
-- [ ] Sizing `--ny-control-height-{sm,md,lg}` = 28/34/44 (34 stays default)
-- [ ] Breakpoints `--ny-bp-*` (JS/docs parity only — **never** inside `@media`)
-- [ ] `tokens.parity.test.ts` — CSS ↔ TS contract
-- [ ] **Deliverable: the authoritative old→new mapping table** (everything downstream reads it)
+- [x] Spacing: 4px base, value-named `--ny-space-{0,px,2,4,8,12,16,20,24,32,40,48,64}`
+- [x] Aliases: `--ny-gutter` / `--ny-inset` / `--ny-inset-compact` / `--ny-stack`
+- [x] Type: 9 steps in `rem`, + line-height / font-weight / tracking tokens
+- [x] Color: ink/paper primitives + semantic layer + 12 feedback + accent
+- [x] Focus: `--ny-focus-ring{,-width,-offset}`, one rule in `base.css`
+- [x] Radii 8→7 (`none`…`full`), elevation ×4, z-index ×4, motion renamed by speed
+- [x] Sizing `--ny-control-height-{sm,md,lg}` = 28/34/44 (34 stays default)
+- [x] Breakpoints `--ny-bp-*` (JS/docs parity only — **never** inside `@media`)
+- [x] `tokens.parity.test.ts` — CSS ↔ TS contract, 10 assertions incl. two invariants
+- [x] `TOKEN-MAP.md` — the authoritative old→new table
 
-## Phase 2 — Rename sweep (serial, 1 owner, ~24 files)
+## Phase 2 — Rename sweep — **done**
 
-- [ ] `--cf-*`→`--ny-*` (semantic remap from the table — **not** a find/replace)
-- [ ] `.cf-*`→`.ny-*` (97 classes), `.cft-*`→`.ny-showcase-*` (25 classes)
-- [ ] `CapitalFlowTracker{,Props}`→`TrackerShowcase{,Props}`
-- [ ] `flowColors`→`deltaColors`, `flowColor()`→`deltaColor()`, `FlowDirection`→`DeltaDirection`
-- [ ] `formatFlow`→`formatDelta`, `formatBillions`→`formatCompact`
-- [ ] `CapitalFlowDS`→`NotYetUI`, `@notyet/capital-flow-ds`→`@notyet/ui`
-- [ ] Second pass: 30 remaining hardcoded px → nearest space token
-- [ ] 49 deprecated `--cf-*` aliases in a marked block (one release)
-- [ ] **Gate:** builds green + `grep -rE 'cf-|cft-|CapitalFlow'` returns zero
+Driven from `TOKEN-MAP.md` as a table of decisions, with a hard assertion that no
+`--cf-*` survives the token pass before any prefix rewriting runs.
+
+- [x] `--cf-*`→`--ny-*` across 42 files (semantic remap, not find/replace)
+- [x] `.cf-*`→`.ny-*` (97 classes), `.cft-*`→`.ny-showcase-*` (25 classes)
+- [x] `CapitalFlowTracker{,Props}`→`TrackerShowcase{,Props}` + file renames
+- [x] `flowColors`→`deltaColors`, `flowColor()`→`deltaColor()`, `FlowDirection`→`DeltaDirection`
+- [x] `formatFlow`→`formatDelta`, `formatBillions`→`formatCompact`
+- [x] `CapitalFlowDS`→`NotYetUI`, `@notyet/capital-flow-ds`→`@notyet/ui`
+- [x] 7 duplicated focus blocks deleted; flow label kept a slim documented override
+- [x] 15 font-weights, 4 line-heights, 2 trackings, 38 spacing literals → tokens
+- [x] Panel (worst offender at 30% token discipline) now uses `--ny-inset` / `--ny-stack`
+- [x] **Gate:** biome ✓ · tsc ✓ · vitest 13/13 ✓ · build:lib ✓ · zero `cf-`/`CapitalFlow`
 - [ ] **Gate:** diff renders vs `.design-sync/.baseline/`
+
+> **Deferred:** the 49 deprecated `--cf-*` aliases. `globalName` changes in the same
+> release, so any existing artifact breaks on the JS side regardless — a CSS-only shim
+> buys nothing. Revisit only if someone reports hand-written CSS in a live artifact.
 
 ## Phase 3 — Layout primitives + hooks (2 agents, parallel)
 

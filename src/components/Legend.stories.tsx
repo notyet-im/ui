@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { flowColors } from '../tokens'
+import { deltaColors } from '../tokens'
 import { Legend } from './Controls'
 
 const meta = {
@@ -15,8 +15,8 @@ const meta = {
   },
   args: {
     items: [
-      { color: flowColors.inflow, label: 'inflow' },
-      { color: flowColors.outflow, label: 'outflow' },
+      { color: deltaColors.positive, label: 'inflow' },
+      { color: deltaColors.negative, label: 'outflow' },
     ],
   },
 } satisfies Meta<typeof Legend>
@@ -33,9 +33,9 @@ export const WithNote: Story = {
 export const ThreeSeries: Story = {
   args: {
     items: [
-      { color: flowColors.inflow, label: 'inflow' },
-      { color: flowColors.outflow, label: 'outflow' },
-      { color: flowColors.neutral, label: 'unattributed' },
+      { color: deltaColors.positive, label: 'inflow' },
+      { color: deltaColors.negative, label: 'outflow' },
+      { color: deltaColors.neutral, label: 'unattributed' },
     ],
   },
 }

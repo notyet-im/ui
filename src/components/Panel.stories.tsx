@@ -27,7 +27,7 @@ export const WithHeading: Story = {
   render: () => (
     <Panel style={{ maxWidth: 420 }}>
       <PanelHeading title="Ticker-level extremes" subtitle="Largest single-name net flow, 15 days" />
-      <div style={{ fontSize: 'var(--cf-text-base)' }}>Panel body follows the heading.</div>
+      <div style={{ fontSize: 'var(--ny-font-size-sm)' }}>Panel body follows the heading.</div>
     </Panel>
   ),
 }
@@ -40,7 +40,7 @@ export const InlineHeading: Story = {
         title="Sector momentum, all markets"
         subtitle="cumulative net flow path over 15 days · click to focus"
       />
-      <div style={{ fontSize: 'var(--cf-text-base)' }}>
+      <div style={{ fontSize: 'var(--ny-font-size-sm)' }}>
         The inline variant pushes the subtitle to the far edge — for wide panels where a stacked heading would
         waste a line.
       </div>
