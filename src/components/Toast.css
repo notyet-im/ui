@@ -1,0 +1,134 @@
+/**
+ * Toast — a `popover="manual"` viewport in the top layer, holding in-flow
+ * toasts.
+ *
+ * The viewport is the popover, not the toast: a top-layer element is forced to
+ * `position: absolute` against the viewport and leaves its parent's flow, so
+ * per-toast popovers would overlap instead of stacking. No z-index either way.
+ */
+
+.ny-toast-viewport {
+  /* Undo the UA popover chrome — `inset: 0; margin: auto; border: solid;
+     padding: 0.25em; background: Canvas`. */
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  padding: var(--ny-gutter);
+  border: 0;
+  background: none;
+  overflow: visible;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-12);
+  width: max-content;
+  max-width: 100%;
+  /* The viewport spans the corner permanently, so it must never eat a click
+     meant for the page. The toasts themselves opt back in. */
+  pointer-events: none;
+}
+
+.ny-toast-viewport--bottom {
+  bottom: 0;
+  flex-direction: column;
+}
+
+.ny-toast-viewport--top {
+  top: 0;
+  /* Newest last in the DOM, nearest the top edge on screen. */
+  flex-direction: column-reverse;
+}
+
+.ny-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ny-space-12);
+  width: 22rem;
+  max-width: 100%;
+  padding: var(--ny-inset);
+  border: 1px solid var(--ny-border);
+  border-left: 3px solid var(--ny-toast-accent, var(--ny-border-strong));
+  border-radius: var(--ny-radius-lg);
+  background: var(--ny-surface-raised);
+  color: var(--ny-text);
+  box-shadow: var(--ny-shadow-lg);
+  pointer-events: auto;
+  animation: ny-toast-enter var(--ny-duration-fast) var(--ny-ease-out);
+}
+
+/* The closed state, stated rather than inherited: a browser with `<dialog>` but
+   without the popover API has no UA `[popover]:not(:popover-open)` rule to hide
+   it with. Higher specificity than `.ny-toast`, so it wins wherever it sits. */
+.ny-toast:not([data-open]) {
+  display: none;
+}
+
+.ny-toast--info {
+  --ny-toast-accent: var(--ny-info);
+}
+
+.ny-toast--success {
+  --ny-toast-accent: var(--ny-success);
+}
+
+.ny-toast--warning {
+  --ny-toast-accent: var(--ny-warning);
+}
+
+.ny-toast--danger {
+  --ny-toast-accent: var(--ny-danger);
+}
+
+.ny-toast__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-4);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ny-toast__title {
+  font-size: var(--ny-font-size-sm);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-toast__description {
+  font-size: var(--ny-font-size-xs);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text-muted);
+}
+
+.ny-toast__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ny-icon-size-lg);
+  height: var(--ny-icon-size-lg);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ny-radius-sm);
+  background: transparent;
+  color: var(--ny-text-subtle);
+  cursor: pointer;
+  transition:
+    color var(--ny-duration-fast) var(--ny-ease-standard),
+    background-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-toast__close:hover {
+  color: var(--ny-text);
+  background: var(--ny-surface-hover);
+}
+
+@keyframes ny-toast-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ny-space-8));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

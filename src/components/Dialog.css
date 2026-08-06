@@ -1,0 +1,148 @@
+/**
+ * Dialog — native `<dialog>` in the browser top layer.
+ *
+ * Nothing here touches z-index: a modal `<dialog>` is painted in the top layer,
+ * above every stacking context on the page, so there is no stack to win.
+ */
+
+.ny-dialog {
+  /* Undo the UA chrome: `border: solid`, `padding: 1em`, `background: Canvas`,
+     `color: CanvasText`. The last two do not inherit, so they must be restated
+     or the dialog renders as a white box in the dark theme. */
+  padding: 0;
+  border: 1px solid var(--ny-border);
+  border-radius: var(--ny-radius-xl);
+  background: var(--ny-surface-raised);
+  color: var(--ny-text);
+  box-shadow: var(--ny-shadow-lg);
+  width: calc(100% - var(--ny-gutter) * 2);
+  max-height: calc(100% - var(--ny-gutter) * 2);
+  overflow: hidden;
+}
+
+/* Scoped to `[open]` deliberately. An unscoped `display: flex` would beat the UA
+   `dialog:not([open]) { display: none }` — author styles outrank UA styles — and
+   every closed dialog on the page would render inline. */
+.ny-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: ny-dialog-enter var(--ny-duration-fast) var(--ny-ease-out);
+}
+
+.ny-dialog--sm {
+  max-width: 24rem;
+}
+
+.ny-dialog--md {
+  max-width: 32rem;
+}
+
+.ny-dialog--lg {
+  max-width: 44rem;
+}
+
+/* `--ny-overlay` is inherited from the originating element, which is how the
+   scrim follows the theme without a second token. */
+.ny-dialog::backdrop {
+  background: var(--ny-overlay);
+}
+
+.ny-dialog[open]::backdrop {
+  animation: ny-dialog-scrim-enter var(--ny-duration-fast) var(--ny-ease-out);
+}
+
+.ny-dialog__header {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ny-space-16);
+  padding: var(--ny-gutter) var(--ny-gutter) var(--ny-stack);
+  flex: none;
+}
+
+.ny-dialog__heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-4);
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.ny-dialog__title {
+  font-size: var(--ny-font-size-xl);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-tight);
+  letter-spacing: var(--ny-tracking-tight);
+  margin: 0;
+}
+
+.ny-dialog__description {
+  font-size: var(--ny-font-size-sm);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text-muted);
+  margin: 0;
+}
+
+.ny-dialog__close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--ny-control-height-sm);
+  height: var(--ny-control-height-sm);
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--ny-radius-md);
+  background: transparent;
+  color: var(--ny-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--ny-duration-fast) var(--ny-ease-standard),
+    background-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-dialog__close:hover {
+  color: var(--ny-text);
+  background: var(--ny-surface-hover);
+}
+
+/* The only scrolling region — the header and footer stay put. */
+.ny-dialog__content {
+  padding: 0 var(--ny-gutter) var(--ny-gutter);
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-normal);
+}
+
+.ny-dialog__footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--ny-space-8);
+  flex-wrap: wrap;
+  padding: var(--ny-inset) var(--ny-gutter);
+  border-top: 1px solid var(--ny-border);
+  background: var(--ny-surface-sunken);
+  flex: none;
+}
+
+@keyframes ny-dialog-enter {
+  from {
+    opacity: 0;
+    transform: translateY(var(--ny-space-8)) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ny-dialog-scrim-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

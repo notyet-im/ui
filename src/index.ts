@@ -69,6 +69,18 @@ export type { RadioGroupOption, RadioGroupProps, RadioProps } from './components
 export { Switch } from './components/Switch'
 export type { SwitchProps } from './components/Switch'
 
+/* Overlays ---------------------------------------------------------------- */
+/* All four render in the browser top layer via `<dialog>` and the `popover`
+   attribute, so none of them participate in the `--ny-z-*` stack. */
+export { Dialog } from './components/Dialog'
+export type { DialogProps } from './components/Dialog'
+export { Popover } from './components/Popover'
+export type { PopoverProps } from './components/Popover'
+export { Tooltip } from './components/Tooltip'
+export type { TooltipProps } from './components/Tooltip'
+export { Toast, ToastViewport } from './components/Toast'
+export type { ToastProps, ToastViewportProps } from './components/Toast'
+
 /* Feedback ---------------------------------------------------------------- */
 export { Alert } from './components/Alert'
 export type { AlertProps } from './components/Alert'

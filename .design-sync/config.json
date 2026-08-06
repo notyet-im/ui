@@ -21,6 +21,21 @@
     },
     "Sparkline": {
       "cardMode": "column"
+    },
+    "Dialog": {
+      "cardMode": "single"
+    },
+    "Popover": {
+      "cardMode": "single"
+    },
+    "Tooltip": {
+      "cardMode": "single"
+    },
+    "Toast": {
+      "cardMode": "single"
+    },
+    "Table": {
+      "cardMode": "column"
     }
   }
 }
