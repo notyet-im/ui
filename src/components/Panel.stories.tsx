@@ -41,8 +41,8 @@ export const InlineHeading: Story = {
         subtitle="cumulative net flow path over 15 days · click to focus"
       />
       <div style={{ fontSize: 'var(--cf-text-base)' }}>
-        The inline variant pushes the subtitle to the far edge — for wide panels where a stacked
-        heading would waste a line.
+        The inline variant pushes the subtitle to the far edge — for wide panels where a stacked heading would
+        waste a line.
       </div>
     </Panel>
   ),

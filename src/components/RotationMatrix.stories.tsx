@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { RotationMatrix } from './HeatGrid'
-import { Panel } from './Panel'
-import { PanelHeading } from './Panel'
-import { buildEdges, regionAggregates } from '../tracker/model'
 import { REGION_CODES } from '../tracker/data'
+import { buildEdges, regionAggregates } from '../tracker/model'
+import { RotationMatrix } from './HeatGrid'
+import { Panel, PanelHeading } from './Panel'
 
 const meta = {
   title: 'Data display/RotationMatrix',

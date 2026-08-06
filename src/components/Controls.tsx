@@ -36,7 +36,11 @@ export interface GhostButtonProps {
 /** Low-emphasis inline action — "clear", "reset" and friends. */
 export function GhostButton({ onClick, children, className }: GhostButtonProps) {
   return (
-    <button type="button" onClick={onClick} className={['cf-ghost-button', className].filter(Boolean).join(' ')}>
+    <button
+      type="button"
+      onClick={onClick}
+      className={['cf-ghost-button', className].filter(Boolean).join(' ')}
+    >
       {children}
     </button>
   )
@@ -109,7 +113,10 @@ export interface EyebrowProps {
 /** Small uppercase monospace label. The system's quietest text role. */
 export function Eyebrow({ variant = 'label', children, className, style }: EyebrowProps) {
   return (
-    <div className={['cf-eyebrow', `cf-eyebrow--${variant}`, className].filter(Boolean).join(' ')} style={style}>
+    <div
+      className={['cf-eyebrow', `cf-eyebrow--${variant}`, className].filter(Boolean).join(' ')}
+      style={style}
+    >
       {children}
     </div>
   )
@@ -134,6 +141,7 @@ export function Legend({ items, note, className }: LegendProps) {
   return (
     <div className={['cf-legend', className].filter(Boolean).join(' ')}>
       {items.map((item, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static non-reordering list; LegendItem has no id, label is a ReactNode, colours are not unique
         <span key={i} className="cf-legend__item">
           <span className="cf-legend__swatch" style={{ background: item.color }} />
           {item.label}

@@ -1,5 +1,5 @@
-import { IconButton } from './Controls'
 import type { ThemeName } from '../tokens'
+import { IconButton } from './Controls'
 
 export interface ThemeToggleProps {
   theme: ThemeName

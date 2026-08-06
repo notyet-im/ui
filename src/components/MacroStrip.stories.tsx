@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { MacroStrip, StatTile } from './MacroStrip'
 import { walkSeries } from '../lib/series'
+import { MacroStrip, StatTile } from './MacroStrip'
 
 const meta = {
   title: 'Data display/MacroStrip',
@@ -46,7 +46,13 @@ export const Default: Story = {
 export const SingleTile: Story = {
   render: () => (
     <MacroStrip style={{ maxWidth: 260 }}>
-      <StatTile label="USD/JPY" value="145.9" change="+0.5%" changeValue={0.5} trend={walkSeries('USD/JPY', 14, 0.5)} />
+      <StatTile
+        label="USD/JPY"
+        value="145.9"
+        change="+0.5%"
+        changeValue={0.5}
+        trend={walkSeries('USD/JPY', 14, 0.5)}
+      />
     </MacroStrip>
   ),
 }

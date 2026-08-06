@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { MacroStrip, StatTile } from './MacroStrip'
 import { walkSeries } from '../lib/series'
+import { MacroStrip, StatTile } from './MacroStrip'
 
 const meta = {
   title: 'Data display/StatTile',

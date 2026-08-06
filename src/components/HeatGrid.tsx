@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react'
-import { heatStyle } from '../lib/heat'
 import { formatBillions } from '../lib/format'
+import { heatStyle } from '../lib/heat'
 import './HeatGrid.css'
 
 export interface HeatGridRow {
@@ -64,7 +64,8 @@ export function HeatGrid({
   const resolvedMax =
     max ??
     rows.reduce(
-      (acc, row) => columns.reduce((inner, column) => Math.max(inner, Math.abs(value(row.key, column.key))), acc),
+      (acc, row) =>
+        columns.reduce((inner, column) => Math.max(inner, Math.abs(value(row.key, column.key))), acc),
       0,
     )
 

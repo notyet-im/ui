@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { flowColor } from '../tokens'
 import { Eyebrow } from './Controls'
 import { Sparkline } from './Sparkline'
-import { flowColor } from '../tokens'
 import './MacroStrip.css'
 
 export interface StatTileProps {
@@ -34,7 +34,14 @@ export function StatTile({ label, value, change, changeValue = 0, trend, classNa
         </div>
       </div>
       {trend && trend.length > 1 && (
-        <Sparkline values={trend} color={accent} width={60} height={24} pad={3} className="cf-stat-tile__spark" />
+        <Sparkline
+          values={trend}
+          color={accent}
+          width={60}
+          height={24}
+          pad={3}
+          className="cf-stat-tile__spark"
+        />
       )}
     </div>
   )

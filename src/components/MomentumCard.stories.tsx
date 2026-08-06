@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { MomentumCard } from './Details'
-import { walkSeries } from '../lib/series'
 import { formatFlow } from '../lib/format'
+import { walkSeries } from '../lib/series'
+import { MomentumCard } from './Details'
 
 const meta = {
   title: 'Data display/MomentumCard',

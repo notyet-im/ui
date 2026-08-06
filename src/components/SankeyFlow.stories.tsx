@@ -1,9 +1,9 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { SankeyFlow } from './SankeyFlow'
-import { Panel } from './Panel'
-import { buildEdges, makeLabeller } from '../tracker/model'
+import { useState } from 'react'
 import { LOCALES } from '../tracker/i18n'
+import { buildEdges, makeLabeller } from '../tracker/model'
+import { Panel } from './Panel'
+import { SankeyFlow } from './SankeyFlow'
 
 const meta = {
   title: 'Charts/SankeyFlow',

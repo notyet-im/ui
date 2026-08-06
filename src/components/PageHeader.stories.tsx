@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
+import type { ThemeName } from '../tokens'
+import { Select } from './Controls'
 import { PageHeader } from './PageHeader'
 import { SegmentedControl } from './SegmentedControl'
-import { Select } from './Controls'
 import { ThemeToggle } from './ThemeToggle'
-import type { ThemeName } from '../tokens'
 
 const meta = {
   title: 'Layout/PageHeader',

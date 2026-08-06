@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Legend } from './Controls'
 import { flowColors } from '../tokens'
+import { Legend } from './Controls'
 
 const meta = {
   title: 'Controls/Legend',

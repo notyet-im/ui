@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { HeatGrid } from './HeatGrid'
-import { Panel } from './Panel'
-import { buildEdges, bucketNets } from '../tracker/model'
+import { useState } from 'react'
 import { REGION_CODES, SECTOR_KEYS } from '../tracker/data'
 import { LOCALES } from '../tracker/i18n'
+import { bucketNets, buildEdges } from '../tracker/model'
+import { HeatGrid } from './HeatGrid'
+import { Panel } from './Panel'
 
 const meta = {
   title: 'Data display/HeatGrid',

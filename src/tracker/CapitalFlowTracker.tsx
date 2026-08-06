@@ -1,8 +1,11 @@
 import { useCallback, useMemo, useState } from 'react'
+import type { ThemeName } from '..'
 import {
   BreakdownBar,
   DataRow,
   Eyebrow,
+  flowColors,
+  formatFlow,
   GhostButton,
   HeatGrid,
   Legend,
@@ -22,21 +25,11 @@ import {
   Tabs,
   ThemeProvider,
   ThemeToggle,
-  flowColors,
-  formatFlow,
   useEscapeKey,
   useMeasure,
 } from '..'
-import type { ThemeName } from '..'
-import {
-  LANG_KEYS,
-  METRIC_KEYS,
-  RANGE_KEYS,
-  REGION_CODES,
-  SECTOR_KEYS,
-  VIEW_KEYS,
-} from './data'
 import type { BucketKey, LangKey, MetricKey, RangeKey, ViewKey } from './data'
+import { LANG_KEYS, METRIC_KEYS, RANGE_KEYS, REGION_CODES, SECTOR_KEYS, VIEW_KEYS } from './data'
 import { LOCALES, WHY } from './i18n'
 import {
   bucketNets,
@@ -289,9 +282,7 @@ export function CapitalFlowTracker({
             <div className="cft-detail__head">
               <div className="cft-detail__head-row">
                 <Eyebrow>{ui.selected}</Eyebrow>
-                {selected != null && (
-                  <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>
-                )}
+                {selected != null && <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>}
               </div>
               <div className="cft-detail__title">{detail.title}</div>
               <div className="cft-detail__figures">
@@ -374,10 +365,7 @@ export function CapitalFlowTracker({
           style={{ gridTemplateColumns: narrow ? 'minmax(0,1fr)' : '1.05fr .95fr 1.15fr' }}
         >
           <Panel column>
-            <PanelHeading
-              title={ui.tickerTitle}
-              subtitle={`${ui.tickerSub} ${locale.rlab[range]}`}
-            />
+            <PanelHeading title={ui.tickerTitle} subtitle={`${ui.tickerSub} ${locale.rlab[range]}`} />
             <div className="cft-ticker-grid">
               <div className="cft-ticker-column">
                 <Eyebrow variant="tile" style={{ color: flowColors.inflow }}>

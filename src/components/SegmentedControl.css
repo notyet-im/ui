@@ -14,14 +14,16 @@
   font-weight: 500;
   background: transparent;
   color: var(--cf-dim);
-  transition: background var(--cf-duration-fade), color var(--cf-duration-fade);
+  transition:
+    background var(--cf-duration-fade),
+    color var(--cf-duration-fade);
 }
 
-.cf-segmented__item:hover:not([aria-checked='true']) {
+.cf-segmented__item:hover:not([aria-checked="true"]) {
   color: var(--cf-text);
 }
 
-.cf-segmented__item[aria-checked='true'] {
+.cf-segmented__item[aria-checked="true"] {
   background: var(--cf-text);
   color: var(--cf-bg);
 }

@@ -58,7 +58,15 @@ export interface Locale {
 
 export const LOCALES: Record<LangKey, Locale> = {
   en: {
-    reg: { US: 'United States', EU: 'Europe', JP: 'Japan', KR: 'Korea', TW: 'Taiwan', HK: 'Hong Kong', SG: 'Singapore' },
+    reg: {
+      US: 'United States',
+      EU: 'Europe',
+      JP: 'Japan',
+      KR: 'Korea',
+      TW: 'Taiwan',
+      HK: 'Hong Kong',
+      SG: 'Singapore',
+    },
     sec: {
       SEMI: 'Semiconductors',
       TECH: 'Tech & Internet',

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
 import type { RefObject } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export interface Measurements {
   /** Measured content width of the observed element, in CSS pixels. 0 until first measure. */

@@ -8,7 +8,7 @@
  */
 
 :root,
-[data-theme='dark'] {
+[data-theme="dark"] {
   color-scheme: dark;
 
   /* Surfaces */
@@ -23,7 +23,7 @@
   --cf-dim-2: #5f6672;
 }
 
-[data-theme='light'] {
+[data-theme="light"] {
   color-scheme: light;
 
   --cf-bg: #f7f6f3;
@@ -43,8 +43,8 @@
   --cf-neutral: #7f8a99;
 
   /* Typography */
-  --cf-font-sans: 'IBM Plex Sans', 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', Helvetica, sans-serif;
-  --cf-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --cf-font-sans: "IBM Plex Sans", "Noto Sans SC", "Noto Sans JP", "Noto Sans KR", Helvetica, sans-serif;
+  --cf-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --cf-text-micro: 10.5px;
   --cf-text-tiny: 11px;

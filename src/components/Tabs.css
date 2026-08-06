@@ -14,14 +14,16 @@
   font-weight: 500;
   color: var(--cf-dim);
   border-bottom: 2px solid transparent;
-  transition: color var(--cf-duration-fade), border-color var(--cf-duration-fade);
+  transition:
+    color var(--cf-duration-fade),
+    border-color var(--cf-duration-fade);
 }
 
 .cf-tabs__tab:hover {
   color: var(--cf-text);
 }
 
-.cf-tabs__tab[aria-selected='true'] {
+.cf-tabs__tab[aria-selected="true"] {
   color: var(--cf-text);
   border-bottom-color: var(--cf-text);
 }

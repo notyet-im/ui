@@ -43,12 +43,11 @@ export const Feed: Story = {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <NarrativeItem {...args} />
         <NarrativeItem title="SG · Property → HK · Financials" value="$2.0B" tone={-1}>
-          Singapore REIT positions were cut on funding costs; proceeds landed in Hong Kong
-          financials as HIBOR eased.
+          Singapore REIT positions were cut on funding costs; proceeds landed in Hong Kong financials as HIBOR
+          eased.
         </NarrativeItem>
         <NarrativeItem title="US · Tech & Internet → JP · Industrials" value="$1.7B" tone={1}>
-          Profit-taking in US megacap software funded a rotation into Japanese automation and
-          capital goods.
+          Profit-taking in US megacap software funded a rotation into Japanese automation and capital goods.
         </NarrativeItem>
       </div>
     </Panel>

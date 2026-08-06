@@ -1,10 +1,10 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { RotationRing } from './RotationRing'
-import { Panel } from './Panel'
-import { buildEdges, regionAggregates } from '../tracker/model'
+import { useState } from 'react'
 import { REGION_CODES } from '../tracker/data'
 import { LOCALES } from '../tracker/i18n'
+import { buildEdges, regionAggregates } from '../tracker/model'
+import { Panel } from './Panel'
+import { RotationRing } from './RotationRing'
 
 const meta = {
   title: 'Charts/RotationRing',

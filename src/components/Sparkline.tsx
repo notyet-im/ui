@@ -62,7 +62,14 @@ export function Sparkline({
     >
       {area && <path d={path.area} fill={stroke} opacity={areaOpacity} />}
       {baseline && (
-        <line x1="0" y1={path.zeroY} x2={width} y2={path.zeroY} stroke="var(--cf-line)" strokeDasharray="3 3" />
+        <line
+          x1="0"
+          y1={path.zeroY}
+          x2={width}
+          y2={path.zeroY}
+          stroke="var(--cf-line)"
+          strokeDasharray="3 3"
+        />
       )}
       <path d={path.line} fill="none" stroke={stroke} strokeWidth={strokeWidth} strokeLinejoin="round" />
     </svg>

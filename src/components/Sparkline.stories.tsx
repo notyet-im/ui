@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Sparkline } from './Sparkline'
 import { walkSeries } from '../lib/series'
 import { flowColors } from '../tokens'
+import { Sparkline } from './Sparkline'
 
 const meta = {
   title: 'Data display/Sparkline',

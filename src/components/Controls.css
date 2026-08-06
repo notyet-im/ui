@@ -12,7 +12,9 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  transition: color var(--cf-duration-fade), border-color var(--cf-duration-fade);
+  transition:
+    color var(--cf-duration-fade),
+    border-color var(--cf-duration-fade);
 }
 
 .cf-icon-button:hover {

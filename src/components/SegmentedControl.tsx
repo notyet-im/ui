@@ -31,7 +31,11 @@ export function SegmentedControl<T extends string>({
   className,
 }: SegmentedControlProps<T>) {
   return (
-    <div className={['cf-segmented', className].filter(Boolean).join(' ')} role="radiogroup" aria-label={label}>
+    <div
+      className={['cf-segmented', className].filter(Boolean).join(' ')}
+      role="radiogroup"
+      aria-label={label}
+    >
       {items.map((item) => (
         <button
           key={item.value}

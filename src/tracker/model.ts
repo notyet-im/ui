@@ -1,16 +1,8 @@
+import { formatFlow } from '../lib/format'
 import { hash, rnd } from '../lib/prng'
 import { walkSeries } from '../lib/series'
-import { formatFlow } from '../lib/format'
-import {
-  BASE_EDGES,
-  MACRO_ROWS,
-  RANGE_SCALE,
-  RANGE_SEED,
-  REGION_CODES,
-  SECTOR_KEYS,
-  TICKERS,
-} from './data'
 import type { BucketKey, MetricKey, RangeKey, RegionCode, SectorKey } from './data'
+import { BASE_EDGES, MACRO_ROWS, RANGE_SCALE, RANGE_SEED, REGION_CODES, SECTOR_KEYS, TICKERS } from './data'
 import type { Locale } from './i18n'
 
 export interface Edge {
@@ -172,8 +164,7 @@ export function selectionDetail(
   const matches = (key: BucketKey) => (isRegion ? key.split('|')[0] === region : key === selectedKey)
   const inbound = edges.filter((e) => matches(e.to))
   const outbound = edges.filter((e) => matches(e.from))
-  const net =
-    inbound.reduce((acc, e) => acc + e.value, 0) - outbound.reduce((acc, e) => acc + e.value, 0)
+  const net = inbound.reduce((acc, e) => acc + e.value, 0) - outbound.reduce((acc, e) => acc + e.value, 0)
 
   const breakdownNames = isRegion
     ? SECTOR_KEYS.map((key) => locale.sec[key])

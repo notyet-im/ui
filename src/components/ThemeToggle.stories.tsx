@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ThemeToggle } from './ThemeToggle'
+import { useState } from 'react'
 import type { ThemeName } from '../tokens'
+import { ThemeToggle } from './ThemeToggle'
 
 const meta = {
   title: 'Theme/ThemeToggle',

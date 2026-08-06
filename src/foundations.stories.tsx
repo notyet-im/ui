@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Panel } from './components/Panel'
 import { Eyebrow } from './components/Controls'
+import { Panel } from './components/Panel'
 import { flowColors } from './tokens'
 
 const meta = {
@@ -106,7 +106,14 @@ export const Typography: Story = {
         {TYPE_SCALE.map(([token, size, note]) => (
           <div key={token} style={{ display: 'flex', alignItems: 'baseline', gap: 16 }}>
             <span style={{ fontSize: `var(${token})`, fontWeight: 600, minWidth: 130 }}>{size}</span>
-            <span style={{ fontFamily: 'var(--cf-font-mono)', fontSize: 'var(--cf-text-xs)', color: 'var(--cf-dim)', minWidth: 150 }}>
+            <span
+              style={{
+                fontFamily: 'var(--cf-font-mono)',
+                fontSize: 'var(--cf-text-xs)',
+                color: 'var(--cf-dim)',
+                minWidth: 150,
+              }}
+            >
               {token}
             </span>
             <span style={{ fontSize: 'var(--cf-text-xs)', color: 'var(--cf-dim-2)' }}>{note}</span>
@@ -142,7 +149,13 @@ export const Radii: Story = {
                 borderRadius: `var(${token})`,
               }}
             />
-            <div style={{ fontFamily: 'var(--cf-font-mono)', fontSize: 'var(--cf-text-micro)', color: 'var(--cf-dim)' }}>
+            <div
+              style={{
+                fontFamily: 'var(--cf-font-mono)',
+                fontSize: 'var(--cf-text-micro)',
+                color: 'var(--cf-dim)',
+              }}
+            >
               {value}
             </div>
           </div>

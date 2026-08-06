@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { ringLayout } from '../lib/ring'
-import type { RingNodeInput, RingPairInput } from '../lib/ring'
 import { formatFlow } from '../lib/format'
-import { flowColors, flowColor } from '../tokens'
+import type { RingNodeInput, RingPairInput } from '../lib/ring'
+import { ringLayout } from '../lib/ring'
+import { flowColor, flowColors } from '../tokens'
 import './FlowChart.css'
 
 export interface RotationRingProps {
@@ -47,7 +47,9 @@ export function RotationRing({
 
   return (
     <div className={['cf-flow', className].filter(Boolean).join(' ')} style={{ height }}>
-      <svg width="100%" height={height} className="cf-flow__svg">
+      {/* Decorative: the accessible representation is the label buttons below,
+          which carry each node's name and value and are keyboard-reachable. */}
+      <svg width="100%" height={height} className="cf-flow__svg" aria-hidden="true">
         {layout.chords.map((chord) => {
           const unrelated = selectedId != null && chord.from !== selectedId && chord.to !== selectedId
           const color =
@@ -70,6 +72,7 @@ export function RotationRing({
           )
         })}
         {layout.nodes.map((node) => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: redundant mouse affordance inside an aria-hidden svg; the keyboard path is the label button
           <circle
             key={node.key}
             cx={node.x.toFixed(1)}
@@ -98,7 +101,10 @@ export function RotationRing({
           }}
         >
           <div className="cf-flow__label-name cf-flow__label-name--ring">{renderLabel(label.id)}</div>
-          <div className="cf-flow__label-value cf-flow__label-value--ring" style={{ color: flowColor(label.net) }}>
+          <div
+            className="cf-flow__label-value cf-flow__label-value--ring"
+            style={{ color: flowColor(label.net) }}
+          >
             {formatValue(label.net)}
           </div>
         </button>

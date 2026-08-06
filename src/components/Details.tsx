@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import { Sparkline } from './Sparkline'
 import { flowColor } from '../tokens'
+import { Sparkline } from './Sparkline'
 import './Details.css'
 
 /* Breakdown bar ----------------------------------------------------------- */
@@ -19,7 +19,14 @@ export interface BreakdownBarProps {
 }
 
 /** A labelled proportion bar, sized relative to its largest sibling. */
-export function BreakdownBar({ label, value, fraction, tone = 1, align = 'start', className }: BreakdownBarProps) {
+export function BreakdownBar({
+  label,
+  value,
+  fraction,
+  tone = 1,
+  align = 'start',
+  className,
+}: BreakdownBarProps) {
   const color = flowColor(tone)
   const width = `${(Math.max(0, Math.min(1, fraction)) * 100).toFixed(0)}%`
   return (
@@ -152,7 +159,17 @@ export function MomentumCard({ name, value, share, tone, trend, onClick, classNa
         </span>
         {share != null && <span className="cf-momentum__share">{share}</span>}
       </div>
-      <Sparkline values={trend} width={140} height={32} pad={4} color={color} area areaOpacity={0.13} strokeWidth={1.5} fluid />
+      <Sparkline
+        values={trend}
+        width={140}
+        height={32}
+        pad={4}
+        color={color}
+        area
+        areaOpacity={0.13}
+        strokeWidth={1.5}
+        fluid
+      />
     </button>
   )
 }

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { flowColors } from '../tokens'
 import { DataRow } from './Details'
 import { Panel } from './Panel'
-import { flowColors } from '../tokens'
 
 const meta = {
   title: 'Data display/DataRow',
@@ -57,9 +57,30 @@ export const TickerList: Story = {
   render: () => (
     <Panel style={{ maxWidth: 260 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 9 }}>
-        <DataRow layout="stacked" monoLabel label="9988.HK" caption="Alibaba" value="$2.1B" valueColor={flowColors.inflow} />
-        <DataRow layout="stacked" monoLabel label="0700.HK" caption="Tencent" value="$2.0B" valueColor={flowColors.inflow} />
-        <DataRow layout="stacked" monoLabel label="3690.HK" caption="Meituan" value="$1.3B" valueColor={flowColors.inflow} />
+        <DataRow
+          layout="stacked"
+          monoLabel
+          label="9988.HK"
+          caption="Alibaba"
+          value="$2.1B"
+          valueColor={flowColors.inflow}
+        />
+        <DataRow
+          layout="stacked"
+          monoLabel
+          label="0700.HK"
+          caption="Tencent"
+          value="$2.0B"
+          valueColor={flowColors.inflow}
+        />
+        <DataRow
+          layout="stacked"
+          monoLabel
+          label="3690.HK"
+          caption="Meituan"
+          value="$1.3B"
+          valueColor={flowColors.inflow}
+        />
       </div>
     </Panel>
   ),

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { formatFlow } from '../lib/format'
 import { BreakdownBar } from './Details'
 import { Panel } from './Panel'
-import { formatFlow } from '../lib/format'
 
 const meta = {
   title: 'Data display/BreakdownBar',

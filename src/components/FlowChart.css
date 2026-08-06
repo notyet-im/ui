@@ -9,7 +9,9 @@
 }
 
 .cf-flow__ribbon {
-  transition: stroke-width var(--cf-duration-flow) var(--cf-ease), opacity var(--cf-duration-fade);
+  transition:
+    stroke-width var(--cf-duration-flow) var(--cf-ease),
+    opacity var(--cf-duration-fade);
 }
 
 .cf-flow__node {
@@ -29,13 +31,14 @@
 .cf-flow__label {
   position: absolute;
   cursor: pointer;
-  line-height: 1.28;
   overflow-wrap: break-word;
   border: 0;
   background: none;
   padding: 0;
   margin: 0;
+  /* `font` is a shorthand and resets line-height — it must precede it. */
   font: inherit;
+  line-height: 1.28;
   color: inherit;
 }
 

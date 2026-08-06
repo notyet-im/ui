@@ -7,7 +7,7 @@ const preview: Preview = {
   parameters: {
     controls: { matchers: { color: /(background|color)$/i } },
     // The DS paints its own background; Storybook's would fight it.
-    backgrounds: { disable: true },
+    backgrounds: { disabled: true },
   },
   globalTypes: {
     theme: {

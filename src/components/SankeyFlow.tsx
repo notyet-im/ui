@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { sankeyLayout } from '../lib/sankey'
-import type { FlowLink } from '../lib/sankey'
 import { formatFlow } from '../lib/format'
+import type { FlowLink } from '../lib/sankey'
+import { sankeyLayout } from '../lib/sankey'
 import { flowColors } from '../tokens'
 import './FlowChart.css'
 
@@ -60,7 +60,9 @@ export function SankeyFlow({
 
   return (
     <div className={['cf-flow', className].filter(Boolean).join(' ')} style={{ height }}>
-      <svg width="100%" height={height} className="cf-flow__svg">
+      {/* Decorative: the accessible representation is the label buttons below,
+          which carry each node's name and value and are keyboard-reachable. */}
+      <svg width="100%" height={height} className="cf-flow__svg" aria-hidden="true">
         {layout.ribbons.map((ribbon) => {
           const unrelated = selectedId != null && ribbon.from !== selectedId && ribbon.to !== selectedId
           const color =
@@ -82,6 +84,7 @@ export function SankeyFlow({
           )
         })}
         {layout.nodes.map((node) => (
+          // biome-ignore lint/a11y/noStaticElementInteractions: redundant mouse affordance inside an aria-hidden svg; the keyboard path is the label button
           <rect
             key={node.key}
             x={node.x}

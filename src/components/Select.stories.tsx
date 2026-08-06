@@ -1,5 +1,5 @@
-import { useState } from 'react'
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { useState } from 'react'
 import { Select } from './Controls'
 
 const meta = {
@@ -39,15 +39,7 @@ const CURRENCIES = [
   { value: 'jpy', label: 'JPY' },
 ]
 
-function Example({
-  options,
-  initial,
-  label,
-}: {
-  options: typeof LANGUAGES
-  initial: string
-  label: string
-}) {
+function Example({ options, initial, label }: { options: typeof LANGUAGES; initial: string; label: string }) {
   const [value, setValue] = useState(initial)
   return <Select label={label} value={value} onChange={setValue} options={options} />
 }
