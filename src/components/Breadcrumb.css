@@ -1,0 +1,55 @@
+.ny-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ny-space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ny-font-size-sm);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--ny-space-8);
+  min-width: 0;
+}
+
+/**
+ * Two classes deep on purpose. `base.css` styles every `.ny-root a` in the
+ * accent, at specificity (0,1,1); a single class here would lose to it and the
+ * whole trail would come out teal. Ancestor links are supporting text — the
+ * current page is the one that should read loudest.
+ */
+.ny-breadcrumb .ny-breadcrumb__link {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--ny-text-muted);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: var(--ny-font-weight-regular);
+  line-height: inherit;
+  text-decoration: none;
+  transition: color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-breadcrumb .ny-breadcrumb__link:hover {
+  color: var(--ny-text);
+  text-decoration: underline;
+}
+
+.ny-breadcrumb__current {
+  min-width: 0;
+  color: var(--ny-text);
+  font-weight: var(--ny-font-weight-medium);
+}
+
+.ny-breadcrumb__separator {
+  color: var(--ny-text-subtle);
+  user-select: none;
+}

@@ -1,0 +1,43 @@
+/* Field -------------------------------------------------------------------- */
+
+.ny-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-4);
+}
+
+/* Label -------------------------------------------------------------------- */
+
+.ny-label {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--ny-space-2);
+  color: var(--ny-text);
+  font-size: var(--ny-font-size-xs);
+  font-weight: var(--ny-font-weight-medium);
+  line-height: var(--ny-line-height-snug);
+  /* Hug the text — a stretched label makes the whole row a click target for a
+     control that may only occupy part of it. */
+  align-self: flex-start;
+}
+
+.ny-label__required {
+  color: var(--ny-danger-text);
+}
+
+/* Help and error text ------------------------------------------------------ */
+
+.ny-help-text,
+.ny-error-text {
+  margin: 0;
+  font-size: var(--ny-font-size-xs);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-help-text {
+  color: var(--ny-text-muted);
+}
+
+.ny-error-text {
+  color: var(--ny-danger-text);
+}

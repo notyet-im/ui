@@ -1,0 +1,63 @@
+/**
+ * Avatar.
+ *
+ * The frame owns the size, the radius and the fallback surface; both the image
+ * and the initials fill it, so the two states are the same shape to the pixel.
+ */
+
+.ny-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  overflow: hidden;
+  background: var(--ny-surface-sunken);
+  border: 1px solid var(--ny-border);
+  color: var(--ny-text);
+  font-family: var(--ny-font-sans);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-tight);
+  user-select: none;
+}
+
+.ny-avatar--circle {
+  border-radius: var(--ny-radius-full);
+}
+
+.ny-avatar--square {
+  border-radius: var(--ny-radius-md);
+}
+
+.ny-avatar--sm {
+  width: var(--ny-control-height-sm);
+  height: var(--ny-control-height-sm);
+  font-size: var(--ny-font-size-2xs);
+}
+
+.ny-avatar--md {
+  width: var(--ny-control-height-md);
+  height: var(--ny-control-height-md);
+  font-size: var(--ny-font-size-xs);
+}
+
+.ny-avatar--lg {
+  width: var(--ny-control-height-lg);
+  height: var(--ny-control-height-lg);
+  font-size: var(--ny-font-size-md);
+}
+
+.ny-avatar__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.ny-avatar__initials {
+  /* Tracking opens the pair up slightly — two capitals at 11px otherwise read as
+     one glyph at avatar size. */
+  letter-spacing: var(--ny-tracking-wide);
+  /* Compensates for the tracking added after the last letter, which would
+     otherwise push the pair off-centre. */
+  text-indent: var(--ny-tracking-wide);
+}

@@ -1,0 +1,184 @@
+/**
+ * Type. Every rule here is a variant class, because the system has no composite
+ * text tokens: a `font` shorthand custom property silently resets line-height,
+ * and a composite cannot be partially overridden. The size modifiers are where
+ * font-size and line-height are bound together instead.
+ *
+ * `VisuallyHidden` has no rules of its own — it renders `.ny-visually-hidden`
+ * from `styles/base.css`, which is the single definition of that clip.
+ */
+
+/* Text -------------------------------------------------------------------- */
+
+/* Only the reset. `p` and `label` arrive with UA margins that would otherwise
+   leak into every layout that uses a spacing token for its rhythm. */
+.ny-text {
+  margin: 0;
+}
+
+/* Sizes. The dense steps take a snug line-height — at 11-12px, 1.5 opens gaps
+   wide enough to break a caption away from what it captions. */
+.ny-text--size-2xs {
+  font-size: var(--ny-font-size-2xs);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-text--size-xs {
+  font-size: var(--ny-font-size-xs);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-text--size-sm {
+  font-size: var(--ny-font-size-sm);
+  line-height: var(--ny-line-height-normal);
+}
+
+.ny-text--size-md {
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-normal);
+}
+
+.ny-text--size-lg {
+  font-size: var(--ny-font-size-lg);
+  line-height: var(--ny-line-height-normal);
+}
+
+.ny-text--weight-regular {
+  font-weight: var(--ny-font-weight-regular);
+}
+
+.ny-text--weight-medium {
+  font-weight: var(--ny-font-weight-medium);
+}
+
+.ny-text--weight-semibold {
+  font-weight: var(--ny-font-weight-semibold);
+}
+
+.ny-text--tone-default {
+  color: var(--ny-text);
+}
+
+.ny-text--tone-muted {
+  color: var(--ny-text-muted);
+}
+
+.ny-text--tone-subtle {
+  color: var(--ny-text-subtle);
+}
+
+.ny-text--tone-positive {
+  color: var(--ny-positive);
+}
+
+.ny-text--tone-negative {
+  color: var(--ny-negative);
+}
+
+.ny-text--tone-accent {
+  color: var(--ny-accent);
+}
+
+.ny-text--align-start {
+  text-align: start;
+}
+
+.ny-text--align-center {
+  text-align: center;
+}
+
+.ny-text--align-end {
+  text-align: end;
+}
+
+/* `tabular-nums` as well as the face: the numeric font is the mono stack, but
+   the fallbacks in it are not all tabular by default. */
+.ny-text--numeric {
+  font-family: var(--ny-font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+/* `display: block` because the default `span` cannot clip as an inline box.
+   `min-width: 0` only helps when this element is itself the flex child — a
+   truncating text inside a flex parent still needs `min-width: 0` there. */
+.ny-text--truncate {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* Heading ----------------------------------------------------------------- */
+
+/* `text-wrap: balance` is a progressive enhancement — where it is unsupported
+   the heading simply wraps normally. It is scoped to headings on purpose: the
+   balancer is capped at a few lines and is wrong for a paragraph. */
+.ny-heading {
+  margin: 0;
+  font-weight: var(--ny-font-weight-semibold);
+  text-wrap: balance;
+}
+
+/* Sizes. Above `xl` the line-height tightens and the tracking pulls in: at
+   display sizes the default spacing reads as loose, not as airy. */
+.ny-heading--size-lg {
+  font-size: var(--ny-font-size-lg);
+  line-height: var(--ny-line-height-snug);
+  letter-spacing: var(--ny-tracking-normal);
+}
+
+.ny-heading--size-xl {
+  font-size: var(--ny-font-size-xl);
+  line-height: var(--ny-line-height-snug);
+  letter-spacing: var(--ny-tracking-normal);
+}
+
+.ny-heading--size-2xl {
+  font-size: var(--ny-font-size-2xl);
+  line-height: var(--ny-line-height-tight);
+  letter-spacing: var(--ny-tracking-tight);
+}
+
+.ny-heading--size-3xl {
+  font-size: var(--ny-font-size-3xl);
+  line-height: var(--ny-line-height-tight);
+  letter-spacing: var(--ny-tracking-tight);
+}
+
+.ny-heading--size-4xl {
+  font-size: var(--ny-font-size-4xl);
+  line-height: var(--ny-line-height-tight);
+  letter-spacing: var(--ny-tracking-tight);
+}
+
+.ny-heading--tone-default {
+  color: var(--ny-text);
+}
+
+.ny-heading--tone-muted {
+  color: var(--ny-text-muted);
+}
+
+.ny-heading--tone-subtle {
+  color: var(--ny-text-subtle);
+}
+
+.ny-heading--tone-positive {
+  color: var(--ny-positive);
+}
+
+.ny-heading--tone-negative {
+  color: var(--ny-negative);
+}
+
+.ny-heading--tone-accent {
+  color: var(--ny-accent);
+}
+
+.ny-heading--truncate {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

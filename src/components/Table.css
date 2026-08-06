@@ -1,0 +1,208 @@
+/**
+ * Table.
+ *
+ * The root is a *container*, not just a wrapper. The stacked reflow at the
+ * bottom of this file is keyed to `@container`, so a table dropped into a
+ * narrow sidebar stacks on a 1440px screen, and a table on a full-width page
+ * keeps its columns even when the window is small. A viewport media query gets
+ * both of those backwards — that mismatch is the responsiveness bug this
+ * system is fixing, and this component is where it shows up worst.
+ */
+.ny-table {
+  --ny-table-cell-y: var(--ny-space-8);
+  --ny-table-cell-x: var(--ny-space-12);
+
+  container-type: inline-size;
+  width: 100%;
+  min-width: 0;
+  /* Above the reflow width a wide table scrolls rather than blowing out its
+     column. Below it, there is nothing left to scroll. */
+  overflow-x: auto;
+}
+
+.ny-table--compact {
+  --ny-table-cell-y: var(--ny-space-4);
+  --ny-table-cell-x: var(--ny-space-8);
+}
+
+.ny-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ny-font-size-sm);
+  color: var(--ny-text);
+}
+
+.ny-table__caption {
+  caption-side: top;
+  text-align: start;
+  padding-bottom: var(--ny-stack);
+  font-size: var(--ny-font-size-xs);
+  color: var(--ny-text-muted);
+}
+
+.ny-table__header-cell {
+  padding: var(--ny-table-cell-y) var(--ny-table-cell-x);
+  border-bottom: 1px solid var(--ny-border-strong);
+  font-size: var(--ny-font-size-xs);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text-muted);
+  white-space: nowrap;
+  vertical-align: bottom;
+}
+
+.ny-table__header-cell--start {
+  text-align: start;
+}
+
+.ny-table__header-cell--end {
+  text-align: end;
+}
+
+.ny-table__cell {
+  padding: var(--ny-table-cell-y) var(--ny-table-cell-x);
+  border-bottom: 1px solid var(--ny-border);
+  vertical-align: baseline;
+}
+
+.ny-table__row:last-child .ny-table__cell {
+  border-bottom: 0;
+}
+
+.ny-table__cell--start {
+  text-align: start;
+}
+
+.ny-table__cell--end {
+  text-align: end;
+}
+
+/* Tabular figures so digits line up column-wise. Non-negotiable for this DS. */
+.ny-table__cell--numeric {
+  font-family: var(--ny-font-numeric);
+  font-variant-numeric: tabular-nums;
+}
+
+.ny-table__empty {
+  padding: var(--ny-space-32) var(--ny-table-cell-x);
+  text-align: center;
+  color: var(--ny-text-muted);
+  border-bottom: 0;
+}
+
+/* Sorting ----------------------------------------------------------------- */
+
+.ny-table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ny-space-4);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  transition: color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-table__sort:hover {
+  color: var(--ny-text);
+}
+
+/* Right-aligned columns put the affordance on the inside edge, so the numbers
+   stay flush to the column rule. */
+.ny-table__header-cell--end .ny-table__sort {
+  flex-direction: row-reverse;
+}
+
+.ny-table__sort-icon {
+  font-size: var(--ny-font-size-2xs);
+  color: var(--ny-text-subtle);
+}
+
+/* State lives on the ARIA attribute — there is no modifier class to drift. */
+.ny-table__header-cell[aria-sort="ascending"],
+.ny-table__header-cell[aria-sort="descending"] {
+  color: var(--ny-text);
+}
+
+.ny-table__header-cell[aria-sort="ascending"] .ny-table__sort-icon,
+.ny-table__header-cell[aria-sort="descending"] .ny-table__sort-icon {
+  color: var(--ny-accent);
+}
+
+/* The label only exists for the stacked layout below. */
+.ny-table__label {
+  display: none;
+}
+
+/* Stacked reflow ---------------------------------------------------------- */
+
+/**
+ * Below 480px *of container*, each row becomes a label/value list.
+ *
+ * `<thead>` is hidden visually rather than with `display: none`, so the column
+ * headers stay in the accessibility tree and `<th scope="col">` keeps
+ * associating with the cells. The visible labels are the `aria-hidden` spans.
+ */
+@container (max-width: 480px) {
+  .ny-table__table,
+  .ny-table__body,
+  .ny-table__row,
+  .ny-table__cell {
+    display: block;
+    width: auto;
+  }
+
+  .ny-table__head {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .ny-table__row {
+    padding: var(--ny-space-8) var(--ny-space-0);
+    border-bottom: 1px solid var(--ny-border);
+  }
+
+  .ny-table__row:last-child {
+    border-bottom: 0;
+  }
+
+  .ny-table__cell {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--ny-space-16);
+    padding: var(--ny-space-4) var(--ny-table-cell-x);
+    border-bottom: 0;
+    text-align: start;
+  }
+
+  .ny-table__label {
+    display: block;
+    flex: none;
+    font-size: var(--ny-font-size-xs);
+    font-weight: var(--ny-font-weight-medium);
+    color: var(--ny-text-muted);
+    white-space: nowrap;
+  }
+
+  .ny-table__value {
+    min-width: 0;
+    text-align: end;
+  }
+
+  .ny-table__empty {
+    display: block;
+    padding: var(--ny-space-24) var(--ny-table-cell-x);
+    text-align: center;
+  }
+}

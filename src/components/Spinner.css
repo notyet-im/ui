@@ -1,0 +1,42 @@
+/**
+ * Spinner.
+ *
+ * The rotation is a plain `@keyframes`; the global `prefers-reduced-motion`
+ * block in `styles/base.css` already collapses every animation duration in the
+ * root, so this file needs no motion query of its own.
+ */
+
+.ny-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ny-spinner__ring {
+  display: block;
+  border: 2px solid var(--ny-border);
+  border-top-color: var(--ny-accent);
+  border-radius: var(--ny-radius-full);
+  animation: ny-spinner-spin var(--ny-duration-slow) linear infinite;
+}
+
+.ny-spinner--sm .ny-spinner__ring {
+  width: var(--ny-icon-size-sm);
+  height: var(--ny-icon-size-sm);
+}
+
+.ny-spinner--md .ny-spinner__ring {
+  width: var(--ny-icon-size-lg);
+  height: var(--ny-icon-size-lg);
+}
+
+.ny-spinner--lg .ny-spinner__ring {
+  width: var(--ny-control-height-md);
+  height: var(--ny-control-height-md);
+}
+
+@keyframes ny-spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

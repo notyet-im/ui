@@ -84,11 +84,11 @@ Driven from `TOKEN-MAP.md` as a table of decisions, with a hard assertion that n
 > release, so any existing artifact breaks on the JS side regardless — a CSS-only shim
 > buys nothing. Revisit only if someone reports hand-written CSS in a live artifact.
 
-## Phase 3 — Layout primitives + hooks (2 agents, parallel)
+## Phase 3 — Layout primitives + hooks
 
-- [ ] 3A `Layout.tsx`/`.css` — Container, Grid, GridItem, Stack (inline custom props + 4 media queries)
-- [ ] 3A `Text.tsx`/`.css` — Text, Heading, VisuallyHidden
-- [ ] 3B `src/hooks.ts` — `useControllableState`, `useRovingFocus`, `useAnchoredPosition` (then frozen)
+- [x] `src/hooks.ts` — `useControllableState`, `useRovingFocus`, `useAnchoredPosition` (**frozen**)
+- [ ] `Layout.tsx`/`.css` — Container, Grid, GridItem, Stack (inline custom props + 4 media queries)
+- [ ] `Text.tsx`/`.css` — Text, Heading, VisuallyHidden
 
 ## Phase 4 — Components (8 agents, concurrent)
 
@@ -102,9 +102,18 @@ New — quad each (`X.tsx` + `X.css` + `X.stories.tsx` + `X.test.tsx`):
 
 Retrofit — `disabled`, roving focus, aria wiring, `@container` reflow, 2-segment titles, tests:
 
-- [ ] 4R1 Panel, PanelHeading, PageHeader, MacroStrip, StatTile, DataRow, NarrativeItem
-- [ ] 4R2 SegmentedControl, Tabs, Select, IconButton, GhostButton, Eyebrow, Legend, ThemeToggle
-- [ ] 4R3 Sparkline, HeatGrid, RotationMatrix, BreakdownBar, MomentumCard, SankeyFlow, RotationRing
+- [x] **Roving focus + `disabled` on SegmentedControl and Tabs**, `panelId` wiring, 9 tests
+- [x] **All 20 existing stories retitled** to the two categories
+- [ ] Remaining retrofit (`@container` reflow where needed) — folded into Phase 5
+
+### Category placement (settled — do not relitigate)
+
+Rule: *Charts = the component's primary job is a geometric encoding of a data series.*
+
+- **Charts (6):** SankeyFlow, RotationRing, Sparkline, HeatGrid, RotationMatrix, BreakdownBar
+- **UI (everything else):** StatTile and MomentumCard embed a Sparkline but are KPI
+  tiles, so they are UI. MacroStrip is a container. Legend renders no encoding.
+  The `Theme/` and `Layout/` groups disappear entirely.
 
 ## Phase 5 — Two categories, integration, docs (serial)
 

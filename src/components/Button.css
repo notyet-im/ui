@@ -1,0 +1,163 @@
+/* Button ------------------------------------------------------------------ */
+
+.ny-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ny-space-8);
+  border: 1px solid transparent;
+  border-radius: var(--ny-radius-lg);
+  font-family: var(--ny-font-sans);
+  font-weight: var(--ny-font-weight-medium);
+  line-height: var(--ny-line-height-tight);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard),
+    color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-button--full {
+  display: flex;
+  width: 100%;
+}
+
+/* Sizes ------------------------------------------------------------------- */
+
+.ny-button--sm {
+  height: var(--ny-control-height-sm);
+  padding: 0 var(--ny-control-padding-x-sm);
+  font-size: var(--ny-font-size-xs);
+}
+
+.ny-button--md {
+  height: var(--ny-control-height-md);
+  padding: 0 var(--ny-control-padding-x-md);
+  font-size: var(--ny-font-size-sm);
+}
+
+.ny-button--lg {
+  height: var(--ny-control-height-lg);
+  padding: 0 var(--ny-control-padding-x-lg);
+  font-size: var(--ny-font-size-md);
+}
+
+/* Variants ---------------------------------------------------------------- */
+
+.ny-button--primary {
+  background: var(--ny-accent);
+  border-color: var(--ny-accent);
+  color: var(--ny-text-on-accent);
+}
+
+.ny-button--primary:hover:not(:disabled) {
+  background: var(--ny-accent-hover);
+  border-color: var(--ny-accent-hover);
+}
+
+.ny-button--primary:active:not(:disabled) {
+  background: var(--ny-accent-active);
+  border-color: var(--ny-accent-active);
+}
+
+.ny-button--secondary {
+  background: var(--ny-surface);
+  border-color: var(--ny-border);
+  color: var(--ny-text);
+}
+
+.ny-button--secondary:hover:not(:disabled) {
+  background: var(--ny-surface-hover);
+  border-color: var(--ny-border-strong);
+}
+
+.ny-button--secondary:active:not(:disabled) {
+  background: var(--ny-surface-active);
+}
+
+/* `--ny-text`, not `--ny-text-muted`: muted lands at 4.3:1 on light paper, which
+   is fine for a caption but not for the label of a thing you are meant to click. */
+.ny-button--ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--ny-text);
+}
+
+.ny-button--ghost:hover:not(:disabled) {
+  background: var(--ny-surface-hover);
+}
+
+.ny-button--ghost:active:not(:disabled) {
+  background: var(--ny-surface-active);
+}
+
+/**
+ * Tinted, not solid.
+ *
+ * A solid `--ny-danger` fill has no label colour that clears 4.5:1 in *both*
+ * themes — `--ny-text-inverse` flips with the theme, so one side always lands
+ * near 3.8:1, and there is no `--ny-text-on-danger` token to flip to. The
+ * `-subtle` / `-text` pair is built for exactly this, and the solid border keeps
+ * the button's weight next to `primary`.
+ */
+.ny-button--danger {
+  background: var(--ny-danger-subtle);
+  border-color: var(--ny-danger);
+  color: var(--ny-danger-text);
+}
+
+.ny-button--danger:hover:not(:disabled) {
+  border-color: var(--ny-danger-text);
+}
+
+.ny-button--danger:active:not(:disabled) {
+  background: var(--ny-surface-active);
+  border-color: var(--ny-danger-text);
+}
+
+/* Disabled ---------------------------------------------------------------- */
+
+/* base.css owns the cursor and the text colour; only the box is set here. */
+.ny-button:disabled {
+  background: var(--ny-surface-sunken);
+  border-color: var(--ny-border);
+}
+
+/* Icons and spinner -------------------------------------------------------- */
+
+.ny-button__icon {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+/* base.css flattens this to 0.01ms under prefers-reduced-motion. */
+.ny-button__spinner {
+  flex: none;
+  animation: ny-button-spin var(--ny-duration-slow) linear infinite;
+}
+
+.ny-button--sm .ny-button__icon > svg,
+.ny-button--sm .ny-button__spinner {
+  width: var(--ny-icon-size-sm);
+  height: var(--ny-icon-size-sm);
+}
+
+.ny-button--md .ny-button__icon > svg,
+.ny-button--md .ny-button__spinner {
+  width: var(--ny-icon-size-md);
+  height: var(--ny-icon-size-md);
+}
+
+.ny-button--lg .ny-button__icon > svg,
+.ny-button--lg .ny-button__spinner {
+  width: var(--ny-icon-size-lg);
+  height: var(--ny-icon-size-lg);
+}
+
+@keyframes ny-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

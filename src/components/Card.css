@@ -1,0 +1,69 @@
+/**
+ * Card — the composed, interactive sibling of Panel.
+ *
+ * The inset is carried on a local custom property rather than applied to the
+ * root, so `header` and `footer` can hold their dividers edge-to-edge while
+ * every slot still shares one padding value.
+ */
+.ny-card {
+  --ny-card-inset: var(--ny-inset);
+
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--ny-surface-raised);
+  border: 1px solid var(--ny-border);
+  border-radius: var(--ny-radius-xl);
+  color: var(--ny-text);
+}
+
+.ny-card--default {
+  --ny-card-inset: var(--ny-inset);
+}
+
+.ny-card--compact {
+  --ny-card-inset: var(--ny-inset-compact);
+}
+
+.ny-card--none {
+  --ny-card-inset: var(--ny-space-0);
+}
+
+.ny-card__header {
+  padding: var(--ny-card-inset);
+  border-bottom: 1px solid var(--ny-border);
+  font-size: var(--ny-font-size-md);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-card__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--ny-card-inset);
+}
+
+.ny-card__footer {
+  padding: var(--ny-card-inset);
+  border-top: 1px solid var(--ny-border);
+  font-size: var(--ny-font-size-xs);
+  color: var(--ny-text-muted);
+}
+
+/**
+ * The lift. `--ny-shadow-sm` is deliberately the smallest step: a card in a
+ * grid of cards is not an overlay, and md/lg read as one floating above the
+ * page rather than as one under the pointer.
+ */
+.ny-card--interactive {
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard),
+    box-shadow var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-card--interactive:hover {
+  background: var(--ny-surface-hover);
+  border-color: var(--ny-border-strong);
+  box-shadow: var(--ny-shadow-sm);
+}

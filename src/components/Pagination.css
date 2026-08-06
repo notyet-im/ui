@@ -1,0 +1,67 @@
+.ny-pagination__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ny-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ny-pagination__item {
+  display: flex;
+}
+
+/**
+ * Numeric font, so the buttons keep an even rhythm as the digits change and the
+ * control does not twitch while paging.
+ */
+.ny-pagination__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ny-control-height-sm);
+  height: var(--ny-control-height-sm);
+  padding: var(--ny-space-0) var(--ny-control-padding-x-sm);
+  border: 1px solid transparent;
+  border-radius: var(--ny-radius-sm);
+  background: none;
+  cursor: pointer;
+  color: var(--ny-text-muted);
+  font-family: var(--ny-font-numeric);
+  font-size: var(--ny-font-size-sm);
+  font-variant-numeric: tabular-nums;
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard),
+    color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-pagination__button:hover:not(:disabled) {
+  background: var(--ny-surface-hover);
+  color: var(--ny-text);
+}
+
+/* State from the ARIA attribute, so the marked page and the styled page cannot
+   drift apart. `base.css` owns the disabled colour — never opacity. */
+.ny-pagination__button[aria-current="page"] {
+  background: var(--ny-surface-selected);
+  border-color: var(--ny-accent);
+  color: var(--ny-text);
+}
+
+.ny-pagination__button:disabled {
+  background: none;
+  border-color: transparent;
+}
+
+.ny-pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--ny-control-height-sm);
+  height: var(--ny-control-height-sm);
+  color: var(--ny-text-subtle);
+  font-size: var(--ny-font-size-sm);
+  user-select: none;
+}

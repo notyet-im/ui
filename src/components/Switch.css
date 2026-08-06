@@ -1,0 +1,109 @@
+/**
+ * The label lives *inside* the button, so the whole row is the hit target and
+ * the button's own text content is its accessible name — no `for`/`id` pairing,
+ * and no click handler on a non-interactive element.
+ */
+.ny-switch {
+  --ny-switch-track-width: var(--ny-space-40);
+  --ny-switch-track-height: var(--ny-space-24);
+  --ny-switch-thumb-size: var(--ny-space-20);
+  --ny-switch-thumb-inset: var(--ny-space-2);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ny-space-8);
+  padding: var(--ny-space-0);
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text);
+  text-align: left;
+}
+
+.ny-switch--sm {
+  --ny-switch-track-width: var(--ny-space-32);
+  --ny-switch-track-height: var(--ny-space-20);
+  --ny-switch-thumb-size: var(--ny-space-16);
+
+  font-size: var(--ny-font-size-sm);
+}
+
+.ny-switch__track {
+  position: relative;
+  flex: none;
+  width: var(--ny-switch-track-width);
+  height: var(--ny-switch-track-height);
+  border: 1px solid var(--ny-border-strong);
+  border-radius: var(--ny-radius-full);
+  background: var(--ny-surface-sunken);
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-switch__thumb {
+  position: absolute;
+  top: var(--ny-switch-thumb-inset);
+  left: var(--ny-switch-thumb-inset);
+  width: var(--ny-switch-thumb-size);
+  height: var(--ny-switch-thumb-size);
+  border-radius: var(--ny-radius-full);
+  background: var(--ny-text-muted);
+  box-shadow: var(--ny-shadow-sm);
+  transition:
+    transform var(--ny-duration-fast) var(--ny-ease-standard),
+    background var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-switch:hover:not(:disabled) .ny-switch__track {
+  border-color: var(--ny-accent);
+  background: var(--ny-surface-hover);
+}
+
+/* State comes off the ARIA attribute that already carries it, never a
+   modifier class that could drift out of sync with what is announced. */
+.ny-switch[aria-checked="true"] .ny-switch__track {
+  background: var(--ny-accent);
+  border-color: var(--ny-accent);
+}
+
+.ny-switch[aria-checked="true"]:hover:not(:disabled) .ny-switch__track {
+  background: var(--ny-accent-hover);
+  border-color: var(--ny-accent-hover);
+}
+
+.ny-switch[aria-checked="true"]:active:not(:disabled) .ny-switch__track {
+  background: var(--ny-accent-active);
+  border-color: var(--ny-accent-active);
+}
+
+.ny-switch[aria-checked="true"] .ny-switch__thumb {
+  background: var(--ny-text-on-accent);
+  transform: translateX(
+    calc(var(--ny-switch-track-width) - var(--ny-switch-thumb-size) - var(--ny-switch-thumb-inset) * 2)
+  );
+}
+
+/* Disabled is a real colour change, never opacity — opacity compounds through
+   the thumb and destroys the contrast the palette was picked for. */
+.ny-switch:disabled .ny-switch__track {
+  background: var(--ny-surface-sunken);
+  border-color: var(--ny-border);
+}
+
+.ny-switch:disabled .ny-switch__thumb {
+  background: var(--ny-text-disabled);
+  box-shadow: var(--ny-shadow-none);
+}
+
+.ny-switch[aria-checked="true"]:disabled .ny-switch__track {
+  background: var(--ny-surface-active);
+  border-color: var(--ny-border-strong);
+}
+
+.ny-switch__label {
+  min-width: 0;
+}

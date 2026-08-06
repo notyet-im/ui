@@ -40,6 +40,16 @@
       "arrowParentheses": "always"
     }
   },
+  "overrides": [
+    {
+      // The barrel is grouped into banner-commented sections (Theme, Layout,
+      // Charts…) that mirror how the system is documented, and design-sync
+      // surfaces it to the design agent. Alphabetising it would delete that
+      // structure for no benefit — export order is meaningless to the compiler.
+      "includes": ["src/index.ts"],
+      "assist": { "actions": { "source": { "organizeImports": "off" } } }
+    }
+  ],
   "assist": {
     "enabled": true,
     "actions": {

@@ -1,0 +1,59 @@
+/**
+ * Skeleton.
+ *
+ * The shimmer is a two-stop sweep across a doubled background, so it needs no
+ * pseudo-element and no overflow clipping. The global `prefers-reduced-motion`
+ * rule in `styles/base.css` collapses the duration, leaving a flat placeholder.
+ */
+
+.ny-skeleton--rect,
+.ny-skeleton--circle,
+.ny-skeleton__line {
+  background-image: linear-gradient(
+    90deg,
+    var(--ny-surface-sunken) 25%,
+    var(--ny-surface-hover) 50%,
+    var(--ny-surface-sunken) 75%
+  );
+  background-size: 200% 100%;
+  animation: ny-skeleton-shimmer calc(var(--ny-duration-slow) * 3) linear infinite;
+}
+
+.ny-skeleton--text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-8);
+  width: 100%;
+}
+
+.ny-skeleton__line {
+  height: var(--ny-space-12);
+  border-radius: var(--ny-radius-sm);
+}
+
+/* The short last line is what makes a stack of bars read as a paragraph rather
+   than as a table. */
+.ny-skeleton__line--last {
+  width: 60%;
+}
+
+.ny-skeleton--rect {
+  width: 100%;
+  height: var(--ny-space-64);
+  border-radius: var(--ny-radius-md);
+}
+
+.ny-skeleton--circle {
+  width: var(--ny-control-height-md);
+  height: var(--ny-control-height-md);
+  border-radius: var(--ny-radius-full);
+}
+
+@keyframes ny-skeleton-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}

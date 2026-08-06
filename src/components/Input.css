@@ -1,0 +1,151 @@
+/* Input -------------------------------------------------------------------- */
+
+/**
+ * The group is layout only — no border, no background.
+ *
+ * The bordered box is the `<input>` itself, exactly as `.ny-select` does it, so
+ * the shared focus ring in base.css lands on the control's own edge instead of
+ * somewhere inside a wrapper's padding.
+ */
+.ny-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.ny-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: 100%;
+  border: 1px solid var(--ny-border);
+  border-radius: var(--ny-radius-lg);
+  background: var(--ny-surface-sunken);
+  color: var(--ny-text);
+  font-family: var(--ny-font-sans);
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-input::placeholder {
+  color: var(--ny-text-muted);
+}
+
+.ny-input--sm {
+  height: var(--ny-control-height-sm);
+  padding: 0 var(--ny-control-padding-x-sm);
+  font-size: var(--ny-font-size-xs);
+}
+
+.ny-input--md {
+  height: var(--ny-control-height-md);
+  padding: 0 var(--ny-control-padding-x-md);
+  font-size: var(--ny-font-size-sm);
+}
+
+.ny-input--lg {
+  height: var(--ny-control-height-lg);
+  padding: 0 var(--ny-control-padding-x-lg);
+  font-size: var(--ny-font-size-md);
+}
+
+/* After the size rules — these override one edge of the shorthand above. */
+.ny-input--with-prefix {
+  padding-left: var(--ny-space-32);
+}
+
+.ny-input--with-suffix {
+  padding-right: var(--ny-space-32);
+}
+
+.ny-input-group__affix {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  color: var(--ny-text-muted);
+  font-size: var(--ny-font-size-xs);
+  /* Clicks fall through to the control, so the affix never steals focus. */
+  pointer-events: none;
+}
+
+.ny-input-group__affix--start {
+  left: var(--ny-control-padding-x-md);
+}
+
+.ny-input-group__affix--end {
+  right: var(--ny-control-padding-x-md);
+}
+
+/* Textarea ----------------------------------------------------------------- */
+
+.ny-textarea {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--ny-border);
+  border-radius: var(--ny-radius-lg);
+  background: var(--ny-surface-sunken);
+  color: var(--ny-text);
+  font-family: var(--ny-font-sans);
+  line-height: var(--ny-line-height-normal);
+  resize: vertical;
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-textarea::placeholder {
+  color: var(--ny-text-muted);
+}
+
+.ny-textarea--sm {
+  padding: var(--ny-space-4) var(--ny-control-padding-x-sm);
+  font-size: var(--ny-font-size-xs);
+}
+
+.ny-textarea--md {
+  padding: var(--ny-space-8) var(--ny-control-padding-x-md);
+  font-size: var(--ny-font-size-sm);
+}
+
+.ny-textarea--lg {
+  padding: var(--ny-space-12) var(--ny-control-padding-x-lg);
+  font-size: var(--ny-font-size-md);
+}
+
+/* JS drives the height, so the drag handle would only fight it. */
+.ny-textarea--auto-grow {
+  resize: none;
+  overflow: hidden;
+}
+
+/* States ------------------------------------------------------------------- */
+
+.ny-input:hover:not(:disabled):not([readonly]),
+.ny-textarea:hover:not(:disabled):not([readonly]) {
+  border-color: var(--ny-border-strong);
+}
+
+/* Keyed off the ARIA attribute, not a modifier class: the attribute is what
+   assistive tech reads, so there is only one thing to get wrong. */
+.ny-input[aria-invalid="true"],
+.ny-textarea[aria-invalid="true"] {
+  border-color: var(--ny-danger);
+}
+
+.ny-input[readonly],
+.ny-textarea[readonly] {
+  background: var(--ny-bg);
+  cursor: default;
+}
+
+/**
+ * base.css owns the disabled text colour and the cursor; only the box is set
+ * here. The fill flattens toward the chrome in both themes — lighter on ink,
+ * darker on paper — so the control reads as inert rather than merely empty.
+ */
+.ny-input:disabled,
+.ny-textarea:disabled {
+  background: var(--ny-surface-hover);
+  border-color: var(--ny-border);
+}

@@ -1,0 +1,100 @@
+/**
+ * Alert.
+ *
+ * Same tone-triple mechanism as Badge: the tone block resolves fill/tint/ink and
+ * the structural rules read them, so tone is one declaration per tone.
+ */
+
+.ny-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ny-space-12);
+  padding: var(--ny-inset);
+  background: var(--ny-alert-tint);
+  border: 1px solid var(--ny-alert-fill);
+  border-radius: var(--ny-radius-lg);
+  color: var(--ny-text);
+  font-family: var(--ny-font-sans);
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-normal);
+}
+
+/* Tones ------------------------------------------------------------------- */
+
+.ny-alert--info {
+  --ny-alert-fill: var(--ny-info);
+  --ny-alert-tint: var(--ny-info-subtle);
+  --ny-alert-ink: var(--ny-info-text);
+}
+
+.ny-alert--success {
+  --ny-alert-fill: var(--ny-success);
+  --ny-alert-tint: var(--ny-success-subtle);
+  --ny-alert-ink: var(--ny-success-text);
+}
+
+.ny-alert--warning {
+  --ny-alert-fill: var(--ny-warning);
+  --ny-alert-tint: var(--ny-warning-subtle);
+  --ny-alert-ink: var(--ny-warning-text);
+}
+
+.ny-alert--danger {
+  --ny-alert-fill: var(--ny-danger);
+  --ny-alert-tint: var(--ny-danger-subtle);
+  --ny-alert-ink: var(--ny-danger-text);
+}
+
+/* Parts ------------------------------------------------------------------- */
+
+.ny-alert__icon {
+  display: flex;
+  flex: none;
+  color: var(--ny-alert-ink);
+}
+
+.ny-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ny-space-4);
+  /* Without this a long unbroken string in the message stretches the flex item
+     past the alert instead of wrapping inside it. */
+  min-width: 0;
+  flex: 1;
+}
+
+.ny-alert__title {
+  margin: var(--ny-space-0);
+  color: var(--ny-alert-ink);
+  font-size: var(--ny-font-size-md);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-alert__message {
+  color: var(--ny-text);
+}
+
+.ny-alert__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--ny-control-height-sm);
+  height: var(--ny-control-height-sm);
+  margin-left: auto;
+  padding: var(--ny-space-0);
+  border: 0;
+  border-radius: var(--ny-radius-md);
+  background: transparent;
+  color: var(--ny-text-muted);
+  cursor: pointer;
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-alert__dismiss:hover {
+  background: var(--ny-surface-hover);
+  color: var(--ny-text);
+}

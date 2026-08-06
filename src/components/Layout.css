@@ -1,0 +1,205 @@
+/**
+ * Layout primitives — Container, Grid, GridItem, Stack.
+ *
+ * Responsive props arrive as inline custom properties written by `Layout.tsx`
+ * (`--ny-grid-cols-md: 3`) and are read back here, inside exactly four media
+ * queries. Nothing is generated per breakpoint: no class explosion, nothing
+ * injected at runtime, and markup that is identical on the server and client.
+ *
+ * The four widths are hardcoded on purpose. A custom property inside a media
+ * condition — `@media (min-width: var(--ny-bp-md))` — is invalid CSS and fails
+ * *silently*; `--ny-bp-*` exists for JS and documentation parity only.
+ *
+ * Each breakpoint falls back to the base value in two steps, which is enough
+ * because `Layout.tsx` fills a sparse `Responsive` object forward before it
+ * writes the properties.
+ */
+
+/* Container --------------------------------------------------------------- */
+
+.ny-container {
+  /* Named, so components inside can reflow with `@container ny-panel (…)`
+     against the container's width instead of the viewport's. */
+  container-type: inline-size;
+  container-name: ny-panel;
+
+  width: 100%;
+  min-width: 0;
+  margin-inline: auto;
+  padding-inline: var(--ny-gutter);
+}
+
+/* Measures, not spacing — these are the three content widths the system lays
+   out at, so they are literals rather than steps off the 4px scale. `lg`
+   coinciding with --ny-bp-xl is deliberate: the widest measure is the widest
+   breakpoint, so the largest container stops growing exactly where the layout
+   stops changing. */
+.ny-container--sm {
+  max-width: 720px;
+}
+
+.ny-container--md {
+  max-width: 960px;
+}
+
+.ny-container--lg {
+  max-width: 1280px;
+}
+
+.ny-container--full {
+  max-width: none;
+}
+
+/* Grid -------------------------------------------------------------------- */
+
+.ny-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--ny-grid-cols, 12), minmax(0, 1fr));
+  min-width: 0;
+  column-gap: var(--ny-grid-col-gap, var(--ny-gutter));
+  row-gap: var(--ny-grid-row-gap, var(--ny-gutter));
+}
+
+.ny-grid--align-start {
+  align-items: start;
+}
+
+.ny-grid--align-center {
+  align-items: center;
+}
+
+.ny-grid--align-end {
+  align-items: end;
+}
+
+.ny-grid--align-stretch {
+  align-items: stretch;
+}
+
+/* GridItem ---------------------------------------------------------------- */
+
+/* `minmax(0, 1fr)` tracks plus `min-width: 0` is what stops a long unbroken
+   string or a wide chart from blowing the column out past its share. */
+.ny-grid-item {
+  grid-column: var(--ny-grid-start, auto) / span var(--ny-grid-span, 1);
+  min-width: 0;
+}
+
+/* Stack ------------------------------------------------------------------- */
+
+.ny-stack {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--ny-stack-gap, var(--ny-stack));
+}
+
+.ny-stack--row {
+  flex-direction: row;
+}
+
+.ny-stack--wrap {
+  flex-wrap: wrap;
+}
+
+.ny-stack--align-start {
+  align-items: flex-start;
+}
+
+.ny-stack--align-center {
+  align-items: center;
+}
+
+.ny-stack--align-end {
+  align-items: flex-end;
+}
+
+.ny-stack--align-stretch {
+  align-items: stretch;
+}
+
+.ny-stack--align-baseline {
+  align-items: baseline;
+}
+
+.ny-stack--justify-start {
+  justify-content: flex-start;
+}
+
+.ny-stack--justify-center {
+  justify-content: center;
+}
+
+.ny-stack--justify-end {
+  justify-content: flex-end;
+}
+
+.ny-stack--justify-between {
+  justify-content: space-between;
+}
+
+/* Breakpoints ------------------------------------------------------------- */
+
+@media (min-width: 480px) {
+  .ny-grid {
+    grid-template-columns: repeat(var(--ny-grid-cols-sm, var(--ny-grid-cols, 12)), minmax(0, 1fr));
+    column-gap: var(--ny-grid-col-gap-sm, var(--ny-grid-col-gap, var(--ny-gutter)));
+    row-gap: var(--ny-grid-row-gap-sm, var(--ny-grid-row-gap, var(--ny-gutter)));
+  }
+
+  .ny-grid-item {
+    grid-column: var(--ny-grid-start, auto) / span var(--ny-grid-span-sm, var(--ny-grid-span, 1));
+  }
+
+  .ny-stack {
+    gap: var(--ny-stack-gap-sm, var(--ny-stack-gap, var(--ny-stack)));
+  }
+}
+
+@media (min-width: 768px) {
+  .ny-grid {
+    grid-template-columns: repeat(var(--ny-grid-cols-md, var(--ny-grid-cols, 12)), minmax(0, 1fr));
+    column-gap: var(--ny-grid-col-gap-md, var(--ny-grid-col-gap, var(--ny-gutter)));
+    row-gap: var(--ny-grid-row-gap-md, var(--ny-grid-row-gap, var(--ny-gutter)));
+  }
+
+  .ny-grid-item {
+    grid-column: var(--ny-grid-start, auto) / span var(--ny-grid-span-md, var(--ny-grid-span, 1));
+  }
+
+  .ny-stack {
+    gap: var(--ny-stack-gap-md, var(--ny-stack-gap, var(--ny-stack)));
+  }
+}
+
+@media (min-width: 1024px) {
+  .ny-grid {
+    grid-template-columns: repeat(var(--ny-grid-cols-lg, var(--ny-grid-cols, 12)), minmax(0, 1fr));
+    column-gap: var(--ny-grid-col-gap-lg, var(--ny-grid-col-gap, var(--ny-gutter)));
+    row-gap: var(--ny-grid-row-gap-lg, var(--ny-grid-row-gap, var(--ny-gutter)));
+  }
+
+  .ny-grid-item {
+    grid-column: var(--ny-grid-start, auto) / span var(--ny-grid-span-lg, var(--ny-grid-span, 1));
+  }
+
+  .ny-stack {
+    gap: var(--ny-stack-gap-lg, var(--ny-stack-gap, var(--ny-stack)));
+  }
+}
+
+@media (min-width: 1280px) {
+  .ny-grid {
+    grid-template-columns: repeat(var(--ny-grid-cols-xl, var(--ny-grid-cols, 12)), minmax(0, 1fr));
+    column-gap: var(--ny-grid-col-gap-xl, var(--ny-grid-col-gap, var(--ny-gutter)));
+    row-gap: var(--ny-grid-row-gap-xl, var(--ny-grid-row-gap, var(--ny-gutter)));
+  }
+
+  .ny-grid-item {
+    grid-column: var(--ny-grid-start, auto) / span var(--ny-grid-span-xl, var(--ny-grid-span, 1));
+  }
+
+  .ny-stack {
+    gap: var(--ny-stack-gap-xl, var(--ny-stack-gap, var(--ny-stack)));
+  }
+}

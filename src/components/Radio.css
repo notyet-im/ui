@@ -1,0 +1,127 @@
+.ny-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ny-space-8);
+  cursor: pointer;
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text);
+}
+
+/* The label is not a form control, so it never matches `:disabled` — key off
+   the input it wraps instead of adding a modifier class. */
+.ny-radio:has(.ny-radio__input:disabled) {
+  cursor: not-allowed;
+  color: var(--ny-text-disabled);
+}
+
+/** Sizing box for the input and its painted twin, which are stacked. */
+.ny-radio__control {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  width: var(--ny-icon-size-md);
+  height: var(--ny-icon-size-md);
+}
+
+/**
+ * The real input, stripped of its native rendering but kept at full size and
+ * on top: it stays the hit target, and the shared focus ring in base.css lands
+ * on it rather than on a decorative stand-in.
+ */
+.ny-radio__input {
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  margin: var(--ny-space-0);
+  cursor: inherit;
+  border-radius: var(--ny-radius-full);
+}
+
+.ny-radio__dot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--ny-border-strong);
+  border-radius: var(--ny-radius-full);
+  background: var(--ny-surface);
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-radio__dot::after {
+  content: "";
+  width: var(--ny-space-8);
+  height: var(--ny-space-8);
+  border-radius: var(--ny-radius-full);
+  background: var(--ny-text-on-accent);
+  transform: scale(0);
+  transition: transform var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-radio__input:hover:not(:disabled) + .ny-radio__dot {
+  border-color: var(--ny-accent);
+  background: var(--ny-surface-hover);
+}
+
+.ny-radio__input:checked + .ny-radio__dot {
+  background: var(--ny-accent);
+  border-color: var(--ny-accent);
+}
+
+.ny-radio__input:checked:hover:not(:disabled) + .ny-radio__dot {
+  background: var(--ny-accent-hover);
+  border-color: var(--ny-accent-hover);
+}
+
+.ny-radio__input:checked:active:not(:disabled) + .ny-radio__dot {
+  background: var(--ny-accent-active);
+  border-color: var(--ny-accent-active);
+}
+
+.ny-radio__input:checked + .ny-radio__dot::after {
+  transform: scale(1);
+}
+
+/* Disabled is a real colour change, never opacity — opacity compounds through
+   the nested dot and destroys the contrast the palette was picked for. */
+.ny-radio__input:disabled + .ny-radio__dot {
+  background: var(--ny-surface-sunken);
+  border-color: var(--ny-border);
+}
+
+.ny-radio__input:checked:disabled + .ny-radio__dot {
+  background: var(--ny-surface-active);
+  border-color: var(--ny-border-strong);
+}
+
+.ny-radio__input:checked:disabled + .ny-radio__dot::after {
+  background: var(--ny-text-disabled);
+}
+
+.ny-radio__label {
+  min-width: 0;
+}
+
+/* RadioGroup --------------------------------------------------------------- */
+
+.ny-radio-group {
+  display: flex;
+}
+
+.ny-radio-group--vertical {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--ny-stack);
+}
+
+.ny-radio-group--horizontal {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--ny-space-20);
+}
