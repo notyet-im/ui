@@ -72,6 +72,8 @@
   --ny-danger-subtle: #2e1714;
   --ny-info-subtle: #131f2c;
 
+  /* Ink for text sitting on the matching `-subtle` tint. */
+  --ny-accent-text: #2fbfa8;
   --ny-success-text: #6fd39b;
   --ny-warning-text: #e8bc63;
   --ny-danger-text: #f0897a;
@@ -112,6 +114,10 @@
   --ny-danger-subtle: #fbe9e6;
   --ny-info-subtle: #e7f0fa;
 
+  /* Ink for text sitting on the matching `-subtle` tint. The accent ink is a
+     darkened teal, not `--ny-accent`: the raw accent on its own light tint is
+     only 2:1, which is unreadable. This lands at 5.7:1. */
+  --ny-accent-text: #17695b;
   --ny-success-text: #23724a;
   --ny-warning-text: #8a6414;
   --ny-danger-text: #a63b2f;
@@ -137,13 +143,28 @@
   --ny-accent: #2fbfa8;
   --ny-accent-hover: #45cdb7;
   --ny-accent-active: #26a892;
-  --ny-text-on-accent: #06201c;
 
   /* Feedback — solid fills. The `-subtle` and `-text` pairs are per-theme. */
   --ny-success: #3fa96f;
   --ny-warning: #d3982f;
   --ny-danger: #d9584a;
   --ny-info: #4c8dd0;
+
+  /**
+   * Ink for text on the matching *solid* fill. Theme-invariant, because the
+   * fills are.
+   *
+   * Do not substitute `--ny-text-inverse` or `--ny-bg` here — those flip with
+   * the theme, so a solid badge would go white-on-amber in the light theme.
+   * A near-black clears 4.5:1 on every fill in the scale (danger, the tightest,
+   * lands at 5.07:1); white would fail on all of them.
+   */
+  --ny-text-on-accent: #06201c;
+  --ny-text-on-success: var(--ny-ink-0);
+  --ny-text-on-warning: var(--ny-ink-0);
+  --ny-text-on-danger: var(--ny-ink-0);
+  --ny-text-on-info: var(--ny-ink-0);
+  --ny-text-on-neutral: var(--ny-ink-0);
 
   /* Focus. Its own token rather than the accent inline, so the ring is tunable
      independently — and so there is exactly one place to change it. */

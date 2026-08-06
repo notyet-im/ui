@@ -20,43 +20,49 @@
 
 /* Tones ------------------------------------------------------------------- */
 
-/* `neutral` and `accent` have no `-text` token of their own, so they borrow the
-   general text roles — which are the accessible pairing for their tint in both
-   themes, where the raw accent teal would not be. */
+/* Each tone resolves four locals — fill, tint, ink-on-tint, ink-on-fill — so the
+   variants below stay at one rule each instead of tone x variant. `neutral` has
+   no tint of its own and borrows the sunken surface. */
 .ny-badge--neutral {
   --ny-badge-fill: var(--ny-neutral);
   --ny-badge-tint: var(--ny-surface-sunken);
   --ny-badge-ink: var(--ny-text-muted);
+  --ny-badge-on-fill: var(--ny-text-on-neutral);
 }
 
 .ny-badge--accent {
   --ny-badge-fill: var(--ny-accent);
   --ny-badge-tint: var(--ny-accent-subtle);
-  --ny-badge-ink: var(--ny-text);
+  --ny-badge-ink: var(--ny-accent-text);
+  --ny-badge-on-fill: var(--ny-text-on-accent);
 }
 
 .ny-badge--success {
   --ny-badge-fill: var(--ny-success);
   --ny-badge-tint: var(--ny-success-subtle);
   --ny-badge-ink: var(--ny-success-text);
+  --ny-badge-on-fill: var(--ny-text-on-success);
 }
 
 .ny-badge--warning {
   --ny-badge-fill: var(--ny-warning);
   --ny-badge-tint: var(--ny-warning-subtle);
   --ny-badge-ink: var(--ny-warning-text);
+  --ny-badge-on-fill: var(--ny-text-on-warning);
 }
 
 .ny-badge--danger {
   --ny-badge-fill: var(--ny-danger);
   --ny-badge-tint: var(--ny-danger-subtle);
   --ny-badge-ink: var(--ny-danger-text);
+  --ny-badge-on-fill: var(--ny-text-on-danger);
 }
 
 .ny-badge--info {
   --ny-badge-fill: var(--ny-info);
   --ny-badge-tint: var(--ny-info-subtle);
   --ny-badge-ink: var(--ny-info-text);
+  --ny-badge-on-fill: var(--ny-text-on-info);
 }
 
 /* Variants ---------------------------------------------------------------- */
@@ -66,12 +72,9 @@
   color: var(--ny-badge-ink);
 }
 
-/* The system has no `--ny-text-on-{tone}` token, so solid fills take the one
-   theme-invariant ink the palette does ship. The four feedback fills sit in the
-   same lightness band as the accent, so it reads as intended on all of them. */
 .ny-badge--solid {
   background: var(--ny-badge-fill);
-  color: var(--ny-text-on-accent);
+  color: var(--ny-badge-on-fill);
 }
 
 .ny-badge--outline {
