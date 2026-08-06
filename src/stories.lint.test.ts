@@ -1,6 +1,6 @@
+import { execSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { execSync } from 'node:child_process'
 import { describe, expect, it } from 'vitest'
 
 /**
@@ -47,7 +47,13 @@ const exported = new Set(
   [...barrel.matchAll(/export\s*\{([^}]*)\}/g)]
     .filter((match) => !/export\s*type/.test(match[0]))
     .flatMap((match) => match[1].split(','))
-    .map((name) => name.trim().split(/\s+as\s+/).pop() ?? '')
+    .map(
+      (name) =>
+        name
+          .trim()
+          .split(/\s+as\s+/)
+          .pop() ?? '',
+    )
     .filter(Boolean),
 )
 
