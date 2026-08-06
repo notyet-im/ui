@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-app/
+storybook-static/
+*.tsbuildinfo
+.DS_Store
+.playwright-mcp/
+
+# design-sync
+.design-sync/sb-reference/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.ds-sync/
+ds-bundle/

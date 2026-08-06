@@ -1,0 +1,53 @@
+.cf-panel {
+  background: var(--cf-panel);
+  border: 1px solid var(--cf-line);
+  border-radius: var(--cf-radius-panel);
+  min-width: 0;
+}
+
+.cf-panel--default {
+  padding: 16px 18px;
+}
+
+/* Chart panels give the plot a little extra room by trimming the bottom pad. */
+.cf-panel--chart {
+  padding: 16px 18px 12px;
+}
+
+.cf-panel--none {
+  padding: 0;
+}
+
+.cf-panel--column {
+  display: flex;
+  flex-direction: column;
+}
+
+.cf-panel-heading {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 13px;
+}
+
+.cf-panel-heading__title {
+  font-size: var(--cf-text-lg);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.cf-panel-heading__subtitle {
+  font-size: var(--cf-text-xs);
+  color: var(--cf-dim);
+}
+
+.cf-panel-heading--inline {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--cf-space-7);
+  flex-wrap: wrap;
+}
+
+.cf-panel-heading--inline .cf-panel-heading__title {
+  margin-bottom: 0;
+}

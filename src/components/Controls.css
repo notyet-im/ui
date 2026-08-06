@@ -1,0 +1,136 @@
+/* Icon button ------------------------------------------------------------- */
+
+.cf-icon-button {
+  border: 1px solid var(--cf-line);
+  background: var(--cf-panel);
+  color: var(--cf-dim);
+  cursor: pointer;
+  width: var(--cf-control-height);
+  height: var(--cf-control-height);
+  border-radius: var(--cf-radius-field);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: color var(--cf-duration-fade), border-color var(--cf-duration-fade);
+}
+
+.cf-icon-button:hover {
+  color: var(--cf-text);
+}
+
+.cf-icon-button:focus-visible {
+  outline: 2px solid var(--cf-inflow);
+  outline-offset: 1px;
+}
+
+/* Select ------------------------------------------------------------------ */
+
+/* `inline-flex` so the wrapper hugs the select — the chevron is positioned
+   against the wrapper, so a stretched block wrapper would strand it. */
+.cf-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.cf-select__input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  border: 1px solid var(--cf-line);
+  background: var(--cf-panel-2);
+  color: var(--cf-text);
+  cursor: pointer;
+  height: var(--cf-control-height);
+  padding: 0 30px 0 11px;
+  border-radius: var(--cf-radius-field);
+  font-size: var(--cf-text-sm);
+  font-weight: 500;
+  font-family: inherit;
+}
+
+.cf-select__input:focus-visible {
+  outline: 2px solid var(--cf-inflow);
+  outline-offset: 1px;
+}
+
+.cf-select__chevron {
+  position: absolute;
+  right: 9px;
+  pointer-events: none;
+}
+
+/* Ghost button ------------------------------------------------------------ */
+
+.cf-ghost-button {
+  border: 1px solid var(--cf-line);
+  background: var(--cf-panel-2);
+  color: var(--cf-dim);
+  cursor: pointer;
+  border-radius: var(--cf-radius-control);
+  padding: 3px 9px;
+  font-size: var(--cf-text-tiny);
+  font-family: var(--cf-font-mono);
+  transition: color var(--cf-duration-fade);
+}
+
+.cf-ghost-button:hover {
+  color: var(--cf-text);
+}
+
+.cf-ghost-button:focus-visible {
+  outline: 2px solid var(--cf-inflow);
+  outline-offset: 1px;
+}
+
+/* Eyebrow ----------------------------------------------------------------- */
+
+.cf-eyebrow {
+  text-transform: uppercase;
+  color: var(--cf-dim-2);
+  font-family: var(--cf-font-mono);
+  line-height: 1.2;
+}
+
+.cf-eyebrow--kicker {
+  font-size: var(--cf-text-tiny);
+  letter-spacing: var(--cf-tracking-kicker);
+}
+
+.cf-eyebrow--label {
+  font-size: var(--cf-text-micro);
+  letter-spacing: var(--cf-tracking-label);
+}
+
+.cf-eyebrow--tile {
+  font-size: var(--cf-text-micro);
+  letter-spacing: var(--cf-tracking-tile);
+}
+
+/* Legend ------------------------------------------------------------------ */
+
+.cf-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--cf-space-6);
+  font-size: var(--cf-text-xs);
+  color: var(--cf-dim);
+  font-family: var(--cf-font-mono);
+  flex-wrap: wrap;
+}
+
+.cf-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cf-legend__swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--cf-radius-swatch);
+  display: inline-block;
+  flex: none;
+}

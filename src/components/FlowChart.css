@@ -1,0 +1,83 @@
+.cf-flow {
+  position: relative;
+  width: 100%;
+}
+
+.cf-flow__svg {
+  overflow: visible;
+  display: block;
+}
+
+.cf-flow__ribbon {
+  transition: stroke-width var(--cf-duration-flow) var(--cf-ease), opacity var(--cf-duration-fade);
+}
+
+.cf-flow__node {
+  cursor: pointer;
+  transition: all var(--cf-duration-flow) var(--cf-ease);
+}
+
+.cf-flow__bubble {
+  cursor: pointer;
+  transition: r var(--cf-duration-flow) var(--cf-ease);
+}
+
+/*
+ * Labels are real buttons so the chart is reachable by keyboard — the SVG
+ * shapes alone would leave selection mouse-only.
+ */
+.cf-flow__label {
+  position: absolute;
+  cursor: pointer;
+  line-height: 1.28;
+  overflow-wrap: break-word;
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.cf-flow__label:focus-visible {
+  outline: 2px solid var(--cf-inflow);
+  outline-offset: 3px;
+  border-radius: var(--cf-radius-swatch);
+}
+
+.cf-flow__label-name {
+  font-size: var(--cf-text-base);
+  font-weight: 500;
+}
+
+.cf-flow__label-name--ring {
+  font-size: var(--cf-text-md);
+  font-weight: 600;
+}
+
+.cf-flow__label-value {
+  font-size: var(--cf-text-tiny);
+  font-family: var(--cf-font-mono);
+  white-space: nowrap;
+}
+
+.cf-flow__label-value--ring {
+  font-size: var(--cf-text-xs);
+}
+
+.cf-flow__caption {
+  position: absolute;
+  top: 0;
+  font-size: var(--cf-text-micro);
+  letter-spacing: var(--cf-tracking-kicker);
+  font-family: var(--cf-font-mono);
+  color: var(--cf-dim-2);
+}
+
+.cf-flow__caption--start {
+  left: 0;
+}
+
+.cf-flow__caption--end {
+  right: 0;
+}

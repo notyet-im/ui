@@ -1,0 +1,211 @@
+/* Breakdown bar ----------------------------------------------------------- */
+
+.cf-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cf-breakdown__head {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--cf-text-base);
+  gap: 10px;
+}
+
+.cf-breakdown__value {
+  font-family: var(--cf-font-mono);
+  flex: none;
+  white-space: nowrap;
+}
+
+.cf-breakdown__track {
+  height: 5px;
+  background: var(--cf-panel-2);
+  border-radius: var(--cf-radius-bar);
+  overflow: hidden;
+  display: flex;
+}
+
+.cf-breakdown__track--end {
+  justify-content: flex-end;
+}
+
+.cf-breakdown__fill {
+  height: 5px;
+  border-radius: var(--cf-radius-bar);
+  transition: width var(--cf-duration-flow) var(--cf-ease);
+}
+
+/* Data row ---------------------------------------------------------------- */
+
+.cf-data-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--cf-text-base);
+  gap: 10px;
+}
+
+.cf-data-row--inline {
+  align-items: center;
+}
+
+.cf-data-row--stacked {
+  align-items: baseline;
+}
+
+.cf-data-row__main {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: var(--cf-space-3);
+}
+
+.cf-data-row--stacked .cf-data-row__main {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.cf-data-row__leading {
+  font-family: var(--cf-font-mono);
+  font-size: var(--cf-text-tiny);
+  flex: none;
+}
+
+.cf-data-row__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cf-data-row__label--mono {
+  font-family: var(--cf-font-mono);
+  font-weight: 500;
+}
+
+.cf-data-row__caption {
+  color: var(--cf-dim);
+  font-size: var(--cf-text-xs);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cf-data-row--stacked .cf-data-row__caption {
+  font-size: var(--cf-text-micro);
+  color: var(--cf-dim-2);
+}
+
+.cf-data-row__value {
+  font-family: var(--cf-font-mono);
+  flex: none;
+  white-space: nowrap;
+}
+
+/* Narrative --------------------------------------------------------------- */
+
+.cf-narrative {
+  display: flex;
+  gap: var(--cf-space-5);
+  align-items: flex-start;
+}
+
+.cf-narrative__rail {
+  width: 3px;
+  align-self: stretch;
+  border-radius: var(--cf-radius-swatch);
+  flex: none;
+}
+
+.cf-narrative__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--cf-space-1);
+  min-width: 0;
+}
+
+.cf-narrative__head {
+  display: flex;
+  gap: var(--cf-space-4);
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.cf-narrative__title {
+  font-size: var(--cf-text-base);
+  font-weight: 600;
+}
+
+.cf-narrative__value {
+  font-size: var(--cf-text-xs);
+  font-family: var(--cf-font-mono);
+  white-space: nowrap;
+}
+
+.cf-narrative__text {
+  font-size: var(--cf-text-sm);
+  color: var(--cf-dim);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* Momentum card ----------------------------------------------------------- */
+
+.cf-momentum {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--cf-line);
+  border-radius: var(--cf-radius-tile);
+  background: var(--cf-panel-2);
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  transition: border-color var(--cf-duration-fade);
+}
+
+.cf-momentum:hover {
+  border-color: var(--cf-dim-2);
+}
+
+.cf-momentum:focus-visible {
+  outline: 2px solid var(--cf-inflow);
+  outline-offset: 1px;
+}
+
+.cf-momentum__name {
+  font-size: var(--cf-text-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cf-momentum__figures {
+  display: flex;
+  align-items: baseline;
+  gap: var(--cf-space-3);
+  flex-wrap: wrap;
+}
+
+/*
+ * `white-space: nowrap` is load-bearing: U+2212 MINUS SIGN allows a line break
+ * before the following `$`, so a tight card would otherwise split `−$7.0B`
+ * across two lines. The row wraps as a whole instead.
+ */
+.cf-momentum__value {
+  font-size: var(--cf-text-xl);
+  font-weight: 600;
+  font-family: var(--cf-font-mono);
+  white-space: nowrap;
+}
+
+.cf-momentum__share {
+  font-size: var(--cf-text-tiny);
+  font-family: var(--cf-font-mono);
+  color: var(--cf-dim);
+  white-space: nowrap;
+}

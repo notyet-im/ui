@@ -1,0 +1,31 @@
+.cf-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--cf-space-9);
+  flex-wrap: wrap;
+}
+
+.cf-page-header__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cf-page-header__title {
+  font-size: var(--cf-text-5xl);
+  font-weight: 600;
+  letter-spacing: var(--cf-tracking-title);
+}
+
+.cf-page-header__subtitle {
+  font-size: var(--cf-text-base);
+  color: var(--cf-dim);
+}
+
+.cf-page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}

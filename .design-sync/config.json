@@ -1,0 +1,20 @@
+{
+  "projectId": "08a144c3-b949-4751-9eef-342d9527b153",
+  "shape": "storybook",
+  "pkg": "@notyet/capital-flow-ds",
+  "globalName": "CapitalFlowDS",
+  "storybookConfigDir": ".storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "buildCmd": "npm run build:lib",
+  "entry": "dist/index.js",
+  "readmeHeader": ".design-sync/conventions.md",
+  "titleMap": {
+    "Tokens": null,
+    "CapitalFlowTracker": null
+  },
+  "overrides": {
+    "SankeyFlow": { "cardMode": "column" },
+    "RotationRing": { "cardMode": "column" },
+    "Sparkline": { "cardMode": "column" }
+  }
+}

@@ -1,0 +1,131 @@
+/**
+ * Capital Flow design tokens.
+ *
+ * Every value here is lifted verbatim from the Capital Flow Tracker prototype.
+ * Surfaces and text flip with the theme; flow semantics (inflow/outflow) are
+ * theme-invariant on purpose — teal always means money arriving, rust always
+ * means money leaving, in either theme.
+ */
+
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --cf-bg: #0b0c0e;
+  --cf-panel: #14161a;
+  --cf-panel-2: #1b1e23;
+  --cf-line: #252a32;
+
+  /* Text */
+  --cf-text: #e9ebee;
+  --cf-dim: #8b929e;
+  --cf-dim-2: #5f6672;
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --cf-bg: #f7f6f3;
+  --cf-panel: #ffffff;
+  --cf-panel-2: #f2f1ec;
+  --cf-line: #e4e1d9;
+
+  --cf-text: #191b1e;
+  --cf-dim: #6c727c;
+  --cf-dim-2: #9aa0a8;
+}
+
+:root {
+  /* Flow semantics — identical in both themes */
+  --cf-inflow: #2fbfa8;
+  --cf-outflow: #e0703f;
+  --cf-neutral: #7f8a99;
+
+  /* Typography */
+  --cf-font-sans: 'IBM Plex Sans', 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', Helvetica, sans-serif;
+  --cf-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --cf-text-micro: 10.5px;
+  --cf-text-tiny: 11px;
+  --cf-text-xs: 11.5px;
+  --cf-text-sm: 12px;
+  --cf-text-base: 12.5px;
+  --cf-text-md: 13px;
+  --cf-text-lg: 13.5px;
+  --cf-text-xl: 14.5px;
+  --cf-text-2xl: 15px;
+  --cf-text-3xl: 18px;
+  --cf-text-4xl: 25px;
+  --cf-text-5xl: 27px;
+
+  --cf-tracking-kicker: 0.14em;
+  --cf-tracking-label: 0.12em;
+  --cf-tracking-tile: 0.1em;
+  --cf-tracking-title: -0.02em;
+
+  /* Radii — named for what they wrap */
+  --cf-radius-swatch: 2px;
+  --cf-radius-bar: 3px;
+  --cf-radius-cell: 4px;
+  --cf-radius-control: 6px;
+  --cf-radius-field: 8px;
+  --cf-radius-tile: 9px;
+  --cf-radius-strip: 10px;
+  --cf-radius-panel: 12px;
+
+  /* Spacing */
+  --cf-space-1: 3px;
+  --cf-space-2: 5px;
+  --cf-space-3: 7px;
+  --cf-space-4: 9px;
+  --cf-space-5: 11px;
+  --cf-space-6: 14px;
+  --cf-space-7: 16px;
+  --cf-space-8: 18px;
+  --cf-space-9: 24px;
+
+  /* Motion — the prototype's single easing curve */
+  --cf-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --cf-duration-flow: 0.5s;
+  --cf-duration-fade: 0.3s;
+
+  /* Control metrics */
+  --cf-control-height: 34px;
+}
+
+/* Reset scoped to the DS root so the library never fights a host page. */
+.cf-root {
+  background: var(--cf-bg);
+  color: var(--cf-text);
+  font-family: var(--cf-font-sans);
+  box-sizing: border-box;
+}
+
+.cf-root *,
+.cf-root *::before,
+.cf-root *::after {
+  box-sizing: border-box;
+}
+
+.cf-root a {
+  color: var(--cf-inflow);
+  text-decoration: none;
+}
+
+.cf-root a:hover {
+  color: var(--cf-outflow);
+}
+
+.cf-mono {
+  font-family: var(--cf-font-mono);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cf-root *,
+  .cf-root *::before,
+  .cf-root *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
