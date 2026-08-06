@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Eyebrow } from './Controls'
 
 const meta = {
-  title: 'Controls/Eyebrow',
+  title: 'UI/Eyebrow',
   component: Eyebrow,
   parameters: {
     docs: {

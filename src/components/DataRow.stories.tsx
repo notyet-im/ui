@@ -4,7 +4,7 @@ import { DataRow } from './Details'
 import { Panel } from './Panel'
 
 const meta = {
-  title: 'Data display/DataRow',
+  title: 'UI/DataRow',
   component: DataRow,
   parameters: {
     docs: {

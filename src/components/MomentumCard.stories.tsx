@@ -4,7 +4,7 @@ import { walkSeries } from '../lib/series'
 import { MomentumCard } from './Details'
 
 const meta = {
-  title: 'Data display/MomentumCard',
+  title: 'UI/MomentumCard',
   component: MomentumCard,
   parameters: {
     docs: {

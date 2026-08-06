@@ -4,7 +4,7 @@ import { deltaColors } from '../tokens'
 import { Sparkline } from './Sparkline'
 
 const meta = {
-  title: 'Data display/Sparkline',
+  title: 'Charts/Sparkline',
   component: Sparkline,
   parameters: {
     docs: {

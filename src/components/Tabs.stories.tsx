@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Tabs } from './Tabs'
 
 const meta = {
-  title: 'Controls/Tabs',
+  title: 'UI/Tabs',
   component: Tabs,
   args: {
     items: [

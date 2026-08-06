@@ -4,7 +4,7 @@ import type { ThemeName } from '../tokens'
 import { ThemeToggle } from './ThemeToggle'
 
 const meta = {
-  title: 'Theme/ThemeToggle',
+  title: 'UI/ThemeToggle',
   component: ThemeToggle,
   parameters: {
     docs: {

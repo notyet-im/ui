@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Panel, PanelHeading } from './Panel'
 
 const meta = {
-  title: 'Layout/PanelHeading',
+  title: 'UI/PanelHeading',
   component: PanelHeading,
   parameters: {
     docs: {

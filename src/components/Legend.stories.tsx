@@ -3,7 +3,7 @@ import { deltaColors } from '../tokens'
 import { Legend } from './Controls'
 
 const meta = {
-  title: 'Controls/Legend',
+  title: 'UI/Legend',
   component: Legend,
   parameters: {
     docs: {

@@ -3,7 +3,7 @@ import { NarrativeItem } from './Details'
 import { Panel } from './Panel'
 
 const meta = {
-  title: 'Data display/NarrativeItem',
+  title: 'UI/NarrativeItem',
   component: NarrativeItem,
   parameters: {
     docs: {

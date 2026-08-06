@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GhostButton } from './Controls'
 
 const meta = {
-  title: 'Controls/GhostButton',
+  title: 'UI/GhostButton',
   component: GhostButton,
   parameters: {
     docs: {

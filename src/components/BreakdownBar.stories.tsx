@@ -4,7 +4,7 @@ import { BreakdownBar } from './Details'
 import { Panel } from './Panel'
 
 const meta = {
-  title: 'Data display/BreakdownBar',
+  title: 'Charts/BreakdownBar',
   component: BreakdownBar,
   parameters: {
     docs: {

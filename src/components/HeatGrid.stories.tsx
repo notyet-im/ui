@@ -7,7 +7,7 @@ import { HeatGrid } from './HeatGrid'
 import { Panel } from './Panel'
 
 const meta = {
-  title: 'Data display/HeatGrid',
+  title: 'Charts/HeatGrid',
   component: HeatGrid,
   parameters: {
     docs: {

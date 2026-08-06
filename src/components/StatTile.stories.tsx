@@ -3,7 +3,7 @@ import { walkSeries } from '../lib/series'
 import { MacroStrip, StatTile } from './MacroStrip'
 
 const meta = {
-  title: 'Data display/StatTile',
+  title: 'UI/StatTile',
   component: StatTile,
   parameters: {
     docs: {

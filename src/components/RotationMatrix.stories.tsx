@@ -5,7 +5,7 @@ import { RotationMatrix } from './HeatGrid'
 import { Panel, PanelHeading } from './Panel'
 
 const meta = {
-  title: 'Data display/RotationMatrix',
+  title: 'Charts/RotationMatrix',
   component: RotationMatrix,
   parameters: {
     docs: {

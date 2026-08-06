@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Select } from './Controls'
 
 const meta = {
-  title: 'Controls/Select',
+  title: 'UI/Select',
   component: Select,
   parameters: {
     docs: {

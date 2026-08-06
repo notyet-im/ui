@@ -7,7 +7,7 @@ import { SegmentedControl } from './SegmentedControl'
 import { ThemeToggle } from './ThemeToggle'
 
 const meta = {
-  title: 'Layout/PageHeader',
+  title: 'UI/PageHeader',
   component: PageHeader,
   args: { title: 'Where the hot money went' },
 } satisfies Meta<typeof PageHeader>

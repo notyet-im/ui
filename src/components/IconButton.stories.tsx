@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { IconButton } from './Controls'
 
 const meta = {
-  title: 'Controls/IconButton',
+  title: 'UI/IconButton',
   component: IconButton,
   parameters: {
     docs: {
