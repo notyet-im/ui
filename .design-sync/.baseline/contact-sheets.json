@@ -1,0 +1,34 @@
+[
+  {
+    "sheet": 1,
+    "components": [
+      "BreakdownBar",
+      "DataRow",
+      "Eyebrow",
+      "GhostButton",
+      "HeatGrid",
+      "IconButton",
+      "Legend",
+      "MacroStrip",
+      "MomentumCard",
+      "NarrativeItem",
+      "PageHeader",
+      "Panel",
+      "PanelHeading",
+      "RotationMatrix",
+      "RotationRing",
+      "SankeyFlow"
+    ]
+  },
+  {
+    "sheet": 2,
+    "components": [
+      "SegmentedControl",
+      "Select",
+      "Sparkline",
+      "StatTile",
+      "Tabs",
+      "ThemeToggle"
+    ]
+  }
+]
