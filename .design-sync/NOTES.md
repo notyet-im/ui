@@ -82,16 +82,19 @@ with the overlay closed in **both** panels — that is a `match`, not a defect.
 
 - `cardMode: "single"` — Dialog, Popover, Tooltip, Toast. An open overlay paints
   over sibling cells in the grid card.
-- `cardMode: "column"` — SankeyFlow, RotationRing, Sparkline (fixed `width={880}`
-  charts), Table (wider than a cell), Heading (the `Truncated` story overflows).
+- `cardMode: "column"` — SankeyFlow, RotationRing, Sparkline (charts that want the
+  full card width), Table (wider than a cell), Heading (`Truncated` overflows).
 
 ## Re-sync risks — what to watch
 
 - **New components need their own story title AND a barrel export.** The lint
   test catches both; run `npm run check` before syncing.
-- **Chart stories hardcode `width={880}`.** `SankeyFlow` and `RotationRing`
-  require a measured pixel width (their labels are HTML and must not scale). If
-  those stories change width, re-check `[GRID_OVERFLOW]` and the `cardMode`s.
+- **`SankeyFlow` and `RotationRing` measure their own container.** `width` is
+  optional; omitted, the component measures via `useMeasure` and draws to fit.
+  They still lay out in real CSS pixels — their labels are HTML and must not
+  scale — so a *hardcoded* width overflows any narrower container. That was a
+  real bug: the stories passed `width={880}` inside a 916px Panel, which
+  overflowed every design-tool cell. Do not reintroduce a fixed width.
 - **Synthetic data is seeded, not random.** `src/tracker/data.ts` + the PRNG in
   `src/lib/prng.ts` make every figure deterministic, so captures are stable. If
   anyone introduces `Math.random()` or `new Date()` into a story, grades will
