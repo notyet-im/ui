@@ -51,11 +51,12 @@ UI = everything else.*
   claude.ai/design reaches the font host at runtime. It does make local render
   checks slower, and a transient `page.goto Timeout` on one component is usually
   this, not a broken preview — re-run validate before chasing it.
-- `[ASSETS_BLOCKED] example.invalid` — **a false positive.** `Avatar.stories.tsx`
-  deliberately points one story at `https://example.invalid/missing.png` to prove
-  the initials fallback. `.invalid` is a reserved TLD that never resolves
-  anywhere (RFC 2606), so it fails identically for real users. Do **not** re-run
-  compare outside the sandbox chasing this.
+- ~~`[ASSETS_BLOCKED] example.invalid`~~ — **fixed at the source, should not
+  recur.** `Avatar.stories.tsx` proved its initials fallback with a remote URL on
+  a reserved TLD, which fired this warning on every capture and could never be
+  cleared by re-running with egress. It now uses an undecodable `data:` URI:
+  same `onError` path, zero network. If `[ASSETS_BLOCKED]` appears again it is a
+  **real** egress problem — treat it as one.
 - `docs: 0/53 components matched` — the repo has no separate MDX per component;
   `.prompt.md` is generated from the `.d.ts` and stories, which is sufficient.
 

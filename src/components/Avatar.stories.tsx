@@ -64,7 +64,11 @@ export const Fallback: Story = {
       <Avatar name="Ada Lovelace" />
       <Avatar name="Grace" />
       <Avatar name="Katherine Coleman Goble Johnson" />
-      <Avatar name="Ada Lovelace" src="https://example.invalid/missing.png" />
+      {/* A deliberately undecodable data URI, not a bad URL: it triggers the
+          same `onError` fallback while making no network request at all. A
+          remote URL here fired an [ASSETS_BLOCKED] warning on every capture
+          forever, which is exactly how a real egress failure gets ignored. */}
+      <Avatar name="Ada Lovelace" src="data:image/png;base64,not-a-real-image" />
     </div>
   ),
 }
