@@ -33,4 +33,14 @@ const preview: Preview = {
   ],
 }
 
+/**
+ * Autodocs for every component.
+ *
+ * 53 of the 55 story files already carry a `parameters.docs.description`
+ * blurb; without this they render nowhere. design-sync ignores docs entries
+ * (`source-storybook.mjs` skips `type === 'docs'`), so the component roster is
+ * unaffected.
+ */
+export const tags = ['autodocs']
+
 export default preview
