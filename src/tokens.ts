@@ -29,15 +29,15 @@ export function deltaColor(value: number): string {
 /**
  * The brand accent and its interaction states.
  *
- * Separate from `deltaColors.positive` on purpose, and now visibly so: the
- * accent darkened to carry a white label while the data teal stayed bright.
+ * Shares a hex with `deltaColors.positive` today but is a separate token on
+ * purpose: re-theming the brand must not move the data encoding, or vice versa.
  * Mirrored here because Storybook's manager chrome renders outside the preview
  * iframe and so cannot read the `--ny-*` custom properties.
  */
 export const accent = {
-  base: '#1b7062',
-  hover: '#218474',
-  active: '#165b50',
+  base: '#2fbfa8',
+  hover: '#41d0ba',
+  active: '#28a28f',
 } as const
 
 /**
