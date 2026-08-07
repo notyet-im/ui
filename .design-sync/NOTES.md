@@ -96,10 +96,13 @@ with the overlay closed in **both** panels — that is a `match`, not a defect.
   `src/lib/prng.ts` make every figure deterministic, so captures are stable. If
   anyone introduces `Math.random()` or `new Date()` into a story, grades will
   churn every capture — pin the values instead.
-- **`useId` is now used** (Field, RadioGroup, Dialog, Tooltip, Popover, Table
-  caption). React ids are deterministic per tree shape, so repeated captures of
-  the same story are identical — but if `renderHashes` ever churn on a no-change
-  run, `useId` is suspect #1. Capture twice and diff before chasing anything else.
+- **`useId` is used** (Field, RadioGroup, Dialog, Tooltip, Popover, Table
+  caption) and has been **verified not to churn**: two consecutive builds of the
+  same source produced identical `renderHashes` for all 53 components, and
+  identical `styleSha`, `bundleSha12` and `sourceKeys`. React ids are
+  deterministic per tree shape. If hashes ever do churn on a no-change run,
+  re-run that double-capture first — it takes two builds and rules `useId` in or
+  out immediately.
 - **`container-type: inline-size` re-parents absolutely-positioned descendants.**
   `Container`, `Panel` and `Card` set it. If an absolutely-positioned child ever
   lands in the wrong place, that is the first thing to check —

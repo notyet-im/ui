@@ -10,8 +10,9 @@ in the plan before touching a shared file.
 
 ## ⚠️ Pending right now
 
-The overhaul shipped once. Since then, four rendering bugs and the tone-ramp work
-have landed **locally only** — the published project is a version behind.
+The overhaul shipped once. Since then the rendering fixes, the tone ramps, the flex
+sweep and the showcase rebuild have landed **locally only** — the published project
+is a version behind.
 
 1. **Local review in progress.** Storybook on :6006. Nothing syncs until it passes.
 2. **Re-sync outstanding.** `_ds_bundle` locally is `styleSha 3f6f39e2…`; the project
@@ -22,14 +23,12 @@ have landed **locally only** — the published project is a version behind.
    (`width` is now optional), so at minimum those two re-grade. Switch, Badge, Alert,
    Button and HeatGrid changed visually and are worth re-reading even where the grade
    technically carries.
-3. **`flex: none` sweep — not started.** ThemeToggle's oval and HeatGrid's squeeze were
-   the same root cause: a fixed-size element in a flex container with no `flex: none`.
-   Two instances found by eye; the rest of the library has not been checked.
-4. **Showcase rebuild on `Container`/`Grid`/`Stack` — not started.** The plan's
-   falsifiable test of whether the grid primitives are actually right. The library is
-   verified without it, but that proof has not been run.
-5. **Double-capture diff — not run.** Guards against `useId` churning `renderHashes`
-   between captures. Cheap; do it as part of the re-sync.
+3. ~~`flex: none` sweep~~ — **done.** Four gaps found and fixed (Badge, Spinner,
+   Pagination, Select); the rest of the library already declared it.
+4. ~~Showcase rebuild on `Container`/`Grid`/`Stack`~~ — **done.** Acceptance test
+   passes; surfaced a missing `Container size="xl"`. Verified at 1440px and 600px.
+5. ~~Double-capture diff~~ — **done.** Zero `renderHash` drift across 53 components
+   between two identical builds; `useId` confirmed stable.
 
 Everything below this line is done.
 
