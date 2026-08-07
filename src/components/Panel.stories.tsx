@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
   args: {
-    children: 'Standard panel padding — 16px top and bottom, 18px either side.',
+    children: 'Standard panel padding — 16px on every side, from --ny-inset.',
   },
 }
 
@@ -53,8 +53,24 @@ export const PaddingVariants: Story = {
     <div style={{ display: 'grid', gap: 14, gridTemplateColumns: 'repeat(3, 1fr)' }}>
       <Panel padding="default">default</Panel>
       <Panel padding="chart">chart</Panel>
+      <Panel padding="compact">compact</Panel>
       <Panel padding="none">
         <div style={{ padding: 8 }}>none</div>
+      </Panel>
+    </div>
+  ),
+}
+
+export const Slots: Story = {
+  name: 'Header and footer',
+  render: () => (
+    <div style={{ display: 'grid', gap: 14, gridTemplateColumns: 'repeat(2, 1fr)' }}>
+      <Panel header="Position limits" footer="Updated 17:00 HKT">
+        Supplying either slot divides the panel and moves the padding onto the regions — this is the shape
+        usually called a card.
+      </Panel>
+      <Panel interactive header="Sector momentum">
+        An interactive panel lifts on hover, for a surface that is itself a link or click target.
       </Panel>
     </div>
   ),

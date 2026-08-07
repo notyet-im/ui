@@ -12,6 +12,13 @@ Repo-specific knowledge for future syncs. Read this before running the driver.
   `--node-modules ./node_modules` (repo root).
 - **Build order**: `npm run build:lib` must run before the storybook reference —
   stories import from `../tokens` and `../lib`, but the bundle comes from `dist/`.
+  ⚠️ It must also run before any **manual** `package-build.mjs` invocation. The
+  driver (`resync.mjs`) runs `cfg.buildCmd` for you; calling the converter
+  directly does **not**. Skipping it bundles a stale `dist/`, and the symptom is
+  brutal to read: previews render the *previous* version of a component while
+  the storybook reference renders the current one, so compare shows a real,
+  confusing mismatch that no source change explains. This has happened once —
+  Panel's new header/footer slots were simply absent from every preview.
 - **Gate before syncing**: `npm run check` (biome → tsc → vitest). It must exit 0.
 
 ## The two-category contract — the thing most likely to break silently
