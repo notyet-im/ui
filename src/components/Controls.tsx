@@ -1,45 +1,27 @@
 import type { CSSProperties, ReactNode } from 'react'
 import './Controls.css'
 
-/* Icon button ------------------------------------------------------------- */
+/* Inline action ------------------------------------------------------------ */
 
-export interface IconButtonProps {
-  /** Required — the button has no text, so it needs an explicit name. */
-  label: string
+export interface InlineActionProps {
   onClick?: () => void
   children?: ReactNode
   className?: string
 }
 
-/** A square 34px button holding a single icon. */
-export function IconButton({ label, onClick, children, className }: IconButtonProps) {
-  return (
-    <button
-      type="button"
-      aria-label={label}
-      onClick={onClick}
-      className={['ny-icon-button', className].filter(Boolean).join(' ')}
-    >
-      {children}
-    </button>
-  )
-}
-
-/* Ghost button ------------------------------------------------------------ */
-
-export interface GhostButtonProps {
-  onClick?: () => void
-  children?: ReactNode
-  className?: string
-}
-
-/** Low-emphasis inline action — "clear", "reset" and friends. */
-export function GhostButton({ onClick, children, className }: GhostButtonProps) {
+/**
+ * A low-emphasis action sized for running text — "clear", "reset" and friends.
+ *
+ * Deliberately *not* a Button size: it is monospace at `--ny-font-size-2xs`,
+ * roughly half a control's height, and belongs beside text rather than in a
+ * control row. `Button variant="ghost"` is the borderless full-size control.
+ */
+export function InlineAction({ onClick, children, className }: InlineActionProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={['ny-ghost-button', className].filter(Boolean).join(' ')}
+      className={['ny-inline-action', className].filter(Boolean).join(' ')}
     >
       {children}
     </button>

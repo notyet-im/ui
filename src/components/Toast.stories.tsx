@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { GhostButton } from './Controls'
+import { InlineAction } from './Controls'
 import { Toast, ToastViewport } from './Toast'
 
 const meta = {
@@ -31,7 +31,7 @@ function TriggerExample() {
 
   return (
     <>
-      <GhostButton onClick={() => setOpen(true)}>Queue rebalance</GhostButton>
+      <InlineAction onClick={() => setOpen(true)}>Queue rebalance</InlineAction>
       <ToastViewport>
         <Toast
           open={open}

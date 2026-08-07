@@ -5,7 +5,11 @@
   rel="stylesheet"
 />
 <style>
+  /* `--ny-bg` rather than a literal: the decorator repeats `data-theme` on
+     <html>, so this resolves to whichever palette the toolbar has selected and
+     the canvas below a short story stops being the UA's black. */
   body {
     margin: 0;
+    background: var(--ny-bg);
   }
 </style>

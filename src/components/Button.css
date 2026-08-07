@@ -18,6 +18,26 @@
     color var(--ny-duration-fast) var(--ny-ease-standard);
 }
 
+/* Square: the size's control height on both axes, and no horizontal padding
+   for a label that isn't there. `flex: none` because a fixed-size box must not
+   be squashed by whatever flex row it lands in. */
+.ny-button--icon-only {
+  padding: 0;
+  flex: none;
+}
+
+.ny-button--icon-only.ny-button--sm {
+  width: var(--ny-control-height-sm);
+}
+
+.ny-button--icon-only.ny-button--md {
+  width: var(--ny-control-height-md);
+}
+
+.ny-button--icon-only.ny-button--lg {
+  width: var(--ny-control-height-lg);
+}
+
 .ny-button--full {
   display: flex;
   width: 100%;

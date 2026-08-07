@@ -1,5 +1,5 @@
 import type { ThemeName } from '../tokens'
-import { IconButton } from './Controls'
+import { Button } from './Button'
 
 export interface ThemeToggleProps {
   theme: ThemeName
@@ -20,8 +20,10 @@ export function ThemeToggle({ theme, onChange, label, className }: ThemeTogglePr
   const resolvedLabel = label ?? (isDark ? 'Switch to light theme' : 'Switch to dark theme')
 
   return (
-    <IconButton
+    <Button
+      iconOnly
       label={resolvedLabel}
+      variant="secondary"
       className={className}
       onClick={() => onChange(isDark ? 'light' : 'dark')}
     >
@@ -54,6 +56,6 @@ export function ThemeToggle({ theme, onChange, label, className }: ThemeTogglePr
           <path d="M20.5 14.6A8.6 8.6 0 1 1 9.4 3.5a7 7 0 0 0 11.1 11.1z" />
         </svg>
       )}
-    </IconButton>
+    </Button>
   )
 }

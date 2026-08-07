@@ -46,11 +46,10 @@ export { SegmentedControl } from './components/SegmentedControl'
 export type { SegmentedControlItem, SegmentedControlProps } from './components/SegmentedControl'
 export { Tabs } from './components/Tabs'
 export type { TabItem, TabsProps } from './components/Tabs'
-export { Eyebrow, GhostButton, IconButton, Legend, Select } from './components/Controls'
+export { Eyebrow, InlineAction, Legend, Select } from './components/Controls'
 export type {
   EyebrowProps,
-  GhostButtonProps,
-  IconButtonProps,
+  InlineActionProps,
   LegendItem,
   LegendProps,
   SelectOption,

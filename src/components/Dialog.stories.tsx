@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { GhostButton } from './Controls'
+import { InlineAction } from './Controls'
 import { Dialog } from './Dialog'
 
 const meta = {
@@ -31,7 +31,7 @@ function ConfirmExample() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-      <GhostButton onClick={() => setOpen(true)}>Rebalance…</GhostButton>
+      <InlineAction onClick={() => setOpen(true)}>Rebalance…</InlineAction>
       <span style={{ color: 'var(--ny-text-muted)', fontSize: 'var(--ny-font-size-xs)' }}>{status}</span>
       <Dialog
         open={open}
@@ -40,15 +40,15 @@ function ConfirmExample() {
         description="Moves 4 positions across 2 desks. Settles at the next close."
         footer={
           <>
-            <GhostButton onClick={() => setOpen(false)}>Cancel</GhostButton>
-            <GhostButton
+            <InlineAction onClick={() => setOpen(false)}>Cancel</InlineAction>
+            <InlineAction
               onClick={() => {
                 setStatus('Rebalance queued for 16:00.')
                 setOpen(false)
               }}
             >
               Queue it
-            </GhostButton>
+            </InlineAction>
           </>
         }
       >
@@ -72,8 +72,8 @@ export const WithFooter: Story = {
   args: {
     footer: (
       <>
-        <GhostButton>Cancel</GhostButton>
-        <GhostButton>Queue it</GhostButton>
+        <InlineAction>Cancel</InlineAction>
+        <InlineAction>Queue it</InlineAction>
       </>
     ),
   },
@@ -91,7 +91,7 @@ export const Scrolling: Story = {
     size: 'lg',
     title: 'Session log',
     description: 'Every fill routed through the desk today.',
-    footer: <GhostButton>Close</GhostButton>,
+    footer: <InlineAction>Close</InlineAction>,
   },
   render: (args) => (
     <Dialog {...args}>

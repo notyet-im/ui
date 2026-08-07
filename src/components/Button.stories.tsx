@@ -9,7 +9,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The general labelled action. `IconButton` and `GhostButton` are separate published components with their own contracts — reach for `Button` whenever the action has a text label. `loading` implies `disabled`, so a request cannot be fired twice.',
+          'The general labelled action. `Button` and `InlineAction` are separate published components with their own contracts — reach for `Button` whenever the action has a text label. `loading` implies `disabled`, so a request cannot be fired twice.',
       },
     },
   },

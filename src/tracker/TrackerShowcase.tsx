@@ -7,10 +7,10 @@ import {
   deltaColors,
   Eyebrow,
   formatDelta,
-  GhostButton,
   Grid,
   GridItem,
   HeatGrid,
+  InlineAction,
   Legend,
   MacroStrip,
   MomentumCard,
@@ -282,7 +282,7 @@ export function TrackerShowcase({
                 <div className="ny-showcase-detail__head">
                   <div className="ny-showcase-detail__head-row">
                     <Eyebrow>{ui.selected}</Eyebrow>
-                    {selected != null && <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>}
+                    {selected != null && <InlineAction onClick={clearSelection}>✕ {ui.clear}</InlineAction>}
                   </div>
                   <div className="ny-showcase-detail__title">{detail.title}</div>
                   <div className="ny-showcase-detail__figures">

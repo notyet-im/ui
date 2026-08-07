@@ -29,22 +29,32 @@ export function deltaColor(value: number): string {
 /**
  * The brand accent and its interaction states.
  *
- * Shares a hex with `deltaColors.positive` today but is a separate token on
- * purpose: re-theming the brand must not move the data encoding, or vice versa.
+ * Separate from `deltaColors.positive` on purpose, and now visibly so: the
+ * accent darkened to carry a white label while the data teal stayed bright.
  * Mirrored here because Storybook's manager chrome renders outside the preview
  * iframe and so cannot read the `--ny-*` custom properties.
  */
 export const accent = {
-  base: '#2fbfa8',
-  hover: '#41d0ba',
-  active: '#28a28f',
+  base: '#1b7062',
+  hover: '#218474',
+  active: '#165b50',
 } as const
 
+/**
+ * The theme-dependent chrome colours, mirrored for the same reason as `accent`:
+ * Storybook's manager renders outside the preview iframe and its docs container
+ * takes plain strings, so neither can read a `--ny-*` custom property.
+ *
+ * `surfaceHover` and `surfaceSelected` exist for exactly that consumer — the
+ * sidebar's 55 hoverable rows and the addon panel's toggles.
+ */
 export const surfaces = {
   dark: {
     bg: '#0b0c0e',
     surface: '#14161a',
     surfaceSunken: '#1b1e23',
+    surfaceHover: '#21252c',
+    surfaceSelected: '#12302c',
     border: '#252a32',
     text: '#e9ebee',
     textMuted: '#8b929e',
@@ -54,6 +64,8 @@ export const surfaces = {
     bg: '#f7f6f3',
     surface: '#ffffff',
     surfaceSunken: '#f2f1ec',
+    surfaceHover: '#ecebe4',
+    surfaceSelected: '#dff3ef',
     border: '#e4e1d9',
     text: '#191b1e',
     textMuted: '#6c727c',

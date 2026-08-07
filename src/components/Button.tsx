@@ -1,7 +1,7 @@
 import type { ReactNode, Ref } from 'react'
 import './Button.css'
 
-export interface ButtonProps {
+interface ButtonBaseProps {
   /**
    * `primary` — the one affirmative action on a surface. Solid accent fill.
    * `secondary` — the default. Bordered, sits on the surface without shouting.
@@ -35,9 +35,30 @@ export interface ButtonProps {
   /** `id` of the form to submit, for buttons rendered outside it. */
   form?: string
   ref?: Ref<HTMLButtonElement>
-  children?: ReactNode
   className?: string
 }
+
+/**
+ * `iconOnly` is a discriminated union rather than a plain boolean so the
+ * accessible name is *required by the type* when there is no visible text.
+ * That guarantee is the whole reason the old `IconButton` existed as its own
+ * component; it survives the merge instead of becoming a convention.
+ */
+export type ButtonProps = ButtonBaseProps &
+  (
+    | {
+        /** Square, icon-only. Renders at the size's control height, no label text. */
+        iconOnly: true
+        /** Required — with no visible text, this is the button's only name. */
+        label: string
+        children?: ReactNode
+      }
+    | {
+        iconOnly?: false
+        label?: never
+        children?: ReactNode
+      }
+  )
 
 /** Indeterminate spinner. Local to `Button` so `loading` costs no extra import. */
 function ButtonSpinner() {
@@ -58,15 +79,19 @@ function ButtonSpinner() {
 }
 
 /**
- * The system's text action.
+ * The system's button, labelled or icon-only.
  *
- * Separate from `IconButton` and `GhostButton`, which are their own published
- * components with their own contracts — this is the general labelled button.
+ * `iconOnly` renders a square at the size's control height and *requires*
+ * `label`, since there is no visible text to name it. For a low-emphasis inline
+ * action in running text — smaller and monospace — reach for `InlineAction`
+ * instead; it is a different kind of control, not a fourth button size.
  *
  * `loading` implies `disabled`: a button that is already working should not be
  * able to start the work again, and `aria-busy` tells assistive tech why.
  */
 export function Button({
+  iconOnly = false,
+  label,
   variant = 'secondary',
   size = 'md',
   disabled = false,
@@ -87,6 +112,7 @@ export function Button({
     'ny-button',
     `ny-button--${variant}`,
     `ny-button--${size}`,
+    iconOnly && 'ny-button--icon-only',
     fullWidth && 'ny-button--full',
     className,
   ]
@@ -99,6 +125,7 @@ export function Button({
       form={form}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      aria-label={label}
       onClick={onClick}
       className={classes.filter(Boolean).join(' ')}
     >

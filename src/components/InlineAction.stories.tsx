@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GhostButton } from './Controls'
+import { InlineAction } from './Controls'
 
 const meta = {
-  title: 'UI/GhostButton',
-  component: GhostButton,
+  title: 'UI/InlineAction',
+  component: InlineAction,
   parameters: {
     docs: {
       description: {
@@ -13,7 +13,7 @@ const meta = {
     },
   },
   args: { children: '✕ clear' },
-} satisfies Meta<typeof GhostButton>
+} satisfies Meta<typeof InlineAction>
 
 export default meta
 type Story = StoryObj<typeof meta>

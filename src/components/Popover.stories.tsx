@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { GhostButton, Select } from './Controls'
+import { InlineAction, Select } from './Controls'
 import { Popover } from './Popover'
 
 const meta = {
@@ -16,7 +16,7 @@ const meta = {
   },
   args: {
     content: 'Sourced from the 16:00 consolidated tape, net of ETF creations.',
-    children: <GhostButton>Method</GhostButton>,
+    children: <InlineAction>Method</InlineAction>,
   },
 } satisfies Meta<typeof Popover>
 
@@ -44,11 +44,11 @@ function FilterExample() {
               { value: 'combined', label: 'Combined' },
             ]}
           />
-          <GhostButton onClick={() => setOpen(false)}>Apply</GhostButton>
+          <InlineAction onClick={() => setOpen(false)}>Apply</InlineAction>
         </div>
       }
     >
-      <GhostButton>Filters</GhostButton>
+      <InlineAction>Filters</InlineAction>
     </Popover>
   )
 }
@@ -77,7 +77,7 @@ export const Above: Story = {
   render: (args) => (
     <div style={{ paddingTop: 96 }}>
       <Popover {...args}>
-        <GhostButton>Method</GhostButton>
+        <InlineAction>Method</InlineAction>
       </Popover>
     </div>
   ),

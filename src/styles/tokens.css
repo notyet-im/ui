@@ -190,9 +190,20 @@
    * in any tone without the component special-casing which one it was handed.
    * `hover` lightens and `active` darkens by a fixed step in each hue.
    */
-  --ny-accent: #2fbfa8;
-  --ny-accent-hover: #41d0ba;
-  --ny-accent-active: #28a28f;
+  /**
+   * Deep enough for a white label.
+   *
+   * `hover` sits exactly at the contrast ceiling — the lightest this hue goes
+   * while white still clears 4.5:1 — and base and active step down from it, so
+   * every interaction state stays readable. Lightening on hover from a base at
+   * the ceiling would have pushed hover itself to 3.2:1.
+   *
+   * This is where the accent being its own token pays for itself: it darkened
+   * without touching `--ny-positive`, so the charts keep the bright teal.
+   */
+  --ny-accent: #1b7062;
+  --ny-accent-hover: #218474;
+  --ny-accent-active: #165b50;
 
   --ny-success: #3fa96f;
   --ny-success-hover: #4ebd81;
@@ -202,9 +213,10 @@
   --ny-warning-hover: #d9a74c;
   --ny-warning-active: #b78327;
 
-  --ny-danger: #d9584a;
-  --ny-danger-hover: #df7368;
-  --ny-danger-active: #d33d2c;
+  /* Same treatment as the accent: a solid danger button carries a white label. */
+  --ny-danger: #c53929;
+  --ny-danger-hover: #d44333;
+  --ny-danger-active: #b03225;
 
   --ny-info: #4c8dd0;
   --ny-info-hover: #689fd7;
@@ -226,10 +238,13 @@
    * A near-black clears 4.5:1 on every fill in the scale (danger, the tightest,
    * lands at 5.07:1); white would fail on all of them.
    */
-  --ny-text-on-accent: #06201c;
+  /* Accent and danger are the two tones used as solid *button* fills, and they
+     are deep enough to carry white. The other three stay bright, which is worth
+     more on a Badge than ink consistency is — a brown warning is not a warning. */
+  --ny-text-on-accent: #ffffff;
+  --ny-text-on-danger: #ffffff;
   --ny-text-on-success: var(--ny-ink-0);
   --ny-text-on-warning: var(--ny-ink-0);
-  --ny-text-on-danger: var(--ny-ink-0);
   --ny-text-on-info: var(--ny-ink-0);
   --ny-text-on-neutral: var(--ny-ink-0);
 

@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GhostButton, IconButton } from './Controls'
+import { Button } from './Button'
+import { InlineAction } from './Controls'
 import { Tooltip } from './Tooltip'
 
 const meta = {
@@ -15,7 +16,7 @@ const meta = {
   },
   args: {
     content: 'Institutional flow, net of ETF creations.',
-    children: <GhostButton>Net flow</GhostButton>,
+    children: <InlineAction>Net flow</InlineAction>,
   },
 } satisfies Meta<typeof Tooltip>
 
@@ -61,19 +62,21 @@ export const Placements: Story = {
     >
       {(['top', 'bottom', 'left', 'right'] as const).map((placement) => (
         <Tooltip key={placement} {...args} placement={placement}>
-          <GhostButton>{placement}</GhostButton>
+          <InlineAction>{placement}</InlineAction>
         </Tooltip>
       ))}
     </div>
   ),
 }
 
-export const OnIconButton: Story = {
+export const OnButton: Story = {
   name: 'On an icon button',
   args: { content: 'How this figure is derived', placement: 'right' },
   render: (args) => (
     <Tooltip {...args}>
-      <IconButton label="About this figure">{infoIcon}</IconButton>
+      <Button iconOnly label="About this figure">
+        {infoIcon}
+      </Button>
     </Tooltip>
   ),
 }

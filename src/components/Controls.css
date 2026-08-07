@@ -1,70 +1,6 @@
-/* Icon button ------------------------------------------------------------- */
+/* Inline action ------------------------------------------------------------ */
 
-.ny-icon-button {
-  border: 1px solid var(--ny-border);
-  background: var(--ny-surface);
-  color: var(--ny-text-muted);
-  cursor: pointer;
-  width: var(--ny-control-height-md);
-  height: var(--ny-control-height-md);
-  /* Square, and it must stay square. Without this a flex parent shrinks the
-     width while the height holds, turning the button into a tall oval. */
-  flex: none;
-  border-radius: var(--ny-radius-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  transition:
-    color var(--ny-duration-base),
-    border-color var(--ny-duration-base);
-}
-
-.ny-icon-button:hover {
-  color: var(--ny-text);
-}
-
-/* Select ------------------------------------------------------------------ */
-
-/* `inline-flex` so the wrapper hugs the select — the chevron is positioned
-   against the wrapper, so a stretched block wrapper would strand it. */
-.ny-select {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  /* The chevron is positioned against this wrapper, so if a flex parent
-     shrinks it the chevron detaches from the control — the same failure the
-     wrapper's `inline-flex` was introduced to fix, just triggered by
-     compression instead of by stretching. */
-  flex: none;
-}
-
-.ny-select__input {
-  appearance: none;
-  -webkit-appearance: none;
-  flex: 1 1 auto;
-  min-width: 0;
-  border: 1px solid var(--ny-border);
-  background: var(--ny-surface-sunken);
-  color: var(--ny-text);
-  cursor: pointer;
-  height: var(--ny-control-height-md);
-  padding: 0 var(--ny-space-32) 0 var(--ny-space-12);
-  border-radius: var(--ny-radius-lg);
-  font-size: var(--ny-font-size-xs);
-  font-weight: var(--ny-font-weight-medium);
-  font-family: inherit;
-}
-
-.ny-select__chevron {
-  position: absolute;
-  right: 9px;
-  pointer-events: none;
-}
-
-/* Ghost button ------------------------------------------------------------ */
-
-.ny-ghost-button {
+.ny-inline-action {
   border: 1px solid var(--ny-border);
   background: var(--ny-surface-sunken);
   color: var(--ny-text-muted);
@@ -76,7 +12,7 @@
   transition: color var(--ny-duration-base);
 }
 
-.ny-ghost-button:hover {
+.ny-inline-action:hover {
   color: var(--ny-text);
 }
 
