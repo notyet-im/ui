@@ -343,5 +343,7 @@ export function narrative(edges: Edge[], locale: Locale, why: string[] | undefin
 
 /** The bucket shown when the user has not picked one: the biggest net receiver. */
 export function defaultSelection(nets: Record<BucketKey, number>): BucketKey {
-  return Object.keys(nets).sort((a, b) => nets[b] - nets[a])[0]
+  // argmax, not a sort: this runs on every render while nothing is selected —
+  // which is the state the page loads in — and only ever reads the first entry.
+  return Object.keys(nets).reduce((best, key) => (nets[key] > nets[best] ? key : best))
 }

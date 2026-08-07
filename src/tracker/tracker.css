@@ -15,7 +15,6 @@
 
 /* Main split: hero chart + detail rail ------------------------------------ */
 
-.ny-showcase-main-grid,
 .ny-showcase-hero-head {
   display: flex;
   align-items: center;
@@ -103,10 +102,6 @@
 .ny-showcase-detail__section {
   display: flex;
   flex-direction: column;
-  gap: var(--ny-space-8);
-}
-
-.ny-showcase-detail__section--breakdown {
   gap: var(--ny-space-8);
 }
 

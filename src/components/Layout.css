@@ -77,10 +77,6 @@
   align-items: end;
 }
 
-.ny-grid--align-stretch {
-  align-items: stretch;
-}
-
 /* GridItem ---------------------------------------------------------------- */
 
 /* `minmax(0, 1fr)` tracks plus `min-width: 0` is what stops a long unbroken
@@ -119,16 +115,8 @@
   align-items: flex-end;
 }
 
-.ny-stack--align-stretch {
-  align-items: stretch;
-}
-
 .ny-stack--align-baseline {
   align-items: baseline;
-}
-
-.ny-stack--justify-start {
-  justify-content: flex-start;
 }
 
 .ny-stack--justify-center {

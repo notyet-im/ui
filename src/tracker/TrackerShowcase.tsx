@@ -114,11 +114,15 @@ export function TrackerShowcase({
 
   const narrow = chartWidth > 0 && chartWidth < 560
 
+  // The measured width is handed to the charts rather than letting them measure
+  // the same box again: two ResizeObservers on one element means two render
+  // passes per resize frame over this whole subtree.
+
   /* Derived data ---------------------------------------------------------- */
 
   const edges = useMemo(() => buildEdges(range, metric), [range, metric])
   const nets = useMemo(() => bucketNets(edges), [edges])
-  const total = useMemo(() => edges.reduce((acc, e) => acc + e.value, 0), [edges])
+  const total = edges.reduce((acc, e) => acc + e.value, 0)
   const selectionKey = selected ?? defaultSelection(nets)
 
   const regions = useMemo(() => regionAggregates(edges), [edges])
@@ -134,10 +138,7 @@ export function TrackerShowcase({
   const macros = useMemo(() => macroReadings(range, locale), [range, locale])
   const stories = useMemo(() => narrative(edges, locale, WHY[lang]), [edges, locale, lang])
 
-  const heatMax = useMemo(
-    () => Object.values(nets).reduce((acc, value) => Math.max(acc, Math.abs(value)), 0),
-    [nets],
-  )
+  const heatMax = Object.values(nets).reduce((acc, value) => Math.max(acc, Math.abs(value)), 0)
 
   const ribbonLinks = useMemo(
     () => edges.slice(0, RIBBON_LIMIT).map((e) => ({ from: e.from, to: e.to, value: e.value })),
@@ -235,6 +236,7 @@ export function TrackerShowcase({
                   {view === 'flow' && (
                     <SankeyFlow
                       links={ribbonLinks}
+                      width={chartWidth}
                       narrow={narrow}
                       selectedId={selected}
                       onSelect={toggle}
@@ -265,6 +267,7 @@ export function TrackerShowcase({
                     <RotationRing
                       nodes={ringNodes}
                       pairs={ringPairs}
+                      width={chartWidth}
                       selectedId={selectedRegion}
                       onSelect={(id) => toggle(`${id}|*`)}
                       renderLabel={(id) => locale.reg[id as (typeof REGION_CODES)[number]]}
@@ -315,7 +318,7 @@ export function TrackerShowcase({
                   </div>
                 </div>
 
-                <div className="ny-showcase-detail__section ny-showcase-detail__section--breakdown">
+                <div className="ny-showcase-detail__section">
                   <Eyebrow>{detail.breakdownLabel}</Eyebrow>
                   {detail.breakdown.map((entry) => (
                     <BreakdownBar

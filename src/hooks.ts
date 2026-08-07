@@ -36,11 +36,14 @@ export function useMeasure<T extends HTMLElement>(): [RefObject<T | null>, Measu
     measure()
     window.addEventListener('resize', measure)
 
+    // Only the element. Observing `document.body` as well fired every live
+    // instance's callback on any reflow that changed page height — a DOM read
+    // per instance for nothing, since the element observer already covers the
+    // element's own width and the `resize` listener covers the viewport.
     let observer: ResizeObserver | undefined
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(measure)
       observer.observe(element)
-      observer.observe(document.body)
     }
 
     return () => {
@@ -176,6 +179,14 @@ export function useRovingFocus({
 
 export type Placement = 'top' | 'bottom' | 'left' | 'right'
 
+/** Module scope, not inside `place()` — it is fixed, and `place()` is hot. */
+const OPPOSITE: Record<Placement, Placement> = {
+  top: 'bottom',
+  bottom: 'top',
+  left: 'right',
+  right: 'left',
+}
+
 export interface AnchoredPosition {
   x: number
   y: number
@@ -221,15 +232,9 @@ export function useAnchoredPosition(
         right: window.innerWidth - a.right,
       }
 
-      const opposite: Record<Placement, Placement> = {
-        top: 'bottom',
-        bottom: 'top',
-        left: 'right',
-        right: 'left',
-      }
       const needed = placement === 'top' || placement === 'bottom' ? f.height + gap : f.width + gap
       const actual =
-        room[placement] < needed && room[opposite[placement]] >= needed ? opposite[placement] : placement
+        room[placement] < needed && room[OPPOSITE[placement]] >= needed ? OPPOSITE[placement] : placement
 
       let x: number
       let y: number
@@ -252,12 +257,32 @@ export function useAnchoredPosition(
       )
     }
 
+    /**
+     * Coalesced to one placement per frame.
+     *
+     * The scroll listener is on `window` in the capture phase, so it fires for
+     * every scroller in the document — and each pass reads `getBoundingClientRect`
+     * after the previous pass wrote new inline `left`/`top`, which makes the read
+     * a *forced synchronous reflow* rather than a cached one. At scroll rate that
+     * is a read-write-read thrash whose cost scales with the whole page's layout
+     * tree. One `place()` per frame caps it regardless of event volume.
+     */
+    let frame = 0
+    const schedule = () => {
+      if (frame !== 0) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        place()
+      })
+    }
+
     place()
-    window.addEventListener('scroll', place, true)
-    window.addEventListener('resize', place)
+    window.addEventListener('scroll', schedule, true)
+    window.addEventListener('resize', schedule)
     return () => {
-      window.removeEventListener('scroll', place, true)
-      window.removeEventListener('resize', place)
+      if (frame !== 0) cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule, true)
+      window.removeEventListener('resize', schedule)
     }
   }, [anchorRef, floatingRef, placement, gap, open])
 

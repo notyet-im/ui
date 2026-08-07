@@ -1,9 +1,10 @@
 /**
  * Badge.
  *
- * Each tone resolves three component-local custom properties — fill, tint and
- * ink — and the three variants consume those. That keeps the tone × variant
- * matrix at 6 + 3 rules instead of 18, and means a new tone is one block.
+ * Each tone resolves five component-local custom properties and the three
+ * variants consume those, which keeps the tone × variant matrix at 6 + 3 rules
+ * instead of 18 and makes a new tone one block. The slots are named at the
+ * tone rules below.
  */
 
 .ny-badge {

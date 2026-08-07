@@ -16,7 +16,11 @@
 
 .ny-flow__node {
   cursor: pointer;
-  transition: all var(--ny-duration-slow) var(--ny-ease-standard);
+  /* `fill`, not `all`: `all` also interpolates x/y/width/height, so every
+     width-driven relayout animated the rect geometry frame by frame. Both
+     sibling rules name their properties; this one did not, which looks
+     accidental rather than intended. */
+  transition: fill var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
 .ny-flow__bubble {
