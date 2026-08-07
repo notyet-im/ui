@@ -26,6 +26,20 @@ export function deltaColor(value: number): string {
   return value >= 0 ? deltaColors.positive : deltaColors.negative
 }
 
+/**
+ * The brand accent and its interaction states.
+ *
+ * Shares a hex with `deltaColors.positive` today but is a separate token on
+ * purpose: re-theming the brand must not move the data encoding, or vice versa.
+ * Mirrored here because Storybook's manager chrome renders outside the preview
+ * iframe and so cannot read the `--ny-*` custom properties.
+ */
+export const accent = {
+  base: '#2fbfa8',
+  hover: '#41d0ba',
+  active: '#28a28f',
+} as const
+
 export const surfaces = {
   dark: {
     bg: '#0b0c0e',

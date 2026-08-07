@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { breakpoints, deltaColors, fonts, motion, space, surfaces, zIndex } from './tokens'
+import { accent, breakpoints, deltaColors, fonts, motion, space, surfaces, zIndex } from './tokens'
 
 /**
  * `tokens.ts` is a hand-maintained mirror of `styles/tokens.css`. It has to be:
@@ -90,6 +90,12 @@ describe('tokens.ts mirrors tokens.css', () => {
     expect(deltaColors.positive).toBe(cssVar(':root', 'ny-positive'))
     expect(deltaColors.negative).toBe(cssVar(':root', 'ny-negative'))
     expect(deltaColors.neutral).toBe(cssVar(':root', 'ny-neutral'))
+  })
+
+  it('accent', () => {
+    expect(accent.base).toBe(cssVar(':root', 'ny-accent'))
+    expect(accent.hover).toBe(cssVar(':root', 'ny-accent-hover'))
+    expect(accent.active).toBe(cssVar(':root', 'ny-accent-active'))
   })
 
   it('dark surfaces', () => {
