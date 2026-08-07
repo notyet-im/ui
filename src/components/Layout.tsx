@@ -78,10 +78,14 @@ function withVars(vars: StyleVars, style: CSSProperties | undefined): CSSPropert
 
 export interface ContainerProps {
   /**
-   * Maximum content width: `sm` 720px, `md` 960px, `lg` 1280px, `full` none.
-   * Default `lg`.
+   * Maximum content width: `sm` 720px, `md` 960px, `lg` 1280px, `xl` 1560px,
+   * `full` none. Default `lg`.
+   *
+   * `xl` is the dashboard tier — dense, multi-column screens genuinely want
+   * more measure than reading content does, and the jump from 1280 straight to
+   * unbounded left them with no honest option.
    */
-  size?: 'sm' | 'md' | 'lg' | 'full'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
   children?: ReactNode
   className?: string
   /** Merged over the generated declarations — the caller wins. */

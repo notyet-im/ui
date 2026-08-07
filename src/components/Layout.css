@@ -46,6 +46,11 @@
   max-width: 1280px;
 }
 
+/* The dashboard tier — wider than any reading measure, still bounded. */
+.ny-container--xl {
+  max-width: 1560px;
+}
+
 .ny-container--full {
   max-width: none;
 }

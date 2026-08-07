@@ -9,14 +9,6 @@
   min-height: 100vh;
 }
 
-.ny-showcase-shell {
-  max-width: 1560px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--ny-space-12);
-}
-
 .ny-showcase-title-time {
   font-family: var(--ny-font-mono);
 }
@@ -24,12 +16,6 @@
 /* Main split: hero chart + detail rail ------------------------------------ */
 
 .ny-showcase-main-grid,
-.ny-showcase-bottom-grid {
-  display: grid;
-  gap: var(--ny-space-12);
-  align-items: stretch;
-}
-
 .ny-showcase-hero-head {
   display: flex;
   align-items: center;
@@ -127,40 +113,6 @@
 .ny-showcase-detail__section--divided {
   border-top: 1px solid var(--ny-border);
   padding-top: var(--ny-space-12);
-}
-
-/* Ticker extremes --------------------------------------------------------- */
-
-.ny-showcase-ticker-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--ny-space-16);
-  flex: 1;
-}
-
-.ny-showcase-ticker-column {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ny-space-8);
-  justify-content: space-between;
-}
-
-/* Narrative --------------------------------------------------------------- */
-
-.ny-showcase-narrative-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--ny-space-12);
-  flex: 1;
-  justify-content: space-between;
-}
-
-/* Sector momentum --------------------------------------------------------- */
-
-.ny-showcase-momentum-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
-  gap: var(--ny-space-12);
 }
 
 /* Footer ------------------------------------------------------------------ */

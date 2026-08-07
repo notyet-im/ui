@@ -2,11 +2,14 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ThemeName } from '..'
 import {
   BreakdownBar,
+  Container,
   DataRow,
   deltaColors,
   Eyebrow,
   formatDelta,
   GhostButton,
+  Grid,
+  GridItem,
   HeatGrid,
   Legend,
   MacroStrip,
@@ -21,6 +24,7 @@ import {
   SegmentedControl,
   Select,
   Sparkline,
+  Stack,
   StatTile,
   Tabs,
   ThemeProvider,
@@ -84,7 +88,7 @@ export function TrackerShowcase({
   const [view, setView] = useState<ViewKey>(heroView)
   const [selected, setSelected] = useState<BucketKey | null>(null)
 
-  const [chartRef, { width: measuredWidth, viewportWidth }] = useMeasure<HTMLDivElement>()
+  const [chartRef, { width: chartWidth }] = useMeasure<HTMLDivElement>()
 
   const clearSelection = useCallback(() => setSelected(null), [])
   useEscapeKey(selected != null, clearSelection)
@@ -97,18 +101,18 @@ export function TrackerShowcase({
   const ui = locale.ui
   const { label, shortLabel } = useMemo(() => makeLabeller(locale), [locale])
 
-  /* Responsive geometry --------------------------------------------------- */
+  /* Responsive content ----------------------------------------------------
+   *
+   * Layout is entirely CSS now — `Container`, `Grid` and `Stack` own it. What
+   * is left here is *content* choice, which CSS genuinely cannot make: whether
+   * to render a region's full name or just its code, and whether the flow chart
+   * should reserve less room for labels.
+   *
+   * It keys off the measured **container**, not the viewport. That distinction
+   * is the whole point: a chart in a 400px panel on a 1600px monitor is narrow,
+   * and the old `window.innerWidth` test called it wide. */
 
-  const viewport = viewportWidth || (typeof window !== 'undefined' ? window.innerWidth : 1440)
-  const narrow = viewport < 760
-  const tiny = viewport < 480
-  const chartWidth = measuredWidth || (narrow ? Math.max(240, viewport - 92) : 880)
-
-  const rowLabelWidth = tiny ? 26 : narrow ? 30 : 92
-  const headerFontSize = `${Math.max(
-    8,
-    Math.min(10.5, ((chartWidth - rowLabelWidth - 30) / SECTOR_KEYS.length) * 0.245),
-  ).toFixed(1)}px`
+  const narrow = chartWidth > 0 && chartWidth < 560
 
   /* Derived data ---------------------------------------------------------- */
 
@@ -156,296 +160,288 @@ export function TrackerShowcase({
   /* Render ---------------------------------------------------------------- */
 
   return (
-    <ThemeProvider
-      theme={theme}
-      className="ny-showcase-page"
-      style={{ padding: tiny ? '16px 12px 28px' : narrow ? '18px 16px 32px' : '22px 26px 40px' }}
-    >
-      <div className="ny-showcase-shell">
-        <PageHeader
-          kicker={ui.kicker}
-          title={ui.title}
-          subtitle={
-            <>
-              {ui.sub} <span className="ny-showcase-title-time">{ui.asOf}</span>
-            </>
-          }
-          actions={
-            <>
-              <SegmentedControl
-                label={ui.selected}
-                items={METRIC_KEYS.map((key, i) => ({ value: key, label: ui.metrics[i] }))}
-                value={metric}
-                onChange={setMetric}
-              />
-              <SegmentedControl
-                label={ui.netOver}
-                variant="mono"
-                items={RANGE_KEYS.map((key) => ({ value: key, label: key }))}
-                value={range}
-                onChange={setRange}
-              />
-              <Select
-                label="Language"
-                options={LANGUAGE_ORDER.map((key) => ({ value: key, label: LANGUAGE_LABELS[key] }))}
-                value={lang}
-                onChange={(next) => setLang(LANG_KEYS.includes(next) ? next : 'en')}
-              />
-              <ThemeToggle theme={theme} onChange={setTheme} />
-            </>
-          }
-        />
-
-        <MacroStrip>
-          {macros.map((macro) => (
-            <StatTile
-              key={macro.key}
-              label={macro.label}
-              value={macro.value}
-              change={macro.changeText}
-              changeValue={macro.change}
-              trend={macro.series}
-            />
-          ))}
-        </MacroStrip>
-
-        <div
-          className="ny-showcase-main-grid"
-          style={{ gridTemplateColumns: narrow ? 'minmax(0,1fr)' : 'minmax(0,1fr) 372px' }}
-        >
-          <Panel padding="chart" column>
-            <div className="ny-showcase-hero-head">
-              <Tabs
-                label={ui.title}
-                items={VIEW_KEYS.map((key, i) => ({ value: key, label: ui.tabs[i] }))}
-                value={view}
-                onChange={setView}
-              />
-              <Legend
-                items={[
-                  { color: deltaColors.positive, label: ui.inflow },
-                  { color: deltaColors.negative, label: ui.outflow },
-                ]}
-                note={`${formatDelta(total)} ${ui.rotated}`}
-              />
-            </div>
-
-            <div className="ny-showcase-hint">{ui.hints[VIEW_KEYS.indexOf(view)]}</div>
-
-            <div className="ny-showcase-chart-frame" ref={chartRef}>
-              {view === 'flow' && (
-                <SankeyFlow
-                  links={ribbonLinks}
-                  width={chartWidth}
-                  narrow={narrow}
-                  selectedId={selected}
-                  onSelect={toggle}
-                  renderLabel={narrow ? shortLabel : label}
-                  startCaption={ui.soldDown}
-                  endCaption={ui.boughtInto}
+    <ThemeProvider theme={theme} className="ny-showcase-page">
+      <Container size="xl">
+        <Stack gap={16}>
+          <PageHeader
+            kicker={ui.kicker}
+            title={ui.title}
+            subtitle={
+              <>
+                {ui.sub} <span className="ny-showcase-title-time">{ui.asOf}</span>
+              </>
+            }
+            actions={
+              <>
+                <SegmentedControl
+                  label={ui.selected}
+                  items={METRIC_KEYS.map((key, i) => ({ value: key, label: ui.metrics[i] }))}
+                  value={metric}
+                  onChange={setMetric}
                 />
-              )}
-
-              {view === 'grid' && (
-                <HeatGrid
-                  rows={REGION_CODES.map((code) => ({
-                    key: code,
-                    code,
-                    name: narrow ? undefined : locale.reg[code],
-                  }))}
-                  columns={SECTOR_KEYS.map((key) => ({ key, label: locale.sshort[key] }))}
-                  value={(row, column) => nets[`${row}|${column}`] ?? 0}
-                  max={heatMax}
-                  selectedKey={selectionKey}
-                  onSelect={toggle}
-                  rowLabelWidth={rowLabelWidth}
-                  headerFontSize={headerFontSize}
-                  cellFontSize={tiny ? '9.5px' : narrow ? '10.5px' : '11.5px'}
-                  minHeight={narrow ? 380 : 452}
+                <SegmentedControl
+                  label={ui.netOver}
+                  variant="mono"
+                  items={RANGE_KEYS.map((key) => ({ value: key, label: key }))}
+                  value={range}
+                  onChange={setRange}
                 />
-              )}
-
-              {view === 'ring' && (
-                <RotationRing
-                  nodes={ringNodes}
-                  pairs={ringPairs}
-                  width={chartWidth}
-                  selectedId={selectedRegion}
-                  onSelect={(id) => toggle(`${id}|*`)}
-                  renderLabel={(id) => locale.reg[id as (typeof REGION_CODES)[number]]}
+                <Select
+                  label="Language"
+                  options={LANGUAGE_ORDER.map((key) => ({ value: key, label: LANGUAGE_LABELS[key] }))}
+                  value={lang}
+                  onChange={(next) => setLang(LANG_KEYS.includes(next) ? next : 'en')}
                 />
-              )}
-            </div>
-          </Panel>
-
-          <Panel column className="ny-showcase-detail">
-            <div className="ny-showcase-detail__head">
-              <div className="ny-showcase-detail__head-row">
-                <Eyebrow>{ui.selected}</Eyebrow>
-                {selected != null && <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>}
-              </div>
-              <div className="ny-showcase-detail__title">{detail.title}</div>
-              <div className="ny-showcase-detail__figures">
-                <span
-                  className="ny-showcase-detail__net"
-                  style={{ color: detail.net >= 0 ? deltaColors.positive : deltaColors.negative }}
-                >
-                  {formatDelta(detail.net, true)}
-                </span>
-                <span className="ny-showcase-detail__net-caption">
-                  {ui.netOver} {locale.rlab[range]}
-                </span>
-              </div>
-              {selected == null && <div className="ny-showcase-detail__auto">{ui.auto}</div>}
-            </div>
-
-            <div>
-              <Sparkline
-                values={detail.series}
-                width={330}
-                height={74}
-                pad={8}
-                color={detail.net >= 0 ? deltaColors.positive : deltaColors.negative}
-                area
-                areaOpacity={0.12}
-                strokeWidth={1.7}
-                baseline
-                fluid
-              />
-              <div className="ny-showcase-detail__chart-caption">
-                <span>{ui.cumFlow}</span>
-                <span>{ui.asOfShort}</span>
-              </div>
-            </div>
-
-            <div className="ny-showcase-detail__section ny-showcase-detail__section--breakdown">
-              <Eyebrow>{detail.breakdownLabel}</Eyebrow>
-              {detail.breakdown.map((entry) => (
-                <BreakdownBar
-                  key={entry.name}
-                  label={entry.name}
-                  value={formatDelta(entry.value, true)}
-                  fraction={entry.fraction}
-                  tone={entry.value}
-                />
-              ))}
-            </div>
-
-            <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
-              <Eyebrow>{ui.counterparties}</Eyebrow>
-              {detail.counterparties.map((entry) => (
-                <DataRow
-                  key={entry.key}
-                  leading={entry.arrow}
-                  label={entry.name}
-                  value={formatDelta(entry.value, true)}
-                  tone={entry.value}
-                />
-              ))}
-            </div>
-
-            <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
-              <Eyebrow>{ui.topNames}</Eyebrow>
-              {detail.names.map((entry) => (
-                <DataRow
-                  key={entry.key}
-                  monoLabel
-                  label={entry.symbol}
-                  caption={entry.name}
-                  value={formatDelta(entry.value, true)}
-                  tone={entry.value}
-                />
-              ))}
-            </div>
-          </Panel>
-        </div>
-
-        <div
-          className="ny-showcase-bottom-grid"
-          style={{ gridTemplateColumns: narrow ? 'minmax(0,1fr)' : '1.05fr .95fr 1.15fr' }}
-        >
-          <Panel column>
-            <PanelHeading title={ui.tickerTitle} subtitle={`${ui.tickerSub} ${locale.rlab[range]}`} />
-            <div className="ny-showcase-ticker-grid">
-              <div className="ny-showcase-ticker-column">
-                <Eyebrow variant="tile" style={{ color: deltaColors.positive }}>
-                  {ui.bought}
-                </Eyebrow>
-                {extremes.bought.map((entry) => (
-                  <DataRow
-                    key={entry.key}
-                    layout="stacked"
-                    monoLabel
-                    label={entry.symbol}
-                    caption={entry.name}
-                    value={formatDelta(entry.value)}
-                    valueColor={deltaColors.positive}
-                  />
-                ))}
-              </div>
-              <div className="ny-showcase-ticker-column">
-                <Eyebrow variant="tile" style={{ color: deltaColors.negative }}>
-                  {ui.sold}
-                </Eyebrow>
-                {extremes.sold.map((entry) => (
-                  <DataRow
-                    key={entry.key}
-                    layout="stacked"
-                    monoLabel
-                    label={entry.symbol}
-                    caption={entry.name}
-                    value={formatDelta(-entry.value)}
-                    valueColor={deltaColors.negative}
-                  />
-                ))}
-              </div>
-            </div>
-          </Panel>
-
-          <Panel column>
-            <PanelHeading title={ui.matrixTitle} subtitle={ui.matrixSub} />
-            <RotationMatrix
-              codes={REGION_CODES}
-              value={(from, to) => regions.pairs[from][to]}
-              max={regions.maxPair}
-            />
-          </Panel>
-
-          <Panel column>
-            <PanelHeading title={ui.narrTitle} subtitle={ui.narrSub} />
-            <div className="ny-showcase-narrative-list">
-              {stories.map((story) => (
-                <NarrativeItem key={story.key} title={story.title} value={story.value} tone={story.tone}>
-                  {story.body}
-                </NarrativeItem>
-              ))}
-            </div>
-          </Panel>
-        </div>
-
-        <Panel>
-          <PanelHeading
-            inline
-            title={ui.momTitle}
-            subtitle={`${ui.momSub} ${locale.rlab[range]} ${ui.momSub2}`}
+                <ThemeToggle theme={theme} onChange={setTheme} />
+              </>
+            }
           />
-          <div className="ny-showcase-momentum-grid">
-            {momentum.map((sector) => (
-              <MomentumCard
-                key={sector.key}
-                name={sector.name}
-                value={formatDelta(sector.value, true)}
-                share={sector.share}
-                tone={sector.value}
-                trend={sector.series}
-                onClick={() => toggle(sector.focusKey)}
+
+          <MacroStrip>
+            {macros.map((macro) => (
+              <StatTile
+                key={macro.key}
+                label={macro.label}
+                value={macro.value}
+                change={macro.changeText}
+                changeValue={macro.change}
+                trend={macro.series}
               />
             ))}
-          </div>
-        </Panel>
+          </MacroStrip>
 
-        <div className="ny-showcase-footer">{ui.footer}</div>
-      </div>
+          <Grid columns={{ base: 1, lg: 12 }} gap={12}>
+            <GridItem span={{ base: 1, lg: 8 }}>
+              <Panel padding="chart" column>
+                <div className="ny-showcase-hero-head">
+                  <Tabs
+                    label={ui.title}
+                    items={VIEW_KEYS.map((key, i) => ({ value: key, label: ui.tabs[i] }))}
+                    value={view}
+                    onChange={setView}
+                  />
+                  <Legend
+                    items={[
+                      { color: deltaColors.positive, label: ui.inflow },
+                      { color: deltaColors.negative, label: ui.outflow },
+                    ]}
+                    note={`${formatDelta(total)} ${ui.rotated}`}
+                  />
+                </div>
+
+                <div className="ny-showcase-hint">{ui.hints[VIEW_KEYS.indexOf(view)]}</div>
+
+                <div className="ny-showcase-chart-frame" ref={chartRef}>
+                  {view === 'flow' && (
+                    <SankeyFlow
+                      links={ribbonLinks}
+                      narrow={narrow}
+                      selectedId={selected}
+                      onSelect={toggle}
+                      renderLabel={narrow ? shortLabel : label}
+                      startCaption={ui.soldDown}
+                      endCaption={ui.boughtInto}
+                    />
+                  )}
+
+                  {view === 'grid' && (
+                    <HeatGrid
+                      rows={REGION_CODES.map((code) => ({
+                        key: code,
+                        code,
+                        name: narrow ? undefined : locale.reg[code],
+                      }))}
+                      columns={SECTOR_KEYS.map((key) => ({ key, label: locale.sshort[key] }))}
+                      value={(row, column) => nets[`${row}|${column}`] ?? 0}
+                      max={heatMax}
+                      selectedKey={selectionKey}
+                      onSelect={toggle}
+                      rowLabelWidth={narrow ? 30 : 92}
+                      minHeight={narrow ? 380 : 452}
+                    />
+                  )}
+
+                  {view === 'ring' && (
+                    <RotationRing
+                      nodes={ringNodes}
+                      pairs={ringPairs}
+                      selectedId={selectedRegion}
+                      onSelect={(id) => toggle(`${id}|*`)}
+                      renderLabel={(id) => locale.reg[id as (typeof REGION_CODES)[number]]}
+                    />
+                  )}
+                </div>
+              </Panel>
+            </GridItem>
+
+            <GridItem span={{ base: 1, lg: 4 }}>
+              <Panel column className="ny-showcase-detail">
+                <div className="ny-showcase-detail__head">
+                  <div className="ny-showcase-detail__head-row">
+                    <Eyebrow>{ui.selected}</Eyebrow>
+                    {selected != null && <GhostButton onClick={clearSelection}>✕ {ui.clear}</GhostButton>}
+                  </div>
+                  <div className="ny-showcase-detail__title">{detail.title}</div>
+                  <div className="ny-showcase-detail__figures">
+                    <span
+                      className="ny-showcase-detail__net"
+                      style={{ color: detail.net >= 0 ? deltaColors.positive : deltaColors.negative }}
+                    >
+                      {formatDelta(detail.net, true)}
+                    </span>
+                    <span className="ny-showcase-detail__net-caption">
+                      {ui.netOver} {locale.rlab[range]}
+                    </span>
+                  </div>
+                  {selected == null && <div className="ny-showcase-detail__auto">{ui.auto}</div>}
+                </div>
+
+                <div>
+                  <Sparkline
+                    values={detail.series}
+                    width={330}
+                    height={74}
+                    pad={8}
+                    color={detail.net >= 0 ? deltaColors.positive : deltaColors.negative}
+                    area
+                    areaOpacity={0.12}
+                    strokeWidth={1.7}
+                    baseline
+                    fluid
+                  />
+                  <div className="ny-showcase-detail__chart-caption">
+                    <span>{ui.cumFlow}</span>
+                    <span>{ui.asOfShort}</span>
+                  </div>
+                </div>
+
+                <div className="ny-showcase-detail__section ny-showcase-detail__section--breakdown">
+                  <Eyebrow>{detail.breakdownLabel}</Eyebrow>
+                  {detail.breakdown.map((entry) => (
+                    <BreakdownBar
+                      key={entry.name}
+                      label={entry.name}
+                      value={formatDelta(entry.value, true)}
+                      fraction={entry.fraction}
+                      tone={entry.value}
+                    />
+                  ))}
+                </div>
+
+                <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
+                  <Eyebrow>{ui.counterparties}</Eyebrow>
+                  {detail.counterparties.map((entry) => (
+                    <DataRow
+                      key={entry.key}
+                      leading={entry.arrow}
+                      label={entry.name}
+                      value={formatDelta(entry.value, true)}
+                      tone={entry.value}
+                    />
+                  ))}
+                </div>
+
+                <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
+                  <Eyebrow>{ui.topNames}</Eyebrow>
+                  {detail.names.map((entry) => (
+                    <DataRow
+                      key={entry.key}
+                      monoLabel
+                      label={entry.symbol}
+                      caption={entry.name}
+                      value={formatDelta(entry.value, true)}
+                      tone={entry.value}
+                    />
+                  ))}
+                </div>
+              </Panel>
+            </GridItem>
+          </Grid>
+
+          <Grid columns={{ base: 1, lg: 3 }} gap={12}>
+            <Panel column>
+              <PanelHeading title={ui.tickerTitle} subtitle={`${ui.tickerSub} ${locale.rlab[range]}`} />
+              <Grid columns={{ base: 1, sm: 2 }} gap={12}>
+                <Stack gap={4}>
+                  <Eyebrow variant="tile" style={{ color: deltaColors.positive }}>
+                    {ui.bought}
+                  </Eyebrow>
+                  {extremes.bought.map((entry) => (
+                    <DataRow
+                      key={entry.key}
+                      layout="stacked"
+                      monoLabel
+                      label={entry.symbol}
+                      caption={entry.name}
+                      value={formatDelta(entry.value)}
+                      valueColor={deltaColors.positive}
+                    />
+                  ))}
+                </Stack>
+                <Stack gap={4}>
+                  <Eyebrow variant="tile" style={{ color: deltaColors.negative }}>
+                    {ui.sold}
+                  </Eyebrow>
+                  {extremes.sold.map((entry) => (
+                    <DataRow
+                      key={entry.key}
+                      layout="stacked"
+                      monoLabel
+                      label={entry.symbol}
+                      caption={entry.name}
+                      value={formatDelta(-entry.value)}
+                      valueColor={deltaColors.negative}
+                    />
+                  ))}
+                </Stack>
+              </Grid>
+            </Panel>
+
+            <Panel column>
+              <PanelHeading title={ui.matrixTitle} subtitle={ui.matrixSub} />
+              <RotationMatrix
+                codes={REGION_CODES}
+                value={(from, to) => regions.pairs[from][to]}
+                max={regions.maxPair}
+              />
+            </Panel>
+
+            <Panel column>
+              <PanelHeading title={ui.narrTitle} subtitle={ui.narrSub} />
+              <Stack gap={12}>
+                {stories.map((story) => (
+                  <NarrativeItem key={story.key} title={story.title} value={story.value} tone={story.tone}>
+                    {story.body}
+                  </NarrativeItem>
+                ))}
+              </Stack>
+            </Panel>
+
+            <Panel>
+              <PanelHeading
+                inline
+                title={ui.momTitle}
+                subtitle={`${ui.momSub} ${locale.rlab[range]} ${ui.momSub2}`}
+              />
+              <Grid columns={{ base: 2, md: 3 }} gap={8}>
+                {momentum.map((sector) => (
+                  <MomentumCard
+                    key={sector.key}
+                    name={sector.name}
+                    value={formatDelta(sector.value, true)}
+                    share={sector.share}
+                    tone={sector.value}
+                    trend={sector.series}
+                    onClick={() => toggle(sector.focusKey)}
+                  />
+                ))}
+              </Grid>
+            </Panel>
+          </Grid>
+
+          <div className="ny-showcase-footer">{ui.footer}</div>
+        </Stack>
+      </Container>
     </ThemeProvider>
   )
 }
