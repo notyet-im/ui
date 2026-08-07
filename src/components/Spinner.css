@@ -10,6 +10,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  /* The ring is a fixed square; letting the wrapper shrink distorts it. */
+  flex: none;
 }
 
 .ny-spinner__ring {

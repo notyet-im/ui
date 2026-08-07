@@ -20,6 +20,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   min-width: var(--ny-control-height-sm);
   height: var(--ny-control-height-sm);
   padding: var(--ny-space-0) var(--ny-control-padding-x-sm);

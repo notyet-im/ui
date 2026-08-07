@@ -32,6 +32,11 @@
   position: relative;
   display: inline-flex;
   align-items: center;
+  /* The chevron is positioned against this wrapper, so if a flex parent
+     shrinks it the chevron detaches from the control — the same failure the
+     wrapper's `inline-flex` was introduced to fix, just triggered by
+     compression instead of by stretching. */
+  flex: none;
 }
 
 .ny-select__input {

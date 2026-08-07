@@ -9,6 +9,9 @@
 .ny-badge {
   display: inline-flex;
   align-items: center;
+  /* `white-space: nowrap` below means a squeezed badge clips its text rather
+     than wrapping it, so it must not be shrinkable. */
+  flex: none;
   gap: var(--ny-space-4);
   border: 1px solid transparent;
   border-radius: var(--ny-radius-full);
