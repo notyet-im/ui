@@ -7,6 +7,9 @@
   cursor: pointer;
   width: var(--ny-control-height-md);
   height: var(--ny-control-height-md);
+  /* Square, and it must stay square. Without this a flex parent shrinks the
+     width while the height holds, turning the button into a tall oval. */
+  flex: none;
   border-radius: var(--ny-radius-lg);
   display: flex;
   align-items: center;

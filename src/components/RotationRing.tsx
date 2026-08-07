@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useMeasure } from '../hooks'
 import { formatDelta } from '../lib/format'
 import type { RingNodeInput, RingPairInput } from '../lib/ring'
 import { ringLayout } from '../lib/ring'
@@ -10,8 +11,15 @@ export interface RotationRingProps {
   nodes: RingNodeInput[]
   /** Directional volumes between members. */
   pairs: RingPairInput[]
-  /** Measured pixel width of the container. */
-  width: number
+  /**
+   * Pixel width to draw at. **Omit it and the chart measures its own
+   * container**, which is what you almost always want — a hardcoded width
+   * overflows any container narrower than it.
+   *
+   * It needs a real number either way: the labels are HTML and must not scale
+   * with the drawing, so the layout is computed in CSS pixels.
+   */
+  width?: number
   height?: number
   /** Member id to highlight. */
   selectedId?: string | null
@@ -43,10 +51,19 @@ export function RotationRing({
   formatValue = (value) => formatDelta(value, true),
   className,
 }: RotationRingProps) {
-  const layout = ringLayout(nodes, pairs, { width, height })
+  const [ref, measured] = useMeasure<HTMLDivElement>()
+  const resolvedWidth = width ?? measured.width
+
+  // Nothing to draw until a width exists. On the measuring path that is one
+  // frame; the ref must still be attached so the observer can report.
+  if (resolvedWidth <= 0) {
+    return <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }} />
+  }
+
+  const layout = ringLayout(nodes, pairs, { width: resolvedWidth, height })
 
   return (
-    <div className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
+    <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
       {/* Decorative: the accessible representation is the label buttons below,
           which carry each node's name and value and are keyboard-reachable. */}
       <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">

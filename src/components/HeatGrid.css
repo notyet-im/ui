@@ -1,16 +1,30 @@
+/**
+ * Below `--ny-heat-grid-min-cell` per column the grid scrolls sideways rather
+ * than compressing. Letting the cells keep shrinking produced unreadable
+ * slivers with the column labels overlapping each other — a legible grid you
+ * scroll beats an illegible one that fits.
+ */
 .ny-heat-grid {
+  --ny-heat-grid-min-cell: 40px;
+  --ny-heat-grid-min-label: 96px;
+
   display: flex;
   flex-direction: column;
   gap: var(--ny-space-4);
-  padding: 6px 0 var(--ny-space-12);
+  padding: var(--ny-space-8) 0 var(--ny-space-12);
   min-width: 0;
   flex: 1;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
 }
 
 .ny-heat-grid__header,
 .ny-heat-grid__row {
   display: flex;
   gap: var(--ny-space-4);
+  /* Grow past the container when the minimums demand it — that is what gives
+     the scroll container something to scroll. */
+  min-width: max-content;
 }
 
 .ny-heat-grid__header {
@@ -32,7 +46,7 @@
 .ny-heat-grid__column-label {
   box-sizing: border-box;
   flex: 1 1 0;
-  min-width: 0;
+  min-width: var(--ny-heat-grid-min-cell);
   line-height: var(--ny-line-height-tight);
   color: var(--ny-text-muted);
   font-family: var(--ny-font-mono);
@@ -59,7 +73,7 @@
 .ny-heat-grid__cell {
   box-sizing: border-box;
   flex: 1 1 0;
-  min-width: 0;
+  min-width: var(--ny-heat-grid-min-cell);
   height: 100%;
   border-radius: var(--ny-radius-sm);
   cursor: pointer;

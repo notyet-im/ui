@@ -20,19 +20,21 @@
 
 /* Tones ------------------------------------------------------------------- */
 
-/* Each tone resolves four locals — fill, tint, ink-on-tint, ink-on-fill — so the
-   variants below stay at one rule each instead of tone x variant. `neutral` has
-   no tint of its own and borrows the sunken surface. */
+/* Each tone resolves five locals — fill, tint, border, ink-on-tint, ink-on-fill
+   — so the variants below stay at one rule each instead of tone x variant.
+   Every tone now carries the same slots, `neutral` included. */
 .ny-badge--neutral {
   --ny-badge-fill: var(--ny-neutral);
-  --ny-badge-tint: var(--ny-surface-sunken);
-  --ny-badge-ink: var(--ny-text-muted);
+  --ny-badge-tint: var(--ny-neutral-subtle);
+  --ny-badge-line: var(--ny-neutral-border);
+  --ny-badge-ink: var(--ny-neutral-text);
   --ny-badge-on-fill: var(--ny-text-on-neutral);
 }
 
 .ny-badge--accent {
   --ny-badge-fill: var(--ny-accent);
   --ny-badge-tint: var(--ny-accent-subtle);
+  --ny-badge-line: var(--ny-accent-border);
   --ny-badge-ink: var(--ny-accent-text);
   --ny-badge-on-fill: var(--ny-text-on-accent);
 }
@@ -40,6 +42,7 @@
 .ny-badge--success {
   --ny-badge-fill: var(--ny-success);
   --ny-badge-tint: var(--ny-success-subtle);
+  --ny-badge-line: var(--ny-success-border);
   --ny-badge-ink: var(--ny-success-text);
   --ny-badge-on-fill: var(--ny-text-on-success);
 }
@@ -47,6 +50,7 @@
 .ny-badge--warning {
   --ny-badge-fill: var(--ny-warning);
   --ny-badge-tint: var(--ny-warning-subtle);
+  --ny-badge-line: var(--ny-warning-border);
   --ny-badge-ink: var(--ny-warning-text);
   --ny-badge-on-fill: var(--ny-text-on-warning);
 }
@@ -54,6 +58,7 @@
 .ny-badge--danger {
   --ny-badge-fill: var(--ny-danger);
   --ny-badge-tint: var(--ny-danger-subtle);
+  --ny-badge-line: var(--ny-danger-border);
   --ny-badge-ink: var(--ny-danger-text);
   --ny-badge-on-fill: var(--ny-text-on-danger);
 }
@@ -61,6 +66,7 @@
 .ny-badge--info {
   --ny-badge-fill: var(--ny-info);
   --ny-badge-tint: var(--ny-info-subtle);
+  --ny-badge-line: var(--ny-info-border);
   --ny-badge-ink: var(--ny-info-text);
   --ny-badge-on-fill: var(--ny-text-on-info);
 }
@@ -77,9 +83,13 @@
   color: var(--ny-badge-on-fill);
 }
 
+/* The border is the tone's `-border` slot, not its solid fill: the fill is
+   sized to carry white-on-colour weight and reads as a shout at hairline
+   width. `-border` is solved for ~3.2:1 on the surface, so it stays legible
+   without dominating. */
 .ny-badge--outline {
   background: transparent;
-  border-color: var(--ny-badge-fill);
+  border-color: var(--ny-badge-line);
   color: var(--ny-badge-ink);
 }
 

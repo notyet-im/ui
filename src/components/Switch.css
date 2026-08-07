@@ -4,10 +4,25 @@
  * and no click handler on a non-interactive element.
  */
 .ny-switch {
+  --ny-switch-track-border: 1px;
   --ny-switch-track-width: var(--ny-space-40);
   --ny-switch-track-height: var(--ny-space-24);
-  --ny-switch-thumb-size: var(--ny-space-20);
   --ny-switch-thumb-inset: var(--ny-space-2);
+
+  /**
+   * Derived, never hand-set. The thumb is absolutely positioned, and an
+   * absolutely-positioned child sits against its parent's *padding* box — so
+   * the track's border has to come out of the height the thumb is sized from.
+   * Hand-setting it to 20px made the top inset apply and the bottom one vanish,
+   * which read as the control sitting low in its own track.
+   */
+  --ny-switch-thumb-size: calc(
+    var(--ny-switch-track-height) -
+    var(--ny-switch-track-border) *
+    2 -
+    var(--ny-switch-thumb-inset) *
+    2
+  );
 
   display: inline-flex;
   align-items: center;
@@ -23,10 +38,10 @@
   text-align: left;
 }
 
+/* Only the track changes; the thumb re-derives from it. */
 .ny-switch--sm {
   --ny-switch-track-width: var(--ny-space-32);
   --ny-switch-track-height: var(--ny-space-20);
-  --ny-switch-thumb-size: var(--ny-space-16);
 
   font-size: var(--ny-font-size-sm);
 }
@@ -36,7 +51,7 @@
   flex: none;
   width: var(--ny-switch-track-width);
   height: var(--ny-switch-track-height);
-  border: 1px solid var(--ny-border-strong);
+  border: var(--ny-switch-track-border) solid var(--ny-border-strong);
   border-radius: var(--ny-radius-full);
   background: var(--ny-surface-sunken);
   transition:
@@ -82,8 +97,17 @@
 
 .ny-switch[aria-checked="true"] .ny-switch__thumb {
   background: var(--ny-text-on-accent);
+  /* Travel is measured across the padding box too, so the border comes out
+     here for the same reason it does in the thumb size. */
   transform: translateX(
-    calc(var(--ny-switch-track-width) - var(--ny-switch-thumb-size) - var(--ny-switch-thumb-inset) * 2)
+    calc(
+      var(--ny-switch-track-width) -
+      var(--ny-switch-track-border) *
+      2 -
+      var(--ny-switch-thumb-size) -
+      var(--ny-switch-thumb-inset) *
+      2
+    )
   );
 }
 

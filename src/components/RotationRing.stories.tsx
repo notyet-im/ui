@@ -17,7 +17,7 @@ const meta = {
       },
     },
   },
-  args: { nodes: [], pairs: [], width: 880 },
+  args: { nodes: [], pairs: [] },
 } satisfies Meta<typeof RotationRing>
 
 export default meta
@@ -32,11 +32,10 @@ const pairs = REGION_CODES.flatMap((from) =>
 function Example({ initial = null }: { initial?: string | null }) {
   const [selected, setSelected] = useState<string | null>(initial)
   return (
-    <Panel padding="chart" style={{ width: 916 }}>
+    <Panel padding="chart">
       <RotationRing
         nodes={nodes}
         pairs={pairs}
-        width={880}
         selectedId={selected}
         onSelect={(id) => setSelected((current) => (current === id ? null : id))}
         renderLabel={(id) => LOCALES.en.reg[id as (typeof REGION_CODES)[number]]}

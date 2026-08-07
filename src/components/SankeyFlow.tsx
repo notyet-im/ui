@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useMeasure } from '../hooks'
 import { formatDelta } from '../lib/format'
 import type { FlowLink } from '../lib/sankey'
 import { sankeyLayout } from '../lib/sankey'
@@ -8,8 +9,16 @@ import './FlowChart.css'
 export interface SankeyFlowProps {
   /** Flows to draw. Order does not matter; the layout sorts by volume. */
   links: FlowLink[]
-  /** Measured pixel width of the container. The chart draws in CSS pixels. */
-  width: number
+  /**
+   * Pixel width to draw at. **Omit it and the chart measures its own
+   * container**, which is what you almost always want — a hardcoded width
+   * overflows any container narrower than it.
+   *
+   * It needs a real number either way: the labels are HTML and must not scale
+   * with the drawing, so the layout is computed in CSS pixels rather than in a
+   * scaled `viewBox`.
+   */
+  width?: number
   /** Overall field height, including the caption row. Default 472. */
   height?: number
   /** Height of the ribbon stack itself. Default 400. */
@@ -56,10 +65,19 @@ export function SankeyFlow({
   endCaption,
   className,
 }: SankeyFlowProps) {
-  const layout = sankeyLayout(links, { width, height: fieldHeight, narrow })
+  const [ref, measured] = useMeasure<HTMLDivElement>()
+  const resolvedWidth = width ?? measured.width
+
+  // Nothing to draw until a width exists. On the measuring path that is one
+  // frame; the ref must still be attached so the observer can report.
+  if (resolvedWidth <= 0) {
+    return <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }} />
+  }
+
+  const layout = sankeyLayout(links, { width: resolvedWidth, height: fieldHeight, narrow })
 
   return (
-    <div className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
+    <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
       {/* Decorative: the accessible representation is the label buttons below,
           which carry each node's name and value and are keyboard-reachable. */}
       <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">

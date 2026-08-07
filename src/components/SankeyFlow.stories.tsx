@@ -12,7 +12,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Two-column flow diagram. Selecting a bucket recolours every ribbon touching it — teal where the selection is receiving, rust where it is sending — and fades the rest. The chart draws in CSS pixels, so it needs a measured `width`; pair it with `useMeasure`.',
+          'Two-column flow diagram. Selecting a bucket recolours every ribbon touching it — teal where the selection is receiving, rust where it is sending — and fades the rest. The chart lays out in CSS pixels because its labels are HTML and must not scale, so it measures its own container — give it a container, not a `width`.',
       },
     },
   },
@@ -20,7 +20,6 @@ const meta = {
     links: buildEdges('15D', 'combined')
       .slice(0, 9)
       .map((edge) => ({ from: edge.from, to: edge.to, value: edge.value })),
-    width: 880,
   },
 } satisfies Meta<typeof SankeyFlow>
 
@@ -33,13 +32,13 @@ const links = buildEdges('15D', 'combined')
 
 const { label, shortLabel } = makeLabeller(LOCALES.en)
 
-function Example({ width = 880, narrow = false }: { width?: number; narrow?: boolean }) {
+/** `maxWidth` constrains the *container*; the chart measures whatever it gets. */
+function Example({ narrow = false, maxWidth }: { narrow?: boolean; maxWidth?: number }) {
   const [selected, setSelected] = useState<string | null>(null)
   return (
-    <Panel padding="chart" style={{ width: width + 36 }}>
+    <Panel padding="chart" style={maxWidth != null ? { maxWidth } : undefined}>
       <SankeyFlow
         links={links}
-        width={width}
         narrow={narrow}
         selectedId={selected}
         onSelect={(id) => setSelected((current) => (current === id ? null : id))}
@@ -60,10 +59,9 @@ export const Selected: Story = {
   render: () => {
     const [selected, setSelected] = useState<string | null>('HK|TECH')
     return (
-      <Panel padding="chart" style={{ width: 916 }}>
+      <Panel padding="chart">
         <SankeyFlow
           links={links}
-          width={880}
           selectedId={selected}
           onSelect={(id) => setSelected((current) => (current === id ? null : id))}
           renderLabel={label}
@@ -77,5 +75,5 @@ export const Selected: Story = {
 
 export const Narrow: Story = {
   name: 'Narrow (abbreviated labels)',
-  render: () => <Example width={340} narrow />,
+  render: () => <Example maxWidth={376} narrow />,
 }

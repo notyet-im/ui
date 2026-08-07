@@ -65,19 +65,44 @@
   --ny-text-disabled: #4a515c;
   --ny-text-inverse: var(--ny-ink-0);
 
-  --ny-accent-subtle: #12302c;
+  /**
+   * Tone ramps — every tone carries the same four per-theme slots, so any tone
+   * can be swapped for any other without a component caring which one it got.
+   *
+   * `-border` is solved per hue for ~3.2:1 against the surface rather than set
+   * to a fixed lightness: amber at a given lightness is far brighter than blue
+   * at the same lightness, so a fixed value would make the tones look
+   * differently weighted. Matching the *contrast* is what makes them consistent.
+   */
+  --ny-accent-subtle: #102b26;
+  --ny-accent-subtle-hover: #163934;
+  --ny-accent-border: #267367;
+  --ny-accent-text: #78e3d2;
 
-  --ny-success-subtle: #14261d;
-  --ny-warning-subtle: #2b2211;
-  --ny-danger-subtle: #2e1714;
-  --ny-info-subtle: #131f2c;
+  --ny-success-subtle: #102b1c;
+  --ny-success-subtle-hover: #163926;
+  --ny-success-border: #2b754d;
+  --ny-success-text: #84d7a9;
 
-  /* Ink for text sitting on the matching `-subtle` tint. */
-  --ny-accent-text: #2fbfa8;
-  --ny-success-text: #6fd39b;
-  --ny-warning-text: #e8bc63;
-  --ny-danger-text: #f0897a;
-  --ny-info-text: #82b4e8;
+  --ny-warning-subtle: #2b2110;
+  --ny-warning-subtle-hover: #392d16;
+  --ny-warning-border: #81622b;
+  --ny-warning-text: #e7bd74;
+
+  --ny-danger-subtle: #2b1310;
+  --ny-danger-subtle-hover: #391916;
+  --ny-danger-border: #ae453a;
+  --ny-danger-text: #e77f74;
+
+  --ny-info-subtle: #101d2b;
+  --ny-info-subtle-hover: #162739;
+  --ny-info-border: #356aa0;
+  --ny-info-text: #7aade1;
+
+  --ny-neutral-subtle: #1a1d21;
+  --ny-neutral-subtle-hover: #23272c;
+  --ny-neutral-border: #5e6876;
+  --ny-neutral-text: #a0abbb;
 
   --ny-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.16);
   --ny-shadow-md: 0 4px 12px rgb(0 0 0 / 0.2);
@@ -107,21 +132,38 @@
   --ny-text-disabled: #b0b5bb;
   --ny-text-inverse: var(--ny-paper-1);
 
-  --ny-accent-subtle: #dff3ef;
+  /* The same four slots per tone as the dark block, mirrored. `-text` is a
+     darkened hue rather than the solid fill: the raw accent on its own light
+     tint is 2:1, which is unreadable. Each lands at 5:1 or better. */
+  --ny-accent-subtle: #e3f7f4;
+  --ny-accent-subtle-hover: #d0f1ec;
+  --ny-accent-border: #359f8e;
+  --ny-accent-text: #147566;
 
-  --ny-success-subtle: #e6f3ea;
-  --ny-warning-subtle: #faf1dd;
-  --ny-danger-subtle: #fbe9e6;
-  --ny-info-subtle: #e7f0fa;
+  --ny-success-subtle: #e5f5ec;
+  --ny-success-subtle-hover: #d2eedf;
+  --ny-success-border: #3ca16a;
+  --ny-success-text: #1f6b41;
 
-  /* Ink for text sitting on the matching `-subtle` tint. The accent ink is a
-     darkened teal, not `--ny-accent`: the raw accent on its own light tint is
-     only 2:1, which is unreadable. This lands at 5.7:1. */
-  --ny-accent-text: #17695b;
-  --ny-success-text: #23724a;
-  --ny-warning-text: #8a6414;
-  --ny-danger-text: #a63b2f;
-  --ny-info-text: #2a5f96;
+  --ny-warning-subtle: #f7f0e3;
+  --ny-warning-subtle-hover: #f1e5d0;
+  --ny-warning-border: #b3883c;
+  --ny-warning-text: #785311;
+
+  --ny-danger-subtle: #f7e5e3;
+  --ny-danger-subtle-hover: #f1d3d0;
+  --ny-danger-border: #cf776e;
+  --ny-danger-text: #781b11;
+
+  --ny-info-subtle: #e3edf7;
+  --ny-info-subtle-hover: #d0e0f1;
+  --ny-info-border: #5f93ca;
+  --ny-info-text: #164474;
+
+  --ny-neutral-subtle: #ebedef;
+  --ny-neutral-subtle-hover: #dde0e4;
+  --ny-neutral-border: #86909f;
+  --ny-neutral-text: #364354;
 
   /* Lighter in light theme — the hairline border carries most of the
      separation, so a heavy shadow reads as dirt rather than as elevation. */
@@ -140,15 +182,39 @@
 
   /* Accent. Shares the positive teal today, but it is its own token so
      re-theming the brand never moves the data encoding, or vice versa. */
+  /**
+   * Solid fills and their interaction states.
+   *
+   * Every tone carries the same three, so a solid Button, Badge or Alert works
+   * in any tone without the component special-casing which one it was handed.
+   * `hover` lightens and `active` darkens by a fixed step in each hue.
+   */
   --ny-accent: #2fbfa8;
-  --ny-accent-hover: #45cdb7;
-  --ny-accent-active: #26a892;
+  --ny-accent-hover: #41d0ba;
+  --ny-accent-active: #28a28f;
 
-  /* Feedback — solid fills. The `-subtle` and `-text` pairs are per-theme. */
   --ny-success: #3fa96f;
+  --ny-success-hover: #4ebd81;
+  --ny-success-active: #358f5e;
+
   --ny-warning: #d3982f;
+  --ny-warning-hover: #d9a74c;
+  --ny-warning-active: #b78327;
+
   --ny-danger: #d9584a;
+  --ny-danger-hover: #df7368;
+  --ny-danger-active: #d33d2c;
+
   --ny-info: #4c8dd0;
+  --ny-info-hover: #689fd7;
+  --ny-info-active: #347bc5;
+
+  /* `--ny-neutral` itself is declared once, in the data-semantics block above:
+     the grey a chart uses for an unattributed series and the grey a UI tone
+     uses are the same colour by design. Split them only if they ever need to
+     diverge — until then one token is the honest representation. */
+  --ny-neutral-hover: #939ca9;
+  --ny-neutral-active: #6c7888;
 
   /**
    * Ink for text on the matching *solid* fill. Theme-invariant, because the

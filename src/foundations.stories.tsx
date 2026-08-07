@@ -53,6 +53,18 @@ const SPACE_ROLES = [
   ['--ny-gutter', '24px', 'Grid gutter — 16px below 768px'],
 ]
 
+/** Every tone carries these same slots — that uniformity is the contract. */
+const TONES = ['accent', 'success', 'warning', 'danger', 'info', 'neutral']
+const TONE_SLOTS: ReadonlyArray<[string, string]> = [
+  ['', 'solid fill'],
+  ['-hover', 'solid, hover'],
+  ['-active', 'solid, pressed'],
+  ['-subtle', 'tint background'],
+  ['-subtle-hover', 'tint, hover'],
+  ['-border', 'hairline — solved for 3.2:1 on the surface'],
+  ['-text', 'ink on the tint'],
+]
+
 const ELEVATION = [
   ['--ny-shadow-sm', 'Hover lift, Card'],
   ['--ny-shadow-md', 'Popover, Tooltip'],
@@ -261,6 +273,73 @@ export const Elevation: Story = {
         Shadows are lighter in the light theme — there, the hairline border carries most of the separation and
         a heavy shadow reads as dirt rather than as elevation.
       </p>
+    </Panel>
+  ),
+}
+
+export const Tones: Story = {
+  render: () => (
+    <Panel style={{ maxWidth: 860 }}>
+      <Eyebrow>Tone ramps — the same seven slots for every tone</Eyebrow>
+      <p
+        style={{
+          margin: 'var(--ny-space-8) 0 var(--ny-space-16)',
+          fontSize: 'var(--ny-font-size-xs)',
+          color: 'var(--ny-text-muted)',
+          maxWidth: 620,
+        }}
+      >
+        A component resolves <code>--ny-&#123;tone&#125;-&#123;slot&#125;</code> from whichever tone it was
+        handed, so any tone can stand in for any other. <code>-border</code> is solved per hue for a contrast{' '}
+        <em>ratio</em> rather than a fixed lightness — amber and blue at the same lightness read as very
+        differently weighted, and matching the ratio is what makes the set look consistent.
+      </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ny-space-16)' }}>
+        {TONES.map((tone) => (
+          <div key={tone} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ny-space-4)' }}>
+            <div
+              style={{
+                fontFamily: 'var(--ny-font-mono)',
+                fontSize: 'var(--ny-font-size-2xs)',
+                color: 'var(--ny-text-muted)',
+              }}
+            >
+              --ny-{tone}-*
+            </div>
+            <div style={{ display: 'flex', gap: 'var(--ny-space-4)', flexWrap: 'wrap' }}>
+              {TONE_SLOTS.map(([slot, note]) => (
+                <div
+                  key={slot}
+                  style={{ display: 'flex', flexDirection: 'column', gap: 'var(--ny-space-4)' }}
+                >
+                  <div
+                    title={`--ny-${tone}${slot} — ${note}`}
+                    style={{
+                      width: 104,
+                      height: 44,
+                      borderRadius: 'var(--ny-radius-md)',
+                      background: `var(--ny-${tone}${slot})`,
+                      border:
+                        slot === '-border' || slot === '-text'
+                          ? '1px solid var(--ny-border)'
+                          : '1px solid transparent',
+                    }}
+                  />
+                  <div
+                    style={{
+                      fontFamily: 'var(--ny-font-mono)',
+                      fontSize: 'var(--ny-font-size-2xs)',
+                      color: 'var(--ny-text-subtle)',
+                    }}
+                  >
+                    {slot === '' ? '(base)' : slot}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </Panel>
   ),
 }

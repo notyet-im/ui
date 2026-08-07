@@ -93,27 +93,28 @@
 }
 
 /**
- * Tinted, not solid.
+ * Solid, matching `primary`'s weight — a destructive action should not read as
+ * quieter than the affirmative one beside it.
  *
- * A solid `--ny-danger` fill has no label colour that clears 4.5:1 in *both*
- * themes — `--ny-text-inverse` flips with the theme, so one side always lands
- * near 3.8:1, and there is no `--ny-text-on-danger` token to flip to. The
- * `-subtle` / `-text` pair is built for exactly this, and the solid border keeps
- * the button's weight next to `primary`.
+ * This was tinted while the palette had no ink for a solid danger fill. It now
+ * does: `--ny-text-on-danger` is theme-invariant like the fill itself and lands
+ * at 5.07:1, where `--ny-text-inverse` would flip with the theme and drop to
+ * ~3.8:1 on one side.
  */
 .ny-button--danger {
-  background: var(--ny-danger-subtle);
+  background: var(--ny-danger);
   border-color: var(--ny-danger);
-  color: var(--ny-danger-text);
+  color: var(--ny-text-on-danger);
 }
 
 .ny-button--danger:hover:not(:disabled) {
-  border-color: var(--ny-danger-text);
+  background: var(--ny-danger-hover);
+  border-color: var(--ny-danger-hover);
 }
 
 .ny-button--danger:active:not(:disabled) {
-  background: var(--ny-surface-active);
-  border-color: var(--ny-danger-text);
+  background: var(--ny-danger-active);
+  border-color: var(--ny-danger-active);
 }
 
 /* Disabled ---------------------------------------------------------------- */

@@ -164,3 +164,47 @@ describe('tokens.css invariants', () => {
     for (const width of widths) expect(allowed.has(width), `unexpected breakpoint ${width}`).toBe(true)
   })
 })
+
+/**
+ * Every tone must carry the same slots. This is the whole point of the tone
+ * ramps: a component resolves `--ny-{tone}-{slot}` from a variable tone, so a
+ * single missing slot is a `var()` that silently resolves to nothing.
+ */
+describe('tone ramps are uniform', () => {
+  const TONES = ['accent', 'success', 'warning', 'danger', 'info', 'neutral']
+  const INVARIANT_SLOTS = ['hover', 'active']
+  const THEMED_SLOTS = ['subtle', 'subtle-hover', 'border', 'text']
+
+  it('declares every solid state for every tone', () => {
+    const missing: string[] = []
+    for (const tone of TONES) {
+      for (const slot of INVARIANT_SLOTS) {
+        try {
+          cssVar(':root', `ny-${tone}-${slot}`)
+        } catch {
+          missing.push(`--ny-${tone}-${slot}`)
+        }
+      }
+      // The base fill itself, wherever it is declared.
+      if (!new RegExp(`--ny-${tone}:`).test(base)) missing.push(`--ny-${tone}`)
+      if (!new RegExp(`--ny-text-on-${tone}:`).test(base)) missing.push(`--ny-text-on-${tone}`)
+    }
+    expect(missing).toEqual([])
+  })
+
+  it('declares every themed slot for every tone, in both themes', () => {
+    const missing: string[] = []
+    for (const theme of ['[data-theme="dark"]', '[data-theme="light"]']) {
+      for (const tone of TONES) {
+        for (const slot of THEMED_SLOTS) {
+          try {
+            cssVar(theme, `ny-${tone}-${slot}`)
+          } catch {
+            missing.push(`${theme} --ny-${tone}-${slot}`)
+          }
+        }
+      }
+    }
+    expect(missing).toEqual([])
+  })
+})
