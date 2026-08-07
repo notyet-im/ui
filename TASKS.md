@@ -8,6 +8,33 @@ in the plan before touching a shared file.
 
 ---
 
+## ⚠️ Pending right now
+
+The overhaul shipped once. Since then, four rendering bugs and the tone-ramp work
+have landed **locally only** — the published project is a version behind.
+
+1. **Local review in progress.** Storybook on :6006. Nothing syncs until it passes.
+2. **Re-sync outstanding.** `_ds_bundle` locally is `styleSha 3f6f39e2…`; the project
+   holds the pre-fix build. Needs: rebuild sb-reference → build → validate → compare →
+   re-grade what changed → upload.
+   **Grades partially invalidate.** Per the design-sync rules a pure token/CSS change
+   carries grades forward, but the *contract* moved on SankeyFlow and RotationRing
+   (`width` is now optional), so at minimum those two re-grade. Switch, Badge, Alert,
+   Button and HeatGrid changed visually and are worth re-reading even where the grade
+   technically carries.
+3. **`flex: none` sweep — not started.** ThemeToggle's oval and HeatGrid's squeeze were
+   the same root cause: a fixed-size element in a flex container with no `flex: none`.
+   Two instances found by eye; the rest of the library has not been checked.
+4. **Showcase rebuild on `Container`/`Grid`/`Stack` — not started.** The plan's
+   falsifiable test of whether the grid primitives are actually right. The library is
+   verified without it, but that proof has not been run.
+5. **Double-capture diff — not run.** Guards against `useId` churning `renderHashes`
+   between captures. Cheap; do it as part of the re-sync.
+
+Everything below this line is done.
+
+---
+
 ## Phase 0 — Safety net and toolchain (serial, blocks everything)
 
 - [x] `git init` + pristine baseline commit
@@ -78,7 +105,7 @@ Driven from `TOKEN-MAP.md` as a table of decisions, with a hard assertion that n
 - [x] 15 font-weights, 4 line-heights, 2 trackings, 38 spacing literals → tokens
 - [x] Panel (worst offender at 30% token discipline) now uses `--ny-inset` / `--ny-stack`
 - [x] **Gate:** biome ✓ · tsc ✓ · vitest 13/13 ✓ · build:lib ✓ · zero `cf-`/`CapitalFlow`
-- [ ] **Gate:** diff renders vs `.design-sync/.baseline/`
+- [x] **Gate:** diff renders vs `.design-sync/.baseline/`
 
 > **Deferred:** the 49 deprecated `--cf-*` aliases. `globalName` changes in the same
 > release, so any existing artifact breaks on the JS side regardless — a CSS-only shim
@@ -87,24 +114,24 @@ Driven from `TOKEN-MAP.md` as a table of decisions, with a hard assertion that n
 ## Phase 3 — Layout primitives + hooks
 
 - [x] `src/hooks.ts` — `useControllableState`, `useRovingFocus`, `useAnchoredPosition` (**frozen**)
-- [ ] `Layout.tsx`/`.css` — Container, Grid, GridItem, Stack (inline custom props + 4 media queries)
-- [ ] `Text.tsx`/`.css` — Text, Heading, VisuallyHidden
+- [x] `Layout.tsx`/`.css` — Container, Grid, GridItem, Stack (inline custom props + 4 media queries)
+- [x] `Text.tsx`/`.css` — Text, Heading, VisuallyHidden
 
 ## Phase 4 — Components (8 agents, concurrent)
 
 New — quad each (`X.tsx` + `X.css` + `X.stories.tsx` + `X.test.tsx`):
 
-- [ ] 4A Forms core — Button, Input, Textarea, Field/Label/HelpText/ErrorText
-- [ ] 4B Selection — Checkbox, Radio, RadioGroup, Switch
-- [ ] 4C Overlays — Dialog, Tooltip, Popover, Toast (native `<dialog>` / `popover`)
-- [ ] 4D Status — Badge, Alert, Spinner, Skeleton, Avatar
-- [ ] 4E Data/nav — Card, Table, Breadcrumb, Pagination
+- [x] 4A Forms core — Button, Input, Textarea, Field/Label/HelpText/ErrorText
+- [x] 4B Selection — Checkbox, Radio, RadioGroup, Switch
+- [x] 4C Overlays — Dialog, Tooltip, Popover, Toast (native `<dialog>` / `popover`)
+- [x] 4D Status — Badge, Alert, Spinner, Skeleton, Avatar
+- [x] 4E Data/nav — Card, Table, Breadcrumb, Pagination
 
 Retrofit — `disabled`, roving focus, aria wiring, `@container` reflow, 2-segment titles, tests:
 
 - [x] **Roving focus + `disabled` on SegmentedControl and Tabs**, `panelId` wiring, 9 tests
 - [x] **All 20 existing stories retitled** to the two categories
-- [ ] Remaining retrofit (`@container` reflow where needed) — folded into Phase 5
+- [x] Remaining retrofit — Table reflows via `@container`; HeatGrid scrolls below a cell minimum
 
 ### Category placement (settled — do not relitigate)
 
@@ -117,22 +144,24 @@ Rule: *Charts = the component's primary job is a geometric encoding of a data se
 
 ## Phase 5 — Two categories, integration, docs (serial)
 
-- [ ] Retitle every story to exactly 2 segments (`UI/X`, `Charts/X`)
-- [ ] Story-title lint test (3 segments ⇒ silent third group)
-- [ ] Split `foundations.stories.tsx` → `Foundations/{Color,Typography,Spacing,Elevation,Layout}`
-      — **never** `Foundations/Grid`, it would null the real `UI/Grid`
-- [ ] Rebuild `src/index.ts` from the Phase 4 manifests
-- [ ] `package.json` name/description, `README.md`
-- [ ] `.design-sync/config.json` — `pkg`, `globalName: NotYetUI`, `titleMap`, `Table` override
-- [ ] Rewrite `.design-sync/conventions.md` + re-validate every name against the build
+- [x] Retitle every story to exactly 2 segments (`UI/X`, `Charts/X`)
+- [x] Story-title lint test (3 segments ⇒ silent third group)
+- [x] ~~Split into five Foundations pages~~ — **deviated**: kept one `Foundations/Tokens`
+      page with a story per system (Colors, Tones, Typography, Spacing, Radii, Elevation).
+      Same coverage, no extra `titleMap` nulls, and no risk of naming a page after a
+      real export
+- [x] Rebuild `src/index.ts` from the Phase 4 manifests
+- [x] `package.json` name/description, `README.md`
+- [x] `.design-sync/config.json` — `pkg`, `globalName: NotYetUI`, `titleMap`, `Table` override
+- [x] Rewrite `.design-sync/conventions.md` + re-validate every name against the build
 - [ ] Rebuild showcase on Container/Grid/Stack (**acceptance test for the grid**)
 
 ## Phase 6 — Quality gate + design-sync (serial)
 
-- [ ] `biome check .` — zero errors
-- [ ] `tsc --noEmit` — zero errors
-- [ ] `vitest run` — all pass (incl. parity + title lint + axe)
-- [ ] `build:lib` + `build-storybook`
+- [x] `biome check .` — zero errors
+- [x] `tsc --noEmit` — zero errors
+- [x] `vitest run` — all pass (incl. parity + title lint + axe)
+- [x] `build:lib` + `build-storybook`
 - [ ] Double-capture diff (guards against `useId` churning renderHashes)
-- [ ] `resync.mjs` → triage → grade every preview → upload
-- [ ] Update `.design-sync/NOTES.md` for the next sync
+- [x] `resync.mjs` → triage → grade every preview → upload  *(done once; now stale)*
+- [x] Update `.design-sync/NOTES.md` for the next sync
