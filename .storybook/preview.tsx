@@ -49,7 +49,7 @@ function ThemedDocsContainer({ context, children }: PropsWithChildren<DocsContai
   }, [context])
 
   return (
-    <DocsContainer context={context} theme={chromeThemes[theme]}>
+    <DocsContainer context={context} theme={chromeThemes(theme)}>
       {children}
     </DocsContainer>
   )

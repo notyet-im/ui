@@ -4,7 +4,7 @@ import type { ThemeName } from '../src/tokens'
 import { chromeThemes } from './theme'
 
 addons.setConfig({
-  theme: chromeThemes.dark,
+  theme: chromeThemes('dark'),
   sidebar: {
     // The four categories are the system's shape; showing them expanded means
     // the split is the first thing you see rather than something you unfold.
@@ -38,7 +38,7 @@ addons.register('notyet/chrome-theme', () => {
     // repeating a no-op swap on every globals change would be wasteful.
     if (next === current) return
     current = next
-    addons.setConfig({ theme: chromeThemes[next] })
+    addons.setConfig({ theme: chromeThemes(next) })
   }
 
   channel.on(SET_GLOBALS, sync)

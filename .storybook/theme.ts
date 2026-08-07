@@ -93,12 +93,25 @@ export function chromeTheme(name: ThemeName) {
 }
 
 /**
- * Both palettes, built once.
+ * Both palettes, built on first use and then memoised.
  *
- * The manager swaps between them at runtime and the docs container picks one per
- * render, so they are memoised here rather than rebuilt on every globals change.
+ * Lazy on purpose, and it is not a micro-optimisation. design-sync bundles
+ * `.storybook/preview` as its preview-decorator wrapper and stubs every
+ * `@storybook/*` module with inert callables — so `create` is not a function
+ * there. Building the themes at module scope meant merely *importing* this file
+ * threw, and since preview.tsx imports it for the docs container, every one of
+ * the 52 component cards failed to render with
+ * `TypeError: (0 , import_create.create) is not a function`.
+ *
+ * Deferring the call makes the import harmless: the manager and the docs
+ * container both call it for real, and design-sync never does.
  */
-export const chromeThemes = {
-  dark: chromeTheme('dark'),
-  light: chromeTheme('light'),
-} as const
+const cache = new Map<ThemeName, ReturnType<typeof chromeTheme>>()
+
+export function chromeThemes(name: ThemeName) {
+  const hit = cache.get(name)
+  if (hit) return hit
+  const built = chromeTheme(name)
+  cache.set(name, built)
+  return built
+}
