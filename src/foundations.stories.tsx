@@ -66,7 +66,7 @@ const TONE_SLOTS: ReadonlyArray<[string, string]> = [
 ]
 
 const ELEVATION = [
-  ['--ny-shadow-sm', 'Hover lift, Card'],
+  ['--ny-shadow-sm', 'Hover lift on an interactive Panel'],
   ['--ny-shadow-md', 'Popover, Tooltip'],
   ['--ny-shadow-lg', 'Dialog, Toast'],
 ]

@@ -113,12 +113,12 @@ component's exact API before using it.
           </Panel>
         </GridItem>
         <GridItem span={{ base: 1, md: 4 }}>
-          <Card header={<Heading size="lg">Alerts</Heading>}>
+          <Panel header={<Heading size="lg">Alerts</Heading>}>
             <Stack gap={8}>
               <Alert tone="warning" title="Position limit">KR desk at 92% of cap.</Alert>
               <Badge tone="success">Settled</Badge>
             </Stack>
-          </Card>
+          </Panel>
         </GridItem>
       </Grid>
     </Stack>

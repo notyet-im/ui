@@ -32,8 +32,6 @@ export { Panel, PanelHeading } from './components/Panel'
 export type { PanelHeadingProps, PanelProps } from './components/Panel'
 export { PageHeader } from './components/PageHeader'
 export type { PageHeaderProps } from './components/PageHeader'
-export { Card } from './components/Card'
-export type { CardProps } from './components/Card'
 
 /* Typography -------------------------------------------------------------- */
 export { Heading, Text, VisuallyHidden } from './components/Text'

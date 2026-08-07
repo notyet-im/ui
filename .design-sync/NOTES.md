@@ -79,6 +79,25 @@ Every overlay has an "Open (no interaction)" story specifically so a static
 capture has something to show. Stories that need a click legitimately capture
 with the overlay closed in **both** panels — that is a `match`, not a defect.
 
+## Anything `.storybook/preview.tsx` imports lands in the preview bundle
+
+design-sync bundles `.storybook/preview` as its preview-decorator wrapper and
+stubs every `@storybook/*` module with inert callables. So a Storybook API is
+safe to *reference* inside that import graph and **fatal to call at module
+scope**.
+
+This has bitten once, and expensively: `.storybook/theme.ts` built both manager
+palettes eagerly with `create()` from `storybook/theming/create`, and
+`preview.tsx` imports it for the docs container. Merely importing the module
+threw, and **all 52 component cards** failed with
+`TypeError: (0 , import_create.create) is not a function`. The build and
+validate stages passed; only the render check caught it.
+
+`chromeThemes` is a memoised *function* for this reason — do not turn it back
+into an eagerly-built object. If you add anything to `preview.tsx`'s import
+graph that touches a Storybook API, run `package-validate.mjs` and check the
+render count before assuming it is fine.
+
 ## Card overrides in `config.json`
 
 - `cardMode: "single"` — Dialog, Popover, Tooltip, Toast. An open overlay paints
@@ -90,6 +109,11 @@ with the overlay closed in **both** panels — that is a `match`, not a defect.
 
 - **New components need their own story title AND a barrel export.** The lint
   test catches both; run `npm run check` before syncing.
+- **Removing a component needs the remote anchor to have `sourceHashes`.**
+  `deletePaths` is derived from them (`lib/remote-diff.mjs`), so a hand-written
+  or truncated sidecar cannot compute deletes — the tool warns loudly rather
+  than silently orphaning, but you then have to `list_files` and clean up by
+  hand. Fetch the real `_ds_sync.json` whole.
 - **`SankeyFlow` and `RotationRing` measure their own container.** `width` is
   optional; omitted, the component measures via `useMeasure` and draws to fit.
   They still lay out in real CSS pixels — their labels are HTML and must not

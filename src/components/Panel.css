@@ -23,6 +23,57 @@
   flex-direction: column;
 }
 
+/* Denser inset, for a panel used as a list item or a small tile. */
+.ny-panel--compact {
+  padding: var(--ny-inset-compact);
+}
+
+/* Divided regions — the shape usually called a card. The slots carry their own
+   padding, so the panel's own padding is dropped when either is present. */
+.ny-panel:has(> .ny-panel__header),
+.ny-panel:has(> .ny-panel__footer) {
+  padding: 0;
+}
+
+.ny-panel__header {
+  padding: var(--ny-inset);
+  border-bottom: 1px solid var(--ny-border);
+  font-size: var(--ny-font-size-md);
+  font-weight: var(--ny-font-weight-semibold);
+  line-height: var(--ny-line-height-snug);
+}
+
+.ny-panel__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: var(--ny-inset);
+}
+
+.ny-panel__footer {
+  padding: var(--ny-inset);
+  border-top: 1px solid var(--ny-border);
+  font-size: var(--ny-font-size-xs);
+  color: var(--ny-text-muted);
+}
+
+/**
+ * The lift. `--ny-shadow-sm` is deliberately the smallest step: a panel in a
+ * grid of panels is not an overlay, and md/lg read as one floating above the
+ * page rather than as one under the pointer.
+ */
+.ny-panel--interactive {
+  transition:
+    background var(--ny-duration-fast) var(--ny-ease-standard),
+    border-color var(--ny-duration-fast) var(--ny-ease-standard),
+    box-shadow var(--ny-duration-fast) var(--ny-ease-standard);
+}
+
+.ny-panel--interactive:hover {
+  background: var(--ny-surface-hover);
+  border-color: var(--ny-border-strong);
+  box-shadow: var(--ny-shadow-sm);
+}
+
 .ny-panel-heading {
   display: flex;
   flex-direction: column;
