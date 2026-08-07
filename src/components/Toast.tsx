@@ -106,7 +106,7 @@ export function Toast({
       role="status"
       aria-live="polite"
       data-open={open ? '' : undefined}
-      className={['ny-toast', `ny-toast--${tone}`, className].filter(Boolean).join(' ')}
+      className={['ny-toast', `ny-tone--${tone}`, className].filter(Boolean).join(' ')}
     >
       <div className="ny-toast__body">
         {title != null && <div className="ny-toast__title">{title}</div>}

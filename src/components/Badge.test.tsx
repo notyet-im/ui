@@ -26,7 +26,7 @@ describe('Badge', () => {
 
     expect(screen.getByText('Active')).toHaveClass(
       'ny-badge',
-      'ny-badge--neutral',
+      'ny-tone--neutral',
       'ny-badge--subtle',
       'ny-badge--md',
     )
@@ -42,7 +42,7 @@ describe('Badge', () => {
     )
 
     expect(screen.getByText('Failed')).toHaveClass(
-      'ny-badge--danger',
+      'ny-tone--danger',
       'ny-badge--solid',
       'ny-badge--sm',
       'custom',

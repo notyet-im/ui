@@ -36,7 +36,7 @@ export function Alert({ tone = 'info', title, children, icon, onDismiss, classNa
   const role = tone === 'danger' || tone === 'warning' ? 'alert' : 'status'
 
   return (
-    <div role={role} className={['ny-alert', `ny-alert--${tone}`, className].filter(Boolean).join(' ')}>
+    <div role={role} className={['ny-alert', `ny-tone--${tone}`, className].filter(Boolean).join(' ')}>
       {icon != null && (
         <span className="ny-alert__icon" aria-hidden="true">
           {icon}

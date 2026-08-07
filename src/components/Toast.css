@@ -47,7 +47,7 @@
   max-width: 100%;
   padding: var(--ny-inset);
   border: 1px solid var(--ny-border);
-  border-left: 3px solid var(--ny-toast-accent, var(--ny-border-strong));
+  border-left: 3px solid var(--ny-tone-fill, var(--ny-border-strong));
   border-radius: var(--ny-radius-lg);
   background: var(--ny-surface-raised);
   color: var(--ny-text);
@@ -61,22 +61,6 @@
    it with. Higher specificity than `.ny-toast`, so it wins wherever it sits. */
 .ny-toast:not([data-open]) {
   display: none;
-}
-
-.ny-toast--info {
-  --ny-toast-accent: var(--ny-info);
-}
-
-.ny-toast--success {
-  --ny-toast-accent: var(--ny-success);
-}
-
-.ny-toast--warning {
-  --ny-toast-accent: var(--ny-warning);
-}
-
-.ny-toast--danger {
-  --ny-toast-accent: var(--ny-danger);
 }
 
 .ny-toast__body {

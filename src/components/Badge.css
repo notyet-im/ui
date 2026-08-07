@@ -24,67 +24,16 @@
 
 /* Tones ------------------------------------------------------------------- */
 
-/* Each tone resolves five locals — fill, tint, border, ink-on-tint, ink-on-fill
-   — so the variants below stay at one rule each instead of tone x variant.
-   Every tone now carries the same slots, `neutral` included. */
-.ny-badge--neutral {
-  --ny-badge-fill: var(--ny-neutral);
-  --ny-badge-tint: var(--ny-neutral-subtle);
-  --ny-badge-line: var(--ny-neutral-border);
-  --ny-badge-ink: var(--ny-neutral-text);
-  --ny-badge-on-fill: var(--ny-text-on-neutral);
-}
-
-.ny-badge--accent {
-  --ny-badge-fill: var(--ny-accent);
-  --ny-badge-tint: var(--ny-accent-subtle);
-  --ny-badge-line: var(--ny-accent-border);
-  --ny-badge-ink: var(--ny-accent-text);
-  --ny-badge-on-fill: var(--ny-text-on-accent);
-}
-
-.ny-badge--success {
-  --ny-badge-fill: var(--ny-success);
-  --ny-badge-tint: var(--ny-success-subtle);
-  --ny-badge-line: var(--ny-success-border);
-  --ny-badge-ink: var(--ny-success-text);
-  --ny-badge-on-fill: var(--ny-text-on-success);
-}
-
-.ny-badge--warning {
-  --ny-badge-fill: var(--ny-warning);
-  --ny-badge-tint: var(--ny-warning-subtle);
-  --ny-badge-line: var(--ny-warning-border);
-  --ny-badge-ink: var(--ny-warning-text);
-  --ny-badge-on-fill: var(--ny-text-on-warning);
-}
-
-.ny-badge--danger {
-  --ny-badge-fill: var(--ny-danger);
-  --ny-badge-tint: var(--ny-danger-subtle);
-  --ny-badge-line: var(--ny-danger-border);
-  --ny-badge-ink: var(--ny-danger-text);
-  --ny-badge-on-fill: var(--ny-text-on-danger);
-}
-
-.ny-badge--info {
-  --ny-badge-fill: var(--ny-info);
-  --ny-badge-tint: var(--ny-info-subtle);
-  --ny-badge-line: var(--ny-info-border);
-  --ny-badge-ink: var(--ny-info-text);
-  --ny-badge-on-fill: var(--ny-text-on-info);
-}
-
 /* Variants ---------------------------------------------------------------- */
 
 .ny-badge--subtle {
-  background: var(--ny-badge-tint);
-  color: var(--ny-badge-ink);
+  background: var(--ny-tone-tint);
+  color: var(--ny-tone-ink);
 }
 
 .ny-badge--solid {
-  background: var(--ny-badge-fill);
-  color: var(--ny-badge-on-fill);
+  background: var(--ny-tone-fill);
+  color: var(--ny-tone-on-fill);
 }
 
 /* The border is the tone's `-border` slot, not its solid fill: the fill is
@@ -93,8 +42,8 @@
    without dominating. */
 .ny-badge--outline {
   background: transparent;
-  border-color: var(--ny-badge-line);
-  color: var(--ny-badge-ink);
+  border-color: var(--ny-tone-line);
+  color: var(--ny-tone-ink);
 }
 
 /* Sizes ------------------------------------------------------------------- */

@@ -47,7 +47,7 @@ export function Badge({
 }: BadgeProps) {
   return (
     <span
-      className={['ny-badge', `ny-badge--${tone}`, `ny-badge--${variant}`, `ny-badge--${size}`, className]
+      className={['ny-badge', `ny-tone--${tone}`, `ny-badge--${variant}`, `ny-badge--${size}`, className]
         .filter(Boolean)
         .join(' ')}
     >

@@ -23,7 +23,11 @@ export interface SankeyFlowProps {
   height?: number
   /** Height of the ribbon stack itself. Default 400. */
   fieldHeight?: number
-  /** Reserve less horizontal room for labels, for narrow viewports. */
+  /**
+   * Reserve less horizontal room for labels. Defaults to whether the measured
+   * width is under 560px, so a chart in a narrow container gets this right
+   * without the caller measuring the same box a second time. Pass it to override.
+   */
   narrow?: boolean
   /** Bucket id to highlight. Everything unrelated fades back. */
   selectedId?: string | null
@@ -56,7 +60,7 @@ export function SankeyFlow({
   width,
   height = 472,
   fieldHeight = 400,
-  narrow = false,
+  narrow,
   selectedId = null,
   onSelect,
   renderLabel = (id) => id,
@@ -74,7 +78,11 @@ export function SankeyFlow({
     return <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }} />
   }
 
-  const layout = sankeyLayout(links, { width: resolvedWidth, height: fieldHeight, narrow })
+  const layout = sankeyLayout(links, {
+    width: resolvedWidth,
+    height: fieldHeight,
+    narrow: narrow ?? resolvedWidth < 560,
+  })
 
   return (
     <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>

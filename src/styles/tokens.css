@@ -180,10 +180,11 @@
   --ny-negative: #e0703f;
   --ny-neutral: #7f8a99;
 
-  /* Accent. Shares the positive teal today, but it is its own token so
-     re-theming the brand never moves the data encoding, or vice versa. */
   /**
    * Solid fills and their interaction states.
+   *
+   * The accent shares the positive teal today but is its own token, so
+   * re-theming the brand never moves the data encoding, or vice versa.
    *
    * Every tone carries the same three, so a solid Button, Badge or Alert works
    * in any tone without the component special-casing which one it was handed.
@@ -343,6 +344,12 @@
   --ny-control-padding-x-sm: 8px;
   --ny-control-padding-x-md: 12px;
   --ny-control-padding-x-lg: 16px;
+  /* The third leg of the control contract. Button and Input agreed on this
+     ramp by coincidence, in two identical blocks; a third control would have
+     had to guess it. */
+  --ny-control-font-size-sm: var(--ny-font-size-xs);
+  --ny-control-font-size-md: var(--ny-font-size-sm);
+  --ny-control-font-size-lg: var(--ny-font-size-md);
   --ny-icon-size-sm: 14px;
   --ny-icon-size-md: 16px;
   --ny-icon-size-lg: 20px;

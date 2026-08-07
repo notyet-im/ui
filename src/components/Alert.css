@@ -10,8 +10,8 @@
   align-items: flex-start;
   gap: var(--ny-space-12);
   padding: var(--ny-inset);
-  background: var(--ny-alert-tint);
-  border: 1px solid var(--ny-alert-line);
+  background: var(--ny-tone-tint);
+  border: 1px solid var(--ny-tone-line);
   border-radius: var(--ny-radius-lg);
   color: var(--ny-text);
   font-family: var(--ny-font-sans);
@@ -21,36 +21,12 @@
 
 /* Tones ------------------------------------------------------------------- */
 
-.ny-alert--info {
-  --ny-alert-tint: var(--ny-info-subtle);
-  --ny-alert-line: var(--ny-info-border);
-  --ny-alert-ink: var(--ny-info-text);
-}
-
-.ny-alert--success {
-  --ny-alert-tint: var(--ny-success-subtle);
-  --ny-alert-line: var(--ny-success-border);
-  --ny-alert-ink: var(--ny-success-text);
-}
-
-.ny-alert--warning {
-  --ny-alert-tint: var(--ny-warning-subtle);
-  --ny-alert-line: var(--ny-warning-border);
-  --ny-alert-ink: var(--ny-warning-text);
-}
-
-.ny-alert--danger {
-  --ny-alert-tint: var(--ny-danger-subtle);
-  --ny-alert-line: var(--ny-danger-border);
-  --ny-alert-ink: var(--ny-danger-text);
-}
-
 /* Parts ------------------------------------------------------------------- */
 
 .ny-alert__icon {
   display: flex;
   flex: none;
-  color: var(--ny-alert-ink);
+  color: var(--ny-tone-ink);
 }
 
 .ny-alert__body {
@@ -65,7 +41,7 @@
 
 .ny-alert__title {
   margin: var(--ny-space-0);
-  color: var(--ny-alert-ink);
+  color: var(--ny-tone-ink);
   font-size: var(--ny-font-size-md);
   font-weight: var(--ny-font-weight-semibold);
   line-height: var(--ny-line-height-snug);

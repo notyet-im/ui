@@ -53,6 +53,89 @@
   color: var(--ny-text-disabled);
 }
 
+/**
+ * Tone resolution — one table for the whole system.
+ *
+ * Badge, Alert and Toast each wrote this mapping out per tone. That was right
+ * while the tones differed in kind: Badge's neutral once borrowed the generic
+ * surface roles, Alert's border once used the solid fill. Since every tone
+ * gained the same seven-slot contract there is no per-tone knowledge left in
+ * any of them — they were the same table, three times, and had already drifted
+ * apart (Badge carried neutral and accent, Alert did not).
+ *
+ * A component opts in by adding `ny-tone--<tone>` beside its own class and
+ * reading these generic slots. Indirection is unchanged: tokens → tone locals
+ * → use, exactly as tokens → component locals → use before. `tone` stays the
+ * public prop; this class is internal and never authored by consumers.
+ *
+ * The one deliberate exception to "component stylesheets own their own block":
+ * a table repeated verbatim in three files is not ownership, it is drift.
+ */
+.ny-tone--neutral {
+  --ny-tone-fill: var(--ny-neutral);
+  --ny-tone-tint: var(--ny-neutral-subtle);
+  --ny-tone-tint-hover: var(--ny-neutral-subtle-hover);
+  --ny-tone-line: var(--ny-neutral-border);
+  --ny-tone-ink: var(--ny-neutral-text);
+  --ny-tone-on-fill: var(--ny-text-on-neutral);
+}
+
+.ny-tone--accent {
+  --ny-tone-fill: var(--ny-accent);
+  --ny-tone-tint: var(--ny-accent-subtle);
+  --ny-tone-tint-hover: var(--ny-accent-subtle-hover);
+  --ny-tone-line: var(--ny-accent-border);
+  --ny-tone-ink: var(--ny-accent-text);
+  --ny-tone-on-fill: var(--ny-text-on-accent);
+}
+
+.ny-tone--success {
+  --ny-tone-fill: var(--ny-success);
+  --ny-tone-tint: var(--ny-success-subtle);
+  --ny-tone-tint-hover: var(--ny-success-subtle-hover);
+  --ny-tone-line: var(--ny-success-border);
+  --ny-tone-ink: var(--ny-success-text);
+  --ny-tone-on-fill: var(--ny-text-on-success);
+}
+
+.ny-tone--warning {
+  --ny-tone-fill: var(--ny-warning);
+  --ny-tone-tint: var(--ny-warning-subtle);
+  --ny-tone-tint-hover: var(--ny-warning-subtle-hover);
+  --ny-tone-line: var(--ny-warning-border);
+  --ny-tone-ink: var(--ny-warning-text);
+  --ny-tone-on-fill: var(--ny-text-on-warning);
+}
+
+.ny-tone--danger {
+  --ny-tone-fill: var(--ny-danger);
+  --ny-tone-tint: var(--ny-danger-subtle);
+  --ny-tone-tint-hover: var(--ny-danger-subtle-hover);
+  --ny-tone-line: var(--ny-danger-border);
+  --ny-tone-ink: var(--ny-danger-text);
+  --ny-tone-on-fill: var(--ny-text-on-danger);
+}
+
+.ny-tone--info {
+  --ny-tone-fill: var(--ny-info);
+  --ny-tone-tint: var(--ny-info-subtle);
+  --ny-tone-tint-hover: var(--ny-info-subtle-hover);
+  --ny-tone-line: var(--ny-info-border);
+  --ny-tone-ink: var(--ny-info-text);
+  --ny-tone-on-fill: var(--ny-text-on-info);
+}
+
+/**
+ * Convention, not a rule this file can enforce: **a component whose root has a
+ * fixed intrinsic size must declare `flex: none` on that root.**
+ *
+ * There is no selector for "has a fixed intrinsic size", and `flex: none` on
+ * `.ny-root > *` would be wrong — most things should shrink. The knowledge
+ * belongs to the component that owns the size, because the flex parent it
+ * lands in cannot know. Skipping it is how ThemeToggle became an oval and a
+ * Badge clipped its own text.
+ */
+
 /** Tabular figures. The one utility class the system exposes. */
 .ny-mono {
   font-family: var(--ny-font-mono);
