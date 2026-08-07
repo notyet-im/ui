@@ -6,8 +6,8 @@ interface ButtonBaseProps {
    * `primary` — the one affirmative action on a surface. Solid accent fill.
    * `secondary` — the default. Bordered, sits on the surface without shouting.
    * `ghost` — borderless, for dense toolbars and inline actions.
-   * `danger` — destructive. Tinted rather than solid, so the label keeps its
-   *   contrast in both themes.
+   * `danger` — destructive. Solid, matching `primary`'s weight, with a white
+   *   label: the fill is deep enough to carry one at 5.26:1.
    */
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
   /**
