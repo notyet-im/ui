@@ -210,6 +210,70 @@
   min-width: 0;
 }
 
+/**
+ * Floating surface, shared by Tooltip and Popover.
+ *
+ * Both are `popover` elements positioned by `useAnchoredPosition`, and both were
+ * carrying the same three blocks: the UA-chrome undo, the raised surface, and
+ * four `[data-placement]` transform-origins that were byte-identical between the
+ * files. Each keeps only what genuinely differs — its measure, padding, radius
+ * and type — and Tooltip keeps `pointer-events: none`, which Popover must not
+ * have.
+ */
+.ny-floating {
+  /* Undo the UA popover chrome — `position: fixed; inset: 0; margin: auto;
+     border: solid; padding: 0.25em`. The coordinates arrive inline as
+     `left` / `top`, so `inset` and `margin` have to be neutralised. */
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  width: max-content;
+  border: 1px solid var(--ny-border);
+  background: var(--ny-surface-raised);
+  color: var(--ny-text);
+  box-shadow: var(--ny-shadow-md);
+  animation: ny-floating-enter var(--ny-duration-fast) var(--ny-ease-out);
+}
+
+/* Wraps the trigger so there is a box to measure. `inline-flex` keeps it hugging
+   the trigger instead of picking up line-box leading. */
+.ny-floating__anchor {
+  display: inline-flex;
+}
+
+/* Grow out of the anchor's edge rather than out of thin air. */
+.ny-floating[data-placement="top"] {
+  transform-origin: bottom center;
+}
+
+.ny-floating[data-placement="bottom"] {
+  transform-origin: top center;
+}
+
+.ny-floating[data-placement="left"] {
+  transform-origin: right center;
+}
+
+.ny-floating[data-placement="right"] {
+  transform-origin: left center;
+}
+
+/**
+ * One keyframe, two depths. A small surface needs a larger scale delta than a
+ * large one to read as the same amount of movement, so the distance stays each
+ * component's to set rather than being averaged into a single number.
+ */
+@keyframes ny-floating-enter {
+  from {
+    opacity: 0;
+    transform: scale(var(--ny-floating-enter-scale, 0.97));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ny-root *,
   .ny-root *::before,

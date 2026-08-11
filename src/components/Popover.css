@@ -4,59 +4,20 @@
  * `auto` is what buys light dismiss: the browser closes the panel on a click
  * outside or on Escape, and nests popovers correctly. No z-index, because the
  * top layer paints above every stacking context by definition.
+ *
+ * The box, the placement origins and the enter animation come from
+ * `.ny-floating` in base.css, which Tooltip also wears. Only the panel-specific
+ * measure, scrolling and type are here.
  */
 
-/* Wraps the trigger so there is a box to measure. */
-.ny-popover__anchor {
-  display: inline-flex;
-}
-
 .ny-popover {
-  /* Undo the UA popover chrome — `position: fixed; inset: 0; margin: auto;
-     border: solid; padding: 0.25em`. Coordinates arrive inline as `left`/`top`,
-     so `inset` and `margin` have to be neutralised. */
-  position: fixed;
-  inset: auto;
-  margin: 0;
-  width: max-content;
+  --ny-floating-enter-scale: 0.98;
+
   max-width: min(22rem, calc(100% - var(--ny-gutter) * 2));
   max-height: calc(100% - var(--ny-gutter) * 2);
   overflow: auto;
   padding: var(--ny-inset);
-  border: 1px solid var(--ny-border);
   border-radius: var(--ny-radius-lg);
-  background: var(--ny-surface-raised);
-  color: var(--ny-text);
-  box-shadow: var(--ny-shadow-md);
   font-size: var(--ny-font-size-sm);
   line-height: var(--ny-line-height-normal);
-  animation: ny-popover-enter var(--ny-duration-fast) var(--ny-ease-out);
-}
-
-/* Grow out of the anchor's edge rather than out of thin air. */
-.ny-popover[data-placement="top"] {
-  transform-origin: bottom center;
-}
-
-.ny-popover[data-placement="bottom"] {
-  transform-origin: top center;
-}
-
-.ny-popover[data-placement="left"] {
-  transform-origin: right center;
-}
-
-.ny-popover[data-placement="right"] {
-  transform-origin: left center;
-}
-
-@keyframes ny-popover-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 import './Toast.css'
+import { useTopLayer } from '../hooks'
 import { Button } from './Button'
 import { CloseIcon } from './icons'
 
@@ -30,15 +31,7 @@ export interface ToastViewportProps {
 export function ToastViewport({ placement = 'bottom', children, className }: ToastViewportProps) {
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const element = ref.current
-    // jsdom implements no part of the popover API, so guard rather than crash.
-    if (!element || typeof element.showPopover !== 'function') return
-    element.showPopover()
-    return () => {
-      if (element.isConnected && element.matches(':popover-open')) element.hidePopover()
-    }
-  }, [])
+  useTopLayer(ref)
 
   return (
     <div

@@ -91,11 +91,15 @@ export function Select<T extends string>({ options, value, onChange, label, clas
 
 export interface EyebrowProps {
   /**
-   * `kicker` — above a page title.
-   * `label` — above a panel section.
-   * `tile` — inside a compact stat tile.
+   * `label` — above a page title or a panel section. The default.
+   * `tile` — inside a compact stat tile, where the tighter box wants tighter
+   *   tracking.
+   *
+   * There was a third, `kicker`, for the page-title case. It compiled to rules
+   * byte-identical to `label`: two names, one rendering, and a prop whose value
+   * the stylesheet did not honour.
    */
-  variant?: 'kicker' | 'label' | 'tile'
+  variant?: 'label' | 'tile'
   children?: ReactNode
   className?: string
   style?: CSSProperties

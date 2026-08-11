@@ -4,61 +4,21 @@
  * `manual` rather than `auto`: a tooltip is dismissed by leaving the trigger,
  * not by clicking elsewhere, and an `auto` popover would also close every other
  * open popover on the page as it opened.
+ *
+ * The box, the placement origins and the enter animation come from
+ * `.ny-floating` in base.css, which Popover also wears. Only the things that
+ * make this a tooltip rather than a panel are here.
  */
 
-/* Wraps the trigger so there is a box to measure. `inline-flex` keeps it hugging
-   the trigger instead of picking up line-box leading. */
-.ny-tooltip__anchor {
-  display: inline-flex;
-}
-
 .ny-tooltip {
-  /* Undo the UA popover chrome — `position: fixed; inset: 0; margin: auto;
-     border: solid; padding: 0.25em`. The coordinates arrive inline as
-     `left` / `top`, so `inset` and `margin` have to be neutralised. */
-  position: fixed;
-  inset: auto;
-  margin: 0;
-  width: max-content;
+  --ny-floating-enter-scale: 0.96;
+
   max-width: 18rem;
   padding: var(--ny-space-4) var(--ny-space-8);
-  border: 1px solid var(--ny-border);
   border-radius: var(--ny-radius-md);
-  background: var(--ny-surface-raised);
-  color: var(--ny-text);
-  box-shadow: var(--ny-shadow-md);
   font-size: var(--ny-font-size-xs);
   line-height: var(--ny-line-height-snug);
   /* A tooltip is never a pointer target: hovering it must not keep it alive, and
      it must never swallow a click meant for what it covers. */
   pointer-events: none;
-  animation: ny-tooltip-enter var(--ny-duration-fast) var(--ny-ease-out);
-}
-
-/* Grow out of the anchor's edge rather than out of thin air. */
-.ny-tooltip[data-placement="top"] {
-  transform-origin: bottom center;
-}
-
-.ny-tooltip[data-placement="bottom"] {
-  transform-origin: top center;
-}
-
-.ny-tooltip[data-placement="left"] {
-  transform-origin: right center;
-}
-
-.ny-tooltip[data-placement="right"] {
-  transform-origin: left center;
-}
-
-@keyframes ny-tooltip-enter {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }

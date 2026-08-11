@@ -1,4 +1,5 @@
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+import { useMemo } from 'react'
 import { formatCompact } from '../lib/format'
 import { heatStyle } from '../lib/heat'
 import './HeatGrid.css'
@@ -31,6 +32,14 @@ export interface HeatGridProps {
   format?: (value: number) => string
   /** Placeholder for a zero/absent cell. Default `·`. */
   emptyText?: string
+  /**
+   * Rendered instead of a value where the row and column keys match, on a
+   * sunken cell. Only meaningful when both axes are the same set — a from→to
+   * matrix, where the diagonal is a thing rotating with itself.
+   */
+  blankDiagonal?: ReactNode
+  /** Tightens the gaps and the minimum cell, for a matrix rather than a table. */
+  density?: 'default' | 'compact'
   rowLabelWidth?: string | number
   headerFontSize?: string | number
   cellFontSize?: string | number
@@ -42,7 +51,10 @@ export interface HeatGridProps {
 /**
  * Dense signed-value grid with a diverging teal/rust ramp.
  *
- * Cells are buttons: this grid is a drill-down control, not just a readout.
+ * Cells are buttons when `onSelect` is given — the grid is then a drill-down
+ * control — and inert `div`s when it is not. That follows from the prop rather
+ * than from a flag because a button that does nothing when clicked is an
+ * accessibility defect, not a style.
  */
 export function HeatGrid({
   rows,
@@ -54,6 +66,8 @@ export function HeatGrid({
   onSelect,
   format = formatCompact,
   emptyText = '·',
+  blankDiagonal,
+  density = 'default',
   rowLabelWidth = 92,
   headerFontSize = 'var(--ny-font-size-2xs)',
   cellFontSize = 'var(--ny-font-size-xs)',
@@ -69,8 +83,10 @@ export function HeatGrid({
       0,
     )
 
+  const classes = ['ny-heat-grid', `ny-heat-grid--${density}`, className]
+
   return (
-    <div className={['ny-heat-grid', className].filter(Boolean).join(' ')} style={{ minHeight, ...style }}>
+    <div className={classes.filter(Boolean).join(' ')} style={{ minHeight, ...style }}>
       <div className="ny-heat-grid__header">
         <div className="ny-heat-grid__corner" style={{ width: rowLabelWidth }} />
         {columns.map((column) => (
@@ -87,10 +103,24 @@ export function HeatGrid({
             {row.name}
           </div>
           {columns.map((column) => {
-            const cellValue = value(row.key, column.key)
             const key = cellKey(row.key, column.key)
+            const blank = blankDiagonal != null && row.key === column.key
+            const cellValue = blank ? 0 : value(row.key, column.key)
             const tone = heatStyle(cellValue, resolvedMax)
             const selected = key === selectedKey
+            const content = blank ? blankDiagonal : cellValue ? format(cellValue) : emptyText
+            const cellStyle: CSSProperties = blank
+              ? { background: 'var(--ny-surface-sunken)', color: 'var(--ny-text-subtle)' }
+              : { background: tone.background, color: tone.color, fontSize: cellFontSize }
+
+            // Inert unless there is somewhere for a click to go.
+            if (onSelect == null || blank) {
+              return (
+                <div key={key} className="ny-heat-grid__cell" style={cellStyle}>
+                  {content}
+                </div>
+              )
+            }
             return (
               <button
                 type="button"
@@ -98,10 +128,10 @@ export function HeatGrid({
                 aria-pressed={selected}
                 aria-label={`${row.code} ${column.label}`}
                 className={`ny-heat-grid__cell${selected ? ' ny-heat-grid__cell--selected' : ''}`}
-                style={{ background: tone.background, color: tone.color, fontSize: cellFontSize }}
-                onClick={() => onSelect?.(key, row.key, column.key)}
+                style={cellStyle}
+                onClick={() => onSelect(key, row.key, column.key)}
               >
-                {cellValue ? format(cellValue) : emptyText}
+                {content}
               </button>
             )
           })}
@@ -130,6 +160,13 @@ export interface RotationMatrixProps {
 /**
  * Square from→to matrix. The diagonal is deliberately blanked — a market
  * rotating with itself is not a cross-border flow.
+ *
+ * It is a `HeatGrid` whose two axes are the same set: same header-plus-rows
+ * structure, same `heatStyle` ramp, same cell geometry. It used to be a second
+ * copy of that render and a second copy of its stylesheet, which had already
+ * diverged on whether to take the absolute value when computing the ramp
+ * maximum. Kept as its own component because "both axes are this one list" is
+ * real knowledge a caller should not have to restate.
  */
 export function RotationMatrix({
   codes,
@@ -140,41 +177,21 @@ export function RotationMatrix({
   diagonalText = '—',
   className,
 }: RotationMatrixProps) {
-  const resolvedMax =
-    max ?? codes.reduce((acc, from) => codes.reduce((inner, to) => Math.max(inner, value(from, to)), acc), 0)
+  const axis = useMemo(() => codes.map((code) => ({ key: code, code, label: code })), [codes])
 
   return (
-    <div className={['ny-matrix', className].filter(Boolean).join(' ')}>
-      <div className="ny-matrix__header">
-        <div className="ny-matrix__corner" />
-        {codes.map((code) => (
-          <div key={code} className="ny-matrix__column-label">
-            {code}
-          </div>
-        ))}
-      </div>
-      {codes.map((from) => (
-        <div key={from} className="ny-matrix__row">
-          <div className="ny-matrix__row-label">{from}</div>
-          {codes.map((to) => {
-            const cellValue = value(from, to)
-            const diagonal = from === to
-            const tone = heatStyle(cellValue, resolvedMax)
-            return (
-              <div
-                key={`${from}->${to}`}
-                className="ny-matrix__cell"
-                style={{
-                  background: diagonal ? 'var(--ny-surface-sunken)' : tone.background,
-                  color: diagonal ? 'var(--ny-text-subtle)' : tone.color,
-                }}
-              >
-                {diagonal ? diagonalText : cellValue ? format(cellValue) : emptyText}
-              </div>
-            )
-          })}
-        </div>
-      ))}
-    </div>
+    <HeatGrid
+      rows={axis}
+      columns={axis}
+      value={value}
+      max={max}
+      format={format}
+      emptyText={emptyText}
+      blankDiagonal={diagonalText}
+      density="compact"
+      rowLabelWidth={34}
+      cellFontSize="var(--ny-font-size-2xs)"
+      className={className}
+    />
   )
 }

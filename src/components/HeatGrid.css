@@ -75,7 +75,6 @@
   min-width: var(--ny-heat-grid-min-cell);
   height: 100%;
   border-radius: var(--ny-radius-sm);
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,65 +84,42 @@
   transition: background var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
+/* Only the drill-down form is a click target — the grid renders a `div` when it
+   has no `onSelect`, and a pointer cursor there promises something that is not
+   there. */
+button.ny-heat-grid__cell {
+  cursor: pointer;
+}
+
 .ny-heat-grid__cell--selected {
   border-color: var(--ny-text);
 }
 
-/* Rotation matrix --------------------------------------------------------- */
+/* Density ----------------------------------------------------------------- */
 
-.ny-matrix {
-  display: flex;
-  flex-direction: column;
+/**
+ * `compact` is what RotationMatrix wears: tighter gaps, a smaller minimum cell
+ * and a floor under the row height, for a square matrix of two-character codes
+ * rather than a table of labelled rows. It was a whole parallel stylesheet
+ * (`.ny-matrix*`, nine selectors mirroring these) until the two components
+ * became one render.
+ */
+.ny-heat-grid--compact {
+  --ny-heat-grid-min-cell: 26px;
+
   gap: var(--ny-space-2);
-  flex: 1;
-  min-height: 0;
 }
 
-.ny-matrix__header,
-.ny-matrix__row {
-  display: flex;
+.ny-heat-grid--compact .ny-heat-grid__header,
+.ny-heat-grid--compact .ny-heat-grid__row {
   gap: var(--ny-space-2);
 }
 
-.ny-matrix__row {
-  align-items: stretch;
-  flex: 1 1 0;
+.ny-heat-grid--compact .ny-heat-grid__row {
   min-height: 26px;
 }
 
-.ny-matrix__corner,
-.ny-matrix__row-label {
-  width: 34px;
-  flex: none;
-}
-
-.ny-matrix__row-label {
-  display: flex;
-  align-items: center;
-  font-size: var(--ny-font-size-2xs);
-  font-family: var(--ny-font-mono);
+/* One code, no name — so the label is the code, and it carries the row. */
+.ny-heat-grid--compact .ny-heat-grid__row-code {
   color: var(--ny-text-muted);
-}
-
-.ny-matrix__column-label {
-  flex: 1;
-  text-align: center;
-  font-size: var(--ny-font-size-2xs);
-  font-family: var(--ny-font-mono);
-  color: var(--ny-text-muted);
-  padding-bottom: var(--ny-space-4);
-}
-
-.ny-matrix__cell {
-  box-sizing: border-box;
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100%;
-  border-radius: var(--ny-radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--ny-font-size-2xs);
-  font-family: var(--ny-font-mono);
-  transition: background var(--ny-duration-slow);
 }

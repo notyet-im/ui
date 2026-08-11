@@ -54,11 +54,6 @@
   line-height: var(--ny-line-height-tight);
 }
 
-.ny-eyebrow--kicker {
-  font-size: var(--ny-font-size-2xs);
-  letter-spacing: var(--ny-tracking-wider);
-}
-
 .ny-eyebrow--label {
   font-size: var(--ny-font-size-2xs);
   letter-spacing: var(--ny-tracking-wider);

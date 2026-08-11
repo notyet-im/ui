@@ -1,6 +1,6 @@
 import type { MouseEvent, ReactNode, ToggleEvent } from 'react'
-import { cloneElement, isValidElement, useCallback, useEffect, useId, useRef } from 'react'
-import { useAnchoredPosition, useControllableState, useEscapeKey } from '../hooks'
+import { cloneElement, isValidElement, useCallback, useId, useRef } from 'react'
+import { useAnchoredPosition, useControllableState, useEscapeKey, useTopLayer } from '../hooks'
 import './Popover.css'
 
 export interface PopoverProps {
@@ -59,15 +59,7 @@ export function Popover({
 
   // Declared above `useAnchoredPosition` on purpose — effects run in hook order,
   // and the panel has no measurable size until `showPopover()` has run.
-  useEffect(() => {
-    const element = floatingRef.current
-    // jsdom implements no part of the popover API, so guard rather than crash.
-    if (!isOpen || !element || typeof element.showPopover !== 'function') return
-    element.showPopover()
-    return () => {
-      if (element.isConnected && element.matches(':popover-open')) element.hidePopover()
-    }
-  }, [isOpen])
+  useTopLayer(floatingRef, isOpen)
 
   const position = useAnchoredPosition(anchorRef, floatingRef, { placement, open: isOpen })
 
@@ -108,7 +100,7 @@ export function Popover({
       components that expose a curated prop list and so would silently drop them. */}
       <span
         ref={anchorRef}
-        className="ny-popover__anchor"
+        className="ny-floating__anchor"
         onPointerDown={handlePointerDown}
         onClick={handleClick}
       >
@@ -120,7 +112,7 @@ export function Popover({
           id={contentId}
           popover="auto"
           data-placement={position.placement}
-          className={['ny-popover', className].filter(Boolean).join(' ')}
+          className={['ny-floating', 'ny-popover', className].filter(Boolean).join(' ')}
           style={{ left: position.x, top: position.y }}
           onToggle={handleToggle}
         >

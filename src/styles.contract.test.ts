@@ -34,7 +34,13 @@ const sources = files.filter(
 )
 const stylesheets = files.filter((f) => f.endsWith('.css'))
 
-const css = stylesheets.map((f) => readFileSync(f, 'utf8')).join('\n')
+/**
+ * Comments are stripped first. A stylesheet that *mentions* a class in prose —
+ * "`.ny-matrix*`, nine selectors mirroring these" — was being read as defining
+ * it, so a class could be deleted, described in the comment explaining its
+ * deletion, and still pass. Which is exactly what happened.
+ */
+const css = stylesheets.map((f) => readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')).join('\n')
 
 /** Class names a stylesheet defines a rule for. */
 const defined = new Set<string>()

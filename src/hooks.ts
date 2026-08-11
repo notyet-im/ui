@@ -80,6 +80,30 @@ export function useMeasure<T extends HTMLElement>(enabled = true): [RefObject<T 
   return [ref, measurements]
 }
 
+/**
+ * Shows an element in the browser top layer while `open`, and takes it back out
+ * on the way past.
+ *
+ * Every popover-based component needs exactly this, and each had written it out:
+ * the same nine lines in Tooltip, Popover and Toast, down to the guard comment.
+ * The two halves are less symmetric than they look — `showPopover()` throws if
+ * the element is already open, and `hidePopover()` throws if it is already
+ * closed or detached — so the cleanup has to check both `isConnected` and
+ * `:popover-open`, which is precisely the kind of detail that rots when it lives
+ * in three places.
+ */
+export function useTopLayer(ref: RefObject<HTMLElement | null>, open = true): void {
+  useEffect(() => {
+    const element = ref.current
+    // jsdom implements no part of the popover API, so guard rather than crash.
+    if (!open || !element || typeof element.showPopover !== 'function') return
+    element.showPopover()
+    return () => {
+      if (element.isConnected && element.matches(':popover-open')) element.hidePopover()
+    }
+  }, [ref, open])
+}
+
 /** Runs `handler` when Escape is pressed, while `active` is true. */
 export function useEscapeKey(active: boolean, handler: () => void): void {
   useEffect(() => {

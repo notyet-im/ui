@@ -17,7 +17,7 @@ export function PageHeader({ kicker, title, subtitle, actions, className }: Page
   return (
     <div className={['ny-page-header', className].filter(Boolean).join(' ')}>
       <div className="ny-page-header__titles">
-        {kicker != null && <Eyebrow variant="kicker">{kicker}</Eyebrow>}
+        {kicker != null && <Eyebrow>{kicker}</Eyebrow>}
         <div className="ny-page-header__title">{title}</div>
         {subtitle != null && <div className="ny-page-header__subtitle">{subtitle}</div>}
       </div>

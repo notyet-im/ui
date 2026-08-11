@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { cloneElement, isValidElement, useCallback, useEffect, useId, useRef, useState } from 'react'
-import { useAnchoredPosition, useEscapeKey } from '../hooks'
+import { useAnchoredPosition, useEscapeKey, useTopLayer } from '../hooks'
 import './Tooltip.css'
 
 export interface TooltipProps {
@@ -76,15 +76,7 @@ export function Tooltip({
   // Must be declared *above* `useAnchoredPosition`: effects run in hook order,
   // and a popover is `display: none` until `showPopover()`, so measuring first
   // would size the tooltip at 0×0 and place it in the wrong spot.
-  useEffect(() => {
-    const element = floatingRef.current
-    // jsdom implements no part of the popover API, so guard rather than crash.
-    if (!open || !element || typeof element.showPopover !== 'function') return
-    element.showPopover()
-    return () => {
-      if (element.isConnected && element.matches(':popover-open')) element.hidePopover()
-    }
-  }, [open])
+  useTopLayer(floatingRef, open)
 
   const position = useAnchoredPosition(anchorRef, floatingRef, { placement, open })
 
@@ -103,7 +95,7 @@ export function Tooltip({
       components that expose a curated prop list and so would silently drop them. */}
       <span
         ref={anchorRef}
-        className="ny-tooltip__anchor"
+        className="ny-floating__anchor"
         onPointerEnter={openAfterDelay}
         onPointerLeave={close}
         onFocus={openNow}
@@ -118,7 +110,7 @@ export function Tooltip({
           role="tooltip"
           popover="manual"
           data-placement={position.placement}
-          className={['ny-tooltip', className].filter(Boolean).join(' ')}
+          className={['ny-floating', 'ny-tooltip', className].filter(Boolean).join(' ')}
           style={{ left: position.x, top: position.y }}
         >
           {content}
