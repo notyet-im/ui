@@ -15,6 +15,11 @@
 /**
  * Numeric font, so the buttons keep an even rhythm as the digits change and the
  * control does not twitch while paging.
+ *
+ * The page marker is a rule under the digit, not a box around it. The rule is
+ * always present and only its *colour* changes between states — a button that
+ * grew a border on hover would shift its own text by a pixel, and across a row
+ * of them that reads as the whole control twitching.
  */
 .ny-pagination__button {
   display: inline-flex;
@@ -24,8 +29,10 @@
   min-width: var(--ny-control-height-sm);
   height: var(--ny-control-height-sm);
   padding: var(--ny-space-0) var(--ny-control-padding-x-sm);
-  border: 1px solid transparent;
-  border-radius: var(--ny-radius-sm);
+  border-bottom: 2px solid transparent;
+  /* Square: a radius would round the ends of a 2px rule into stubs, and the
+     shared focus ring follows the radius, so it squares off with it. */
+  border-radius: var(--ny-radius-none);
   background: none;
   cursor: pointer;
   color: var(--ny-text-muted);
@@ -33,27 +40,22 @@
   font-size: var(--ny-font-size-sm);
   font-variant-numeric: tabular-nums;
   transition:
-    background var(--ny-duration-fast) var(--ny-ease-standard),
     border-color var(--ny-duration-fast) var(--ny-ease-standard),
     color var(--ny-duration-fast) var(--ny-ease-standard);
 }
 
+/* Hover previews the marker rather than tinting a box behind it — the two
+   idioms together read as a box that also happens to be underlined. */
 .ny-pagination__button:hover:not(:disabled) {
-  background: var(--ny-surface-hover);
+  border-color: var(--ny-border-strong);
   color: var(--ny-text);
 }
 
 /* State from the ARIA attribute, so the marked page and the styled page cannot
    drift apart. `base.css` owns the disabled colour — never opacity. */
 .ny-pagination__button[aria-current="page"] {
-  background: var(--ny-surface-selected);
   border-color: var(--ny-accent);
   color: var(--ny-text);
-}
-
-.ny-pagination__button:disabled {
-  background: none;
-  border-color: transparent;
 }
 
 .ny-pagination__ellipsis {

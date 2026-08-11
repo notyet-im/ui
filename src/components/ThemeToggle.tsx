@@ -30,8 +30,6 @@ export function ThemeToggle({ theme, onChange, label, className }: ThemeTogglePr
       {isDark ? (
         <svg
           viewBox="0 0 24 24"
-          width="16"
-          height="16"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.7"
@@ -44,8 +42,6 @@ export function ThemeToggle({ theme, onChange, label, className }: ThemeTogglePr
       ) : (
         <svg
           viewBox="0 0 24 24"
-          width="16"
-          height="16"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.7"

@@ -364,6 +364,7 @@
   --ny-icon-size-sm: 14px;
   --ny-icon-size-md: 16px;
   --ny-icon-size-lg: 20px;
+  --ny-icon-size-xl: 24px;
 
   /**
    * Breakpoints — for JS and documentation parity only.

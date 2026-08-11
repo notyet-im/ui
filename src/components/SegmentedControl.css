@@ -1,5 +1,15 @@
+/**
+ * Anchored to the control height, not left to its font metrics.
+ *
+ * It declared no height at all, so 35px was whatever a 12px face at
+ * line-height 1.5 happened to produce inside 4px of padding and a 1px border —
+ * one pixel taller than every control beside it in a toolbar, and free to move
+ * again on a font swap or a locale with taller glyphs.
+ */
 .ny-segmented {
   display: flex;
+  align-items: stretch;
+  height: var(--ny-control-height-md);
   gap: var(--ny-space-2);
   background: var(--ny-surface-sunken);
   border: 1px solid var(--ny-border);
@@ -8,6 +18,8 @@
 }
 
 .ny-segmented__item {
+  display: inline-flex;
+  align-items: center;
   border: 0;
   cursor: pointer;
   border-radius: var(--ny-radius-md);
@@ -29,13 +41,13 @@
 }
 
 .ny-segmented__item--text {
-  padding: var(--ny-space-4) var(--ny-space-12);
+  padding: 0 var(--ny-space-12);
   font-family: var(--ny-font-sans);
   font-size: var(--ny-font-size-xs);
 }
 
 .ny-segmented__item--mono {
-  padding: var(--ny-space-4) var(--ny-space-12);
+  padding: 0 var(--ny-space-12);
   font-family: var(--ny-font-mono);
   font-size: var(--ny-font-size-sm);
 }

@@ -18,24 +18,11 @@
     color var(--ny-duration-fast) var(--ny-ease-standard);
 }
 
-/* Square: the size's control height on both axes, and no horizontal padding
-   for a label that isn't there. `flex: none` because a fixed-size box must not
-   be squashed by whatever flex row it lands in. */
+/* `flex: none` because a fixed-size box must not be squashed by whatever flex
+   row it lands in. The square sizing and the padding reset live below the size
+   rules, which they have to outrank. */
 .ny-button--icon-only {
-  padding: 0;
   flex: none;
-}
-
-.ny-button--icon-only.ny-button--sm {
-  width: var(--ny-control-height-sm);
-}
-
-.ny-button--icon-only.ny-button--md {
-  width: var(--ny-control-height-md);
-}
-
-.ny-button--icon-only.ny-button--lg {
-  width: var(--ny-control-height-lg);
 }
 
 .ny-button--full {
@@ -61,6 +48,31 @@
   height: var(--ny-control-height-lg);
   padding: 0 var(--ny-control-padding-x-lg);
   font-size: var(--ny-control-font-size-lg);
+}
+
+/**
+ * Square: the size's control height on both axes, and no horizontal padding for
+ * a label that isn't there.
+ *
+ * Below the size rules on purpose. `padding: 0` sat above them at single-class
+ * specificity and simply lost, so every icon-only button carried its size's
+ * horizontal padding — 12px a side on `md`, leaving a 34px button a 10px content
+ * box. The glyph was then shrunk to fit it, which is why an icon-only button
+ * looked like it had a tiny icon rather than a squeezed one.
+ */
+.ny-button--icon-only.ny-button--sm {
+  width: var(--ny-control-height-sm);
+  padding: 0;
+}
+
+.ny-button--icon-only.ny-button--md {
+  width: var(--ny-control-height-md);
+  padding: 0;
+}
+
+.ny-button--icon-only.ny-button--lg {
+  width: var(--ny-control-height-lg);
+  padding: 0;
 }
 
 /* Variants ---------------------------------------------------------------- */
@@ -175,6 +187,35 @@
 .ny-button--lg .ny-button__spinner {
   width: var(--ny-icon-size-lg);
   height: var(--ny-icon-size-lg);
+}
+
+/**
+ * An icon-only button sizes its glyph one step up the ramp from the same button
+ * with a label, because there the glyph *is* the content rather than a marker
+ * beside it. At the label sizes a 34px button held a 16px icon — 47% of the box,
+ * which read as a speck in a control.
+ *
+ * Sized here rather than at the call site: the `iconStart`/`iconEnd` slots have
+ * been CSS-sized since they were written, but `iconOnly` renders its child bare,
+ * so every caller was picking its own number and they had drifted to 13, 14 and
+ * 16 across four components.
+ */
+.ny-button--icon-only.ny-button--sm > svg {
+  flex: none;
+  width: var(--ny-icon-size-md);
+  height: var(--ny-icon-size-md);
+}
+
+.ny-button--icon-only.ny-button--md > svg {
+  flex: none;
+  width: var(--ny-icon-size-lg);
+  height: var(--ny-icon-size-lg);
+}
+
+.ny-button--icon-only.ny-button--lg > svg {
+  flex: none;
+  width: var(--ny-icon-size-xl);
+  height: var(--ny-icon-size-xl);
 }
 
 @keyframes ny-button-spin {
