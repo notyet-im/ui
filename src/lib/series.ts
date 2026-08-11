@@ -24,10 +24,25 @@ export function walkSeries(key: string, length: number, endValue: number): numbe
 export interface SeriesPath {
   /** `M…L…` polyline through every point. */
   line: string
-  /** The line closed down to the zero baseline, for a fill. */
+  /** The line closed to `closeAt`, for a fill. */
   area: string
   /** Y coordinate of the zero baseline, in the same user space. */
   zeroY: number
+}
+
+export interface SeriesPathOptions {
+  /**
+   * Where the fill closes. `zero` bounds it at the zero baseline, so the fill
+   * reads as signed area; `floor` bounds it at the bottom of the plot, so it
+   * reads as magnitude under the curve.
+   *
+   * Only close at `zero` when the zero line is actually drawn. Otherwise the
+   * fill stops at a height nothing on screen explains — and for an all-negative
+   * series zero is the *top* of the plot, so the fill appears above the curve.
+   *
+   * Default `zero`.
+   */
+  closeAt?: 'zero' | 'floor'
 }
 
 /**
@@ -36,9 +51,22 @@ export interface SeriesPath {
  * The vertical domain always includes zero so that a baseline is meaningful
  * even for an all-positive or all-negative series.
  */
-export function seriesPath(values: number[], width: number, height: number, pad: number): SeriesPath {
-  const min = Math.min(0, ...values)
-  const max = Math.max(0, ...values)
+export function seriesPath(
+  values: number[],
+  width: number,
+  height: number,
+  pad: number,
+  { closeAt = 'zero' }: SeriesPathOptions = {},
+): SeriesPath {
+  // One pass rather than `Math.min(0, ...values)`. This is exported API over a
+  // caller's array, and spread-as-arguments throws `RangeError` past roughly
+  // 130k elements — a hard ceiling, not a slow path.
+  let min = 0
+  let max = 0
+  for (const v of values) {
+    if (v < min) min = v
+    if (v > max) max = v
+  }
   const span = max - min || 1
   const y = (v: number) => height - pad - ((v - min) / span) * (height - pad * 2)
 
@@ -50,9 +78,10 @@ export function seriesPath(values: number[], width: number, height: number, pad:
     .join(' ')
 
   const zeroY = y(0)
+  const closeY = closeAt === 'floor' ? height - pad : zeroY
   return {
     line,
-    area: `${line} L${width} ${zeroY.toFixed(1)} L0 ${zeroY.toFixed(1)} Z`,
+    area: `${line} L${width} ${closeY.toFixed(1)} L0 ${closeY.toFixed(1)} Z`,
     zeroY,
   }
 }

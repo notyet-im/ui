@@ -112,7 +112,9 @@ export function Popover({
           id={contentId}
           popover="auto"
           data-placement={position.placement}
-          className={['ny-floating', 'ny-popover', className].filter(Boolean).join(' ')}
+          className={['ny-popover-reset', 'ny-raised', 'ny-floating', 'ny-popover', className]
+            .filter(Boolean)
+            .join(' ')}
           style={{ left: position.x, top: position.y }}
           onToggle={handleToggle}
         >

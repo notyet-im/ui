@@ -63,8 +63,6 @@ export interface RingOptions {
   width: number
   /** Height of the SVG field. Default 472. */
   height?: number
-  /** Vertical centre of the ring. Default 236. */
-  centerY?: number
   /** Smallest node radius, at zero net. Default 9. */
   minNodeRadius?: number
   /** Additional radius at maximum net. Default 20. */
@@ -84,13 +82,16 @@ export function ringLayout(
   pairs: RingPairInput[],
   options: RingOptions,
 ): RingLayout {
-  const { width, height = 472, centerY = 236, minNodeRadius = 9, nodeRadiusRange = 20 } = options
+  const { width, height = 472, minNodeRadius = 9, nodeRadiusRange = 20 } = options
 
   const cx = width / 2
-  const cy = centerY
+  // Derived, not an option. `centerY` defaulted to 236 independently of
+  // `height`, so `<RotationRing height={600}>` drew the ring 64px above centre —
+  // a misconfiguration the caller could not see and never asked for.
+  const cy = height / 2
   const radius = ringRadius(width)
 
-  const maxNet = Math.max(...nodeInputs.map((n) => Math.abs(n.net))) || 1
+  const maxNet = nodeInputs.reduce((acc, n) => Math.max(acc, Math.abs(n.net)), 0) || 1
 
   const positions: Record<string, [number, number]> = {}
   const nodes: RingNode[] = []

@@ -37,7 +37,7 @@ export function ToastViewport({ placement = 'bottom', children, className }: Toa
     <div
       ref={ref}
       popover="manual"
-      className={['ny-toast-viewport', `ny-toast-viewport--${placement}`, className]
+      className={['ny-popover-reset', 'ny-toast-viewport', `ny-toast-viewport--${placement}`, className]
         .filter(Boolean)
         .join(' ')}
     >

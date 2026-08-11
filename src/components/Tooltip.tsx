@@ -110,7 +110,9 @@ export function Tooltip({
           role="tooltip"
           popover="manual"
           data-placement={position.placement}
-          className={['ny-floating', 'ny-tooltip', className].filter(Boolean).join(' ')}
+          className={['ny-popover-reset', 'ny-raised', 'ny-floating', 'ny-tooltip', className]
+            .filter(Boolean)
+            .join(' ')}
           style={{ left: position.x, top: position.y }}
         >
           {content}

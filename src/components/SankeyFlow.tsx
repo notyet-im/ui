@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
-import { useMeasure } from '../hooks'
 import { formatDelta } from '../lib/format'
 import type { FlowLink } from '../lib/sankey'
 import { sankeyLayout } from '../lib/sankey'
 import { deltaColors } from '../tokens'
+import { edgeColor, edgeOpacity, FlowField, FlowLabel } from './FlowChart'
 import './FlowChart.css'
 
 export interface SankeyFlowProps {
@@ -43,11 +43,6 @@ export interface SankeyFlowProps {
   className?: string
 }
 
-/** Opacity for ribbons unrelated to the current selection. */
-const DIMMED = 0.07
-const FOCUSED = 0.5
-const RESTING = 0.3
-
 /**
  * Two-column flow diagram: capital leaves the left stack and arrives in the
  * right one, with ribbon thickness proportional to volume.
@@ -69,89 +64,66 @@ export function SankeyFlow({
   endCaption,
   className,
 }: SankeyFlowProps) {
-  // Only observe when the caller has not already told us the width.
-  const [ref, measured] = useMeasure<HTMLDivElement>(width == null)
-  const resolvedWidth = width ?? measured.width
-
-  // Nothing to draw until a width exists. On the measuring path that is one
-  // frame; the ref must still be attached so the observer can report.
-  if (resolvedWidth <= 0) {
-    return <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }} />
-  }
-
-  const layout = sankeyLayout(links, {
-    width: resolvedWidth,
-    height: fieldHeight,
-    narrow: narrow ?? resolvedWidth < 560,
-  })
-
   return (
-    <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
-      {/* Decorative: the accessible representation is the label buttons below,
-          which carry each node's name and value and are keyboard-reachable. */}
-      <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">
-        {layout.ribbons.map((ribbon) => {
-          const unrelated = selectedId != null && ribbon.from !== selectedId && ribbon.to !== selectedId
-          const color =
-            ribbon.to === selectedId
-              ? deltaColors.positive
-              : ribbon.from === selectedId
-                ? deltaColors.negative
-                : deltaColors.neutral
-          return (
-            <path
-              key={ribbon.key}
-              d={ribbon.d}
-              fill="none"
-              stroke={color}
-              strokeWidth={ribbon.width.toFixed(1)}
-              opacity={unrelated ? DIMMED : selectedId ? FOCUSED : RESTING}
-              className="ny-flow__ribbon"
-            />
-          )
-        })}
-        {layout.nodes.map((node) => (
-          // biome-ignore lint/a11y/noStaticElementInteractions: redundant mouse affordance inside an aria-hidden svg; the keyboard path is the label button
-          <rect
-            key={node.key}
-            x={node.x}
-            y={node.y.toFixed(1)}
-            width={layout.nodeWidth}
-            height={node.height.toFixed(1)}
-            rx="2"
-            fill={node.side === 'source' ? deltaColors.negative : deltaColors.positive}
-            className="ny-flow__node"
-            onClick={() => onSelect?.(node.id)}
-          />
-        ))}
-      </svg>
-
-      {layout.labels.map((label) => {
-        const color = label.side === 'source' ? deltaColors.negative : deltaColors.positive
+    <FlowField width={width} height={height} className={className}>
+      {(resolvedWidth) => {
+        const layout = sankeyLayout(links, {
+          width: resolvedWidth,
+          height: fieldHeight,
+          narrow: narrow ?? resolvedWidth < 560,
+        })
         return (
-          <button
-            type="button"
-            key={label.key}
-            className="ny-flow__label"
-            onClick={() => onSelect?.(label.id)}
-            style={{
-              maxWidth: label.maxWidth,
-              left: label.left,
-              top: label.top,
-              transform: label.transform,
-              textAlign: label.textAlign,
-            }}
-          >
-            <div className="ny-flow__label-name">{renderLabel(label.id)}</div>
-            <div className="ny-flow__label-value" style={{ color }}>
-              {formatValue(label.value)}
-            </div>
-          </button>
-        )
-      })}
+          <>
+            {/* Decorative: the accessible representation is the label buttons
+                below, which carry each node's name and value and are
+                keyboard-reachable. */}
+            <svg width="100%" height={height} className="ny-flow__svg" aria-hidden="true">
+              {layout.ribbons.map((ribbon) => (
+                <path
+                  key={ribbon.key}
+                  d={ribbon.d}
+                  fill="none"
+                  stroke={edgeColor(selectedId, ribbon.from, ribbon.to)}
+                  strokeWidth={ribbon.width.toFixed(1)}
+                  opacity={edgeOpacity(selectedId, ribbon.from, ribbon.to)}
+                  className="ny-flow__ribbon"
+                />
+              ))}
+              {layout.nodes.map((node) => (
+                // biome-ignore lint/a11y/noStaticElementInteractions: redundant mouse affordance inside an aria-hidden svg; the keyboard path is the label button
+                <rect
+                  key={node.key}
+                  x={node.x}
+                  y={node.y.toFixed(1)}
+                  width={layout.nodeWidth}
+                  height={node.height.toFixed(1)}
+                  rx="2"
+                  fill={node.side === 'source' ? deltaColors.negative : deltaColors.positive}
+                  className="ny-flow__node"
+                  onClick={() => onSelect?.(node.id)}
+                />
+              ))}
+            </svg>
 
-      {startCaption != null && <div className="ny-flow__caption ny-flow__caption--start">{startCaption}</div>}
-      {endCaption != null && <div className="ny-flow__caption ny-flow__caption--end">{endCaption}</div>}
-    </div>
+            {layout.labels.map((label) => (
+              <FlowLabel
+                key={label.key}
+                placement={label}
+                onClick={() => onSelect?.(label.id)}
+                value={formatValue(label.value)}
+                valueColor={label.side === 'source' ? deltaColors.negative : deltaColors.positive}
+              >
+                {renderLabel(label.id)}
+              </FlowLabel>
+            ))}
+
+            {startCaption != null && (
+              <div className="ny-flow__caption ny-flow__caption--start">{startCaption}</div>
+            )}
+            {endCaption != null && <div className="ny-flow__caption ny-flow__caption--end">{endCaption}</div>}
+          </>
+        )
+      }}
+    </FlowField>
   )
 }

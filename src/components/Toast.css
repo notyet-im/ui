@@ -7,12 +7,10 @@
  * per-toast popovers would overlap instead of stacking. No z-index either way.
  */
 
+/* `.ny-popover-reset` in base.css does the UA-chrome undo. What is left here is
+   what the viewport overrides on top of it: it is a transparent rail, not a
+   card, so it cancels the border and background a panel would want. */
 .ny-toast-viewport {
-  /* Undo the UA popover chrome — `inset: 0; margin: auto; border: solid;
-     padding: 0.25em; background: Canvas`. */
-  position: fixed;
-  inset: auto;
-  margin: 0;
   padding: var(--ny-gutter);
   border: 0;
   background: none;
@@ -21,7 +19,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--ny-space-12);
-  width: max-content;
   max-width: 100%;
   /* The viewport spans the corner permanently, so it must never eat a click
      meant for the page. The toasts themselves opt back in. */

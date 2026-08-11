@@ -211,27 +211,49 @@
 }
 
 /**
- * Floating surface, shared by Tooltip and Popover.
+ * The top layer, in two halves.
  *
- * Both are `popover` elements positioned by `useAnchoredPosition`, and both were
- * carrying the same three blocks: the UA-chrome undo, the raised surface, and
- * four `[data-placement]` transform-origins that were byte-identical between the
- * files. Each keeps only what genuinely differs — its measure, padding, radius
- * and type — and Tooltip keeps `pointer-events: none`, which Popover must not
- * have.
+ * These were one `.ny-floating` class, which meant only the two components that
+ * wanted *both* halves could wear it. `ToastViewport` is also a popover and
+ * needed the chrome undo, but it explicitly cancels the surface (`border: 0;
+ * background: none`) — so it kept a verbatim copy of the reset instead, and the
+ * block the fold existed to delete survived in a third file. `.ny-toast` and
+ * `.ny-dialog` want the surface and not the reset. Cut along that seam and each
+ * component takes the half it means.
  */
-.ny-floating {
-  /* Undo the UA popover chrome — `position: fixed; inset: 0; margin: auto;
-     border: solid; padding: 0.25em`. The coordinates arrive inline as
-     `left` / `top`, so `inset` and `margin` have to be neutralised. */
+
+/**
+ * Undo the UA popover chrome — `position: fixed; inset: 0; margin: auto;
+ * border: solid; padding: 0.25em`. Coordinates arrive inline as `left`/`top`,
+ * so `inset` and `margin` have to be neutralised.
+ *
+ * Not for `<dialog>`: a modal is centred by the UA, and `inset: auto` would
+ * drop it to the top-left.
+ */
+.ny-popover-reset {
   position: fixed;
   inset: auto;
   margin: 0;
   width: max-content;
+}
+
+/**
+ * A raised card: the surface every top-layer panel paints itself on.
+ *
+ * The depth is a local, not a fixed value — an anchored panel sits `md` above
+ * the page and a modal or a toast sits `lg`. Set through a property rather than
+ * overridden, so it does not depend on which stylesheet the bundle happens to
+ * emit second.
+ */
+.ny-raised {
   border: 1px solid var(--ny-border);
   background: var(--ny-surface-raised);
   color: var(--ny-text);
-  box-shadow: var(--ny-shadow-md);
+  box-shadow: var(--ny-raised-shadow, var(--ny-shadow-md));
+}
+
+/** Anchored panels — the reset, the surface, and the entrance together. */
+.ny-floating {
   animation: ny-floating-enter var(--ny-duration-fast) var(--ny-ease-out);
 }
 
@@ -266,7 +288,7 @@
 @keyframes ny-floating-enter {
   from {
     opacity: 0;
-    transform: scale(var(--ny-floating-enter-scale, 0.97));
+    transform: scale(var(--ny-floating-enter-scale));
   }
   to {
     opacity: 1;

@@ -13,7 +13,15 @@ export interface SparklineProps {
   pad?: number
   /** Stroke colour. Defaults to the flow colour of the final value. */
   color?: string
-  /** Fill the area between the line and the zero baseline. */
+  /**
+   * Fill under the line.
+   *
+   * The fill is bounded by the zero baseline when `baseline` draws one, and by
+   * the bottom of the plot when it does not — so its edge is always something
+   * the reader can see. Without that, a series that never crosses zero fills to
+   * a height nothing explains, and an all-negative one fills *upward*, since
+   * zero is then the top of the plot.
+   */
   area?: boolean
   areaOpacity?: number
   strokeWidth?: number
@@ -46,7 +54,7 @@ export function Sparkline({
   className,
   style,
 }: SparklineProps) {
-  const path = seriesPath(values, width, height, pad)
+  const path = seriesPath(values, width, height, pad, { closeAt: baseline ? 'zero' : 'floor' })
   const stroke = color ?? deltaColor(values[values.length - 1] ?? 0)
 
   return (

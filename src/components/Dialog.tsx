@@ -82,7 +82,7 @@ export function Dialog({
     <dialog
       ref={dialogRef}
       id={baseId}
-      className={['ny-dialog', `ny-dialog--${size}`, className].filter(Boolean).join(' ')}
+      className={['ny-raised', 'ny-dialog', `ny-dialog--${size}`, className].filter(Boolean).join(' ')}
       aria-labelledby={title != null ? titleId : undefined}
       aria-describedby={description != null ? descriptionId : undefined}
       onClose={handleNativeClose}

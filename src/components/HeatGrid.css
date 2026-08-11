@@ -5,11 +5,18 @@
  * scroll beats an illegible one that fits.
  */
 .ny-heat-grid {
+  /* Everything a density varies. `--compact` overrides these four and nothing
+     else, which is what makes it a whole mode rather than a starting point its
+     caller has to finish with inline props. */
   --ny-heat-grid-min-cell: 40px;
+  --ny-heat-grid-gap: var(--ny-space-4);
+  --ny-heat-grid-cell-font: var(--ny-font-size-xs);
+  --ny-heat-grid-label-width: 92px;
 
   display: flex;
   flex-direction: column;
-  gap: var(--ny-space-4);
+  gap: var(--ny-heat-grid-gap);
+  padding: var(--ny-space-8) 0 var(--ny-space-12);
   min-width: 0;
   flex: 1;
   overflow-x: auto;
@@ -19,7 +26,7 @@
 .ny-heat-grid__header,
 .ny-heat-grid__row {
   display: flex;
-  gap: var(--ny-space-4);
+  gap: var(--ny-heat-grid-gap);
   /* Grow past the container when the minimums demand it — that is what gives
      the scroll container something to scroll. */
   min-width: max-content;
@@ -36,13 +43,17 @@
   min-height: 0;
 }
 
+/* The width is the density's; `rowLabelWidth` overrides it inline when a row
+   hides its `name` and needs less room. */
 .ny-heat-grid__corner,
 .ny-heat-grid__row-label {
   flex: none;
+  width: var(--ny-heat-grid-label-width);
 }
 
 .ny-heat-grid__column-label {
   box-sizing: border-box;
+  font-size: var(--ny-font-size-2xs);
   flex: 1 1 0;
   min-width: var(--ny-heat-grid-min-cell);
   line-height: var(--ny-line-height-tight);
@@ -78,15 +89,27 @@
   align-items: center;
   justify-content: center;
   font-family: var(--ny-font-mono);
+  font-size: var(--ny-heat-grid-cell-font);
   border: 1px solid transparent;
-  padding: 0;
   transition: background var(--ny-duration-slow) var(--ny-ease-standard);
 }
 
-/* Only the drill-down form is a click target — the grid renders a `div` when it
-   has no `onSelect`, and a pointer cursor there promises something that is not
-   there. */
-button.ny-heat-grid__cell {
+/**
+ * The button fills its cell rather than being it, so the cell keeps the grid
+ * semantics and the button keeps native keyboard activation.
+ *
+ * It carries the radius because the shared focus ring follows it: on a square
+ * button inside a rounded cell the ring would cut the cell's corners.
+ */
+.ny-heat-grid__button {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  padding: 0;
+  background: none;
+  border-radius: inherit;
+  color: inherit;
+  font: inherit;
   cursor: pointer;
 }
 
@@ -97,16 +120,6 @@ button.ny-heat-grid__cell {
 /* Density ----------------------------------------------------------------- */
 
 /**
- * The pad is the default density's, not the block's. A chart-panel grid wants
- * the breathing room; the matrix sits directly under a `PanelHeading` that
- * already carries its own margin, and used to sit flush — so `compact` takes
- * none. On the block it was 20px of vertical space the matrix silently gained.
- */
-.ny-heat-grid--default {
-  padding: var(--ny-space-8) 0 var(--ny-space-12);
-}
-
-/**
  * `compact` is what RotationMatrix wears: tighter gaps, a smaller minimum cell
  * and a floor under the row height, for a square matrix of two-character codes
  * rather than a table of labelled rows. It was a whole parallel stylesheet
@@ -115,23 +128,28 @@ button.ny-heat-grid__cell {
  */
 .ny-heat-grid--compact {
   --ny-heat-grid-min-cell: 26px;
+  --ny-heat-grid-gap: var(--ny-space-2);
+  --ny-heat-grid-cell-font: var(--ny-font-size-2xs);
+  --ny-heat-grid-label-width: 34px;
 
-  gap: var(--ny-space-2);
-  /* `.ny-matrix` carried this and the fold dropped it. Without it the grid's
-     min-height resolves to its content, so a `flex: 1` matrix in a column panel
-     can push the panel taller instead of fitting inside it. Set here rather
-     than on the block because the default density takes an explicit `minHeight`
-     prop, which this would sit underneath. */
+  /* The default's pad is for a grid sitting alone in a chart panel. A matrix
+     sits under a `PanelHeading` that already carries its own margin, and used
+     to sit flush. */
+  padding: 0;
+  /* `.ny-matrix` carried this and the fold dropped it. Restored as
+     belt-and-braces, not as a fix: `overflow-x: auto` on the block makes
+     `overflow-y` compute to `auto` too, and a flex item whose overflow is not
+     `visible` already has an automatic minimum size of zero — so the matrix was
+     fitting inside its panel either way. This only becomes load-bearing if the
+     scroll container is ever removed. Set here rather than on the block because
+     the default density takes an explicit `minHeight` prop. */
   min-height: 0;
 }
 
-.ny-heat-grid--compact .ny-heat-grid__header,
+/* Square cells, so the floor under the row is the same number as the floor
+   under the column — read from the property rather than repeated. */
 .ny-heat-grid--compact .ny-heat-grid__row {
-  gap: var(--ny-space-2);
-}
-
-.ny-heat-grid--compact .ny-heat-grid__row {
-  min-height: 26px;
+  min-height: var(--ny-heat-grid-min-cell);
 }
 
 /**

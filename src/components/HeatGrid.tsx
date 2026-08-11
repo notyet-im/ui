@@ -1,5 +1,4 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { useMemo } from 'react'
 import { formatCompact } from '../lib/format'
 import { heatStyle } from '../lib/heat'
 import './HeatGrid.css'
@@ -38,11 +37,23 @@ export interface HeatGridProps {
    * matrix, where the diagonal is a thing rotating with itself.
    */
   blankDiagonal?: ReactNode
-  /** Tightens the gaps and the minimum cell, for a matrix rather than a table. */
+  /**
+   * Tightens the gaps, the minimum cell, the cell type and the row-label width,
+   * for a matrix rather than a table. Each of those is a custom property the
+   * mode overrides, so `compact` is the whole look and not a starting point.
+   */
   density?: 'default' | 'compact'
+  /** Overrides the density's label width — for a row whose `name` is hidden. */
   rowLabelWidth?: string | number
-  headerFontSize?: string | number
-  cellFontSize?: string | number
+  /** Names the grid for assistive tech. Strongly recommended. */
+  label?: string
+  /**
+   * Names the column of row labels — the blank corner above them. It cannot be
+   * left empty: a header with no name is one assistive tech reads as missing,
+   * and it cannot be dropped either, because then column *n* of each row would
+   * line up against column *n−1* of the header.
+   */
+  rowHeaderLabel?: string
   minHeight?: string | number
   className?: string
   style?: CSSProperties
@@ -51,9 +62,16 @@ export interface HeatGridProps {
 /**
  * Dense signed-value grid with a diverging teal/rust ramp.
  *
- * Cells are buttons when `onSelect` is given — the grid is then a drill-down
- * control — and inert `div`s when it is not. That follows from the prop rather
- * than from a flag because a button that does nothing when clicked is an
+ * The structure is a real grid: `row`, `columnheader`, `rowheader`, `gridcell`.
+ * That is what carries a cell's meaning — a screen reader reaches "+1.8" and can
+ * name the row and column it sits at, from the headers, rather than needing each
+ * cell to repeat them.
+ *
+ * A cell holds a `<button>` when `onSelect` is given, and its value directly
+ * when it is not. The button nests inside the cell rather than replacing it: a
+ * native button keeps keyboard activation and focus for free, and overriding its
+ * role with `gridcell` would have thrown that away. There is no button at all
+ * without `onSelect`, because a button that does nothing when clicked is an
  * accessibility defect, not a style.
  */
 export function HeatGrid({
@@ -68,9 +86,9 @@ export function HeatGrid({
   emptyText = '·',
   blankDiagonal,
   density = 'default',
-  rowLabelWidth = 92,
-  headerFontSize = 'var(--ny-font-size-2xs)',
-  cellFontSize = 'var(--ny-font-size-xs)',
+  rowLabelWidth,
+  label,
+  rowHeaderLabel = 'Row',
   minHeight,
   className,
   style,
@@ -83,22 +101,34 @@ export function HeatGrid({
       0,
     )
 
-  const classes = ['ny-heat-grid', `ny-heat-grid--${density}`, className]
+  const classes = ['ny-heat-grid', density === 'compact' && 'ny-heat-grid--compact', className]
 
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={{ minHeight, ...style }}>
-      <div className="ny-heat-grid__header">
-        <div className="ny-heat-grid__corner" style={{ width: rowLabelWidth }} />
+    <div
+      role="grid"
+      aria-label={label}
+      className={classes.filter(Boolean).join(' ')}
+      style={{ minHeight, ...style }}
+    >
+      <div role="row" className="ny-heat-grid__header">
+        <div role="columnheader" className="ny-heat-grid__corner" style={{ width: rowLabelWidth }}>
+          {/* Real text, not `aria-label`: an empty header is one assistive tech
+              reads as missing, and the corner cannot be dropped either, or
+              column n of each row would line up against column n−1 of the
+              header. Hidden because sighted readers get it from the row labels
+              directly underneath. */}
+          <span className="ny-visually-hidden">{rowHeaderLabel}</span>
+        </div>
         {columns.map((column) => (
-          <div key={column.key} className="ny-heat-grid__column-label" style={{ fontSize: headerFontSize }}>
+          <div role="columnheader" key={column.key} className="ny-heat-grid__column-label">
             {column.label}
           </div>
         ))}
       </div>
 
       {rows.map((row) => (
-        <div key={row.key} className="ny-heat-grid__row">
-          <div className="ny-heat-grid__row-label" style={{ width: rowLabelWidth }}>
+        <div role="row" key={row.key} className="ny-heat-grid__row">
+          <div role="rowheader" className="ny-heat-grid__row-label" style={{ width: rowLabelWidth }}>
             <span className="ny-heat-grid__row-code">{row.code}</span>
             {row.name}
           </div>
@@ -106,39 +136,31 @@ export function HeatGrid({
             const key = cellKey(row.key, column.key)
             const blank = blankDiagonal != null && row.key === column.key
             const cellValue = blank ? 0 : value(row.key, column.key)
-            const tone = heatStyle(cellValue, resolvedMax)
-            const selected = key === selectedKey
             const content = blank ? blankDiagonal : cellValue ? format(cellValue) : emptyText
-            // `fontSize` applies to both branches. The blank diagonal is a cell
-            // among cells: letting it inherit rendered the em-dash at body size
-            // (14px) beside 2xs (11px) neighbours, on a taller line box.
-            const cellStyle: CSSProperties = {
-              fontSize: cellFontSize,
-              ...(blank
-                ? { background: 'var(--ny-surface-sunken)', color: 'var(--ny-text-subtle)' }
-                : { background: tone.background, color: tone.color }),
-            }
+            // A blanked cell is a zero cell, and `heatStyle` already says what a
+            // zero cell looks like — restating it here meant retuning that
+            // fallback in `lib/heat.ts` would move every zero cell in every grid
+            // except the matrix diagonal, the one that most needs to match.
+            const tone = heatStyle(cellValue, resolvedMax)
+            const selected = !blank && key === selectedKey
+            const classes = `ny-heat-grid__cell${selected ? ' ny-heat-grid__cell--selected' : ''}`
 
-            // Inert unless there is somewhere for a click to go.
-            if (onSelect == null || blank) {
-              return (
-                <div key={key} className="ny-heat-grid__cell" style={cellStyle}>
-                  {content}
-                </div>
-              )
-            }
             return (
-              <button
-                type="button"
-                key={key}
-                aria-pressed={selected}
-                aria-label={`${row.code} ${column.label}`}
-                className={`ny-heat-grid__cell${selected ? ' ny-heat-grid__cell--selected' : ''}`}
-                style={cellStyle}
-                onClick={() => onSelect(key, row.key, column.key)}
-              >
-                {content}
-              </button>
+              <div role="gridcell" key={key} className={classes} style={tone}>
+                {/* Inert unless there is somewhere for a click to go. */}
+                {onSelect == null || blank ? (
+                  content
+                ) : (
+                  <button
+                    type="button"
+                    aria-pressed={selected}
+                    className="ny-heat-grid__button"
+                    onClick={() => onSelect(key, row.key, column.key)}
+                  >
+                    {content}
+                  </button>
+                )}
+              </div>
             )
           })}
         </div>
@@ -160,6 +182,10 @@ export interface RotationMatrixProps {
   emptyText?: string
   /** Text for the from===to diagonal. Default `—`. */
   diagonalText?: string
+  /** Names the grid for assistive tech. Strongly recommended. */
+  label?: string
+  /** Names the corner above the row codes. Default `From`. */
+  rowHeaderLabel?: string
   className?: string
 }
 
@@ -178,12 +204,17 @@ export function RotationMatrix({
   codes,
   value,
   max,
-  format = (v) => (v / 1000).toFixed(1),
+  // Unsigned: a rotation matrix holds directional volume, so every cell is
+  // positive and a `+` on all of them says nothing. The thousands scale and the
+  // ≥9950 rounding still come from `lib/format`, which owns them.
+  format = (v) => formatCompact(v, false),
   emptyText = '·',
   diagonalText = '—',
+  label,
+  rowHeaderLabel = 'From',
   className,
 }: RotationMatrixProps) {
-  const axis = useMemo(() => codes.map((code) => ({ key: code, code, label: code })), [codes])
+  const axis = codes.map((code) => ({ key: code, code, label: code }))
 
   return (
     <HeatGrid
@@ -195,8 +226,8 @@ export function RotationMatrix({
       emptyText={emptyText}
       blankDiagonal={diagonalText}
       density="compact"
-      rowLabelWidth={34}
-      cellFontSize="var(--ny-font-size-2xs)"
+      label={label}
+      rowHeaderLabel={rowHeaderLabel}
       className={className}
     />
   )

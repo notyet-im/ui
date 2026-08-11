@@ -6,15 +6,14 @@
  */
 
 .ny-dialog {
-  /* Undo the UA chrome: `border: solid`, `padding: 1em`, `background: Canvas`,
-     `color: CanvasText`. The last two do not inherit, so they must be restated
-     or the dialog renders as a white box in the dark theme. */
+  /* The border, fill and ink come from `.ny-raised`; a modal sits a step
+     deeper than an anchored panel. Only `padding: 0` is UA-chrome undo — and
+     note `.ny-popover-reset` is deliberately *not* worn here: a modal is
+     centred by the UA and `inset: auto` would drop it to the top-left. */
+  --ny-raised-shadow: var(--ny-shadow-lg);
+
   padding: 0;
-  border: 1px solid var(--ny-border);
   border-radius: var(--ny-radius-xl);
-  background: var(--ny-surface-raised);
-  color: var(--ny-text);
-  box-shadow: var(--ny-shadow-lg);
   width: calc(100% - var(--ny-gutter) * 2);
   max-height: calc(100% - var(--ny-gutter) * 2);
   overflow: hidden;

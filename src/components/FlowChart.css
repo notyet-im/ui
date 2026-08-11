@@ -57,7 +57,7 @@
   font-weight: var(--ny-font-weight-medium);
 }
 
-.ny-flow__label-name--ring {
+.ny-flow__label-name--dense {
   font-size: var(--ny-font-size-sm);
   font-weight: var(--ny-font-weight-semibold);
 }
@@ -68,7 +68,7 @@
   white-space: nowrap;
 }
 
-.ny-flow__label-value--ring {
+.ny-flow__label-value--dense {
   font-size: var(--ny-font-size-xs);
 }
 
