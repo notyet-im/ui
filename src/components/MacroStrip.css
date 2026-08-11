@@ -1,12 +1,21 @@
 /*
- * The 1px gap over a `--ny-border` background is what draws the hairline rules
- * between tiles — cheaper than per-tile borders and it never doubles up.
+ * The hairline rules between tiles are each tile's 1px ring bleeding into the
+ * 1px grid gap. Two neighbours paint the same gap in the same colour, so the
+ * line never doubles up, and `overflow: hidden` trims the ring at the strip's
+ * own border.
+ *
+ * The strip used to paint `--ny-border` as a substrate and let the gaps show it
+ * through, which is a tile cheaper — but the substrate is only hidden where a
+ * tile covers it. Any row that does not divide evenly into the column count
+ * left an empty cell showing a solid block of border colour: five tiles across
+ * three columns, and the sixth cell reads as a hole. Painting outward from the
+ * tiles instead means an empty cell is simply the strip's own surface.
  */
 .ny-macro-strip {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: var(--ny-space-px);
-  background: var(--ny-border);
+  background: var(--ny-surface);
   border: 1px solid var(--ny-border);
   border-radius: var(--ny-radius-xl);
   overflow: hidden;
@@ -14,6 +23,7 @@
 
 .ny-stat-tile {
   background: var(--ny-surface);
+  box-shadow: 0 0 0 1px var(--ny-border);
   padding: var(--ny-space-12) var(--ny-space-12);
   display: flex;
   align-items: center;
