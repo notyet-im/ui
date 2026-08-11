@@ -109,9 +109,15 @@ export function HeatGrid({
             const tone = heatStyle(cellValue, resolvedMax)
             const selected = key === selectedKey
             const content = blank ? blankDiagonal : cellValue ? format(cellValue) : emptyText
-            const cellStyle: CSSProperties = blank
-              ? { background: 'var(--ny-surface-sunken)', color: 'var(--ny-text-subtle)' }
-              : { background: tone.background, color: tone.color, fontSize: cellFontSize }
+            // `fontSize` applies to both branches. The blank diagonal is a cell
+            // among cells: letting it inherit rendered the em-dash at body size
+            // (14px) beside 2xs (11px) neighbours, on a taller line box.
+            const cellStyle: CSSProperties = {
+              fontSize: cellFontSize,
+              ...(blank
+                ? { background: 'var(--ny-surface-sunken)', color: 'var(--ny-text-subtle)' }
+                : { background: tone.background, color: tone.color }),
+            }
 
             // Inert unless there is somewhere for a click to go.
             if (onSelect == null || blank) {

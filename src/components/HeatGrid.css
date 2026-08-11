@@ -10,7 +10,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--ny-space-4);
-  padding: var(--ny-space-8) 0 var(--ny-space-12);
   min-width: 0;
   flex: 1;
   overflow-x: auto;
@@ -98,6 +97,16 @@ button.ny-heat-grid__cell {
 /* Density ----------------------------------------------------------------- */
 
 /**
+ * The pad is the default density's, not the block's. A chart-panel grid wants
+ * the breathing room; the matrix sits directly under a `PanelHeading` that
+ * already carries its own margin, and used to sit flush — so `compact` takes
+ * none. On the block it was 20px of vertical space the matrix silently gained.
+ */
+.ny-heat-grid--default {
+  padding: var(--ny-space-8) 0 var(--ny-space-12);
+}
+
+/**
  * `compact` is what RotationMatrix wears: tighter gaps, a smaller minimum cell
  * and a floor under the row height, for a square matrix of two-character codes
  * rather than a table of labelled rows. It was a whole parallel stylesheet
@@ -119,7 +128,14 @@ button.ny-heat-grid__cell {
   min-height: 26px;
 }
 
-/* One code, no name — so the label is the code, and it carries the row. */
+/**
+ * One code, no name — so the label is the code, and it carries the row. Both
+ * declarations undo something the label sets for the code-beside-a-name case:
+ * the muted colour is the code's own, and the weight is reset because the code
+ * would otherwise inherit the label's `medium` and read bolder than the matrix
+ * row labels ever did.
+ */
 .ny-heat-grid--compact .ny-heat-grid__row-code {
   color: var(--ny-text-muted);
+  font-weight: var(--ny-font-weight-regular);
 }
