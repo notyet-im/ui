@@ -191,3 +191,27 @@ render count before assuming it is fine.
   `src/styles.contract.test.ts` now asserts that every `.ny-*` class a component
   emits has a rule somewhere. Keep it: jsdom applies no stylesheets, so it is the
   only automated check that can see this class of break.
+
+## Doc traps (2026-08-11)
+
+- **The same rule lives in two files and they drift apart.** The "charts need a
+  measured width" rule was corrected in `conventions.md` in the morning and was
+  still wrong in `README.md` that evening — both are shipped to consumers, and
+  neither references the other. When a component's contract changes, grep both:
+  `conventions.md` becomes the uploaded README header, `README.md` ships to npm.
+
+- **`conventions.md` names tokens by hand.** Nothing checks it. A quick audit is
+  worth running whenever tokens move:
+
+      python3 - <<'PY'
+      import re, pathlib
+      css = re.sub(r'/\*[\s\S]*?\*/', '', pathlib.Path('src/styles/tokens.css').read_text())
+      defined = set(re.findall(r'(--ny-[a-z0-9-]+):', css))
+      doc = pathlib.Path('.design-sync/conventions.md').read_text()
+      named = set(re.findall(r'`(--ny-[a-z0-9-]+)`', doc))
+      print(sorted(n for n in named if n not in defined))
+      PY
+
+  The `{a,b,c}` shorthand forms in the table are invisible to that check —
+  `--ny-icon-size-{sm,md,lg}` stayed wrong through a token addition because the
+  family is written as one string, not as members.

@@ -43,7 +43,7 @@ inline styles reading these tokens:
 | Radii | `--ny-radius-{none,xs,sm,md,lg,xl,full}` |
 | Elevation | `--ny-shadow-{none,sm,md,lg}` |
 | Motion | `--ny-ease-{standard,out,in}` `--ny-duration-{fast,base,slow}` |
-| Controls | `--ny-control-height-{sm,md,lg}` (28/34/44) `--ny-control-padding-x-{sm,md,lg}` `--ny-icon-size-{sm,md,lg}` |
+| Controls | `--ny-control-height-{sm,md,lg}` (28/34/44) `--ny-control-padding-x-{sm,md,lg}` `--ny-icon-size-{sm,md,lg,xl}` |
 | Layering | `--ny-z-{base,sticky,dropdown,toast}` |
 
 Prefer the **spacing roles** over raw steps for component chrome — they are what
@@ -89,6 +89,19 @@ in via container queries, and the four breakpoints live in the primitives.
   ids and the `aria-describedby`/`aria-invalid` links.
 - **Never set `z-index` on an overlay.** `Dialog`, `Popover`, `Tooltip` and
   `Toast` render in the browser top layer and always paint above everything.
+- **Give a data grid a `label`.** `HeatGrid` and `RotationMatrix` render a real
+  `role="grid"` with row and column headers, and a grid with no accessible name
+  is one a screen-reader user cannot place. `rowHeaderLabel` names the corner
+  above the row labels — it defaults sensibly, so set it only when "Row" is
+  wrong for your axis.
+- **`Sparkline`'s fill follows its baseline.** With `baseline` the fill closes on
+  the zero line and reads as signed area; without it the fill closes on the
+  bottom of the plot and reads as magnitude under the curve. Pass `baseline`
+  whenever the sign is the point — a series that never crosses zero otherwise
+  fills to a height nothing on screen explains.
+- **An icon-only `Button` sizes its own glyph.** Pass the bare `<svg>` with no
+  `width`/`height`: the button sets them from its size, and a hardcoded pair
+  either fights it or drifts from the other icon buttons.
 
 ### 5. Where the truth lives
 

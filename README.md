@@ -129,15 +129,22 @@ Run `npm run storybook` for the live catalogue.
 - **Components never format numbers.** Pass a formatted string plus the signed
   raw value that picks the colour. `formatDelta` and `formatCompact` emit U+2212
   MINUS so signed columns stay optically flush.
-- **`SankeyFlow` and `RotationRing` need a measured pixel width** — their labels
-  are HTML and must not scale. `useMeasure()` returns one.
+- **Charts measure themselves — do not hardcode a `width`.** `SankeyFlow` and
+  `RotationRing` lay out in real CSS pixels because their labels are HTML and
+  must not scale, so they read their own container. Pass a `width` only to pin a
+  chart to a fixed size, which will overflow a narrower parent.
+- **Give `HeatGrid` and `RotationMatrix` a `label`.** They render a real
+  `role="grid"`, and a grid with no accessible name cannot be placed.
+- **`Sparkline`'s fill follows its baseline** — closed on the zero line with
+  `baseline`, on the bottom of the plot without it. Pass `baseline` when the sign
+  is the point.
 - **`StatTile` only works inside `MacroStrip`.**
 
 ## Utilities
 
 `deltaColor` / `deltaColors` · `formatDelta` / `formatCompact` / `formatPercent`
 · `useMeasure` / `useEscapeKey` / `useControllableState` / `useRovingFocus` /
-`useAnchoredPosition` · `sankeyLayout` / `ringLayout` / `heatStyle` /
+`useAnchoredPosition` / `useTopLayer` · `sankeyLayout` / `ringLayout` / `heatStyle` /
 `walkSeries` / `seriesPath` · `rnd` / `hash` (seeded PRNG, so the showcase data
 is deterministic).
 
