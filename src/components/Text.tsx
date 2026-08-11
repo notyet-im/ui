@@ -42,8 +42,11 @@ export interface TextProps {
    * `positive` — a value that went up. Teal in both themes.
    * `negative` — a value that went down. Rust in both themes.
    * `accent` — draws the eye to one figure. Never for a whole paragraph.
+   * `danger` — something is wrong: a validation message, a failed state. Not
+   *   the same as `negative`, which is a *number* that fell; the palette keeps
+   *   the two apart so a chart never recolours when the UI's danger does.
    */
-  tone?: 'default' | 'muted' | 'subtle' | 'positive' | 'negative' | 'accent'
+  tone?: 'default' | 'muted' | 'subtle' | 'positive' | 'negative' | 'accent' | 'danger'
   /**
    * Tabular figures, via `--ny-font-numeric`. Set this on every number that
    * sits in a column — proportional digits make a column jitter as it updates.
@@ -59,6 +62,8 @@ export interface TextProps {
    * Omit to inherit alignment. `start`/`end` are writing-direction aware.
    */
   align?: 'start' | 'center' | 'end'
+  /** Needed when something points at this text — `aria-describedby`, say. */
+  id?: string
   children?: ReactNode
   className?: string
   style?: CSSProperties
@@ -84,6 +89,7 @@ export function Text({
   numeric = false,
   truncate = false,
   align,
+  id,
   children,
   className,
   style,
@@ -100,7 +106,7 @@ export function Text({
     className,
   ]
   return (
-    <Tag className={classes.filter(Boolean).join(' ')} style={style}>
+    <Tag id={id} className={classes.filter(Boolean).join(' ')} style={style}>
       {children}
     </Tag>
   )

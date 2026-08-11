@@ -57,8 +57,8 @@ export type {
 /* Forms ------------------------------------------------------------------- */
 export { Input, Textarea } from './components/Input'
 export type { InputProps, TextareaProps } from './components/Input'
-export { ErrorText, Field, HelpText, Label, useFieldControl } from './components/Field'
-export type { ErrorTextProps, FieldProps, HelpTextProps, LabelProps } from './components/Field'
+export { Field, Label, useFieldControl } from './components/Field'
+export type { FieldProps, LabelProps } from './components/Field'
 export { Checkbox } from './components/Checkbox'
 export type { CheckboxProps } from './components/Checkbox'
 export { Radio, RadioGroup } from './components/Radio'

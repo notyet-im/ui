@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { createContext, useContext, useId, useMemo } from 'react'
 import './Field.css'
+import { Text } from './Text'
 
 /* Field -------------------------------------------------------------------- */
 
@@ -52,6 +53,18 @@ export interface FieldProps {
  * `aria-describedby` at whichever of `help` and `error` are present. Nothing
  * here has to be repeated at the call site, which is the whole point: hand-wired
  * `htmlFor` is the single most common accessibility defect in a form.
+ *
+ * The two messages are plain `Text`. They used to be `HelpText` and `ErrorText`,
+ * two components whose entire stylesheet — `margin: 0`, `font-size: xs`,
+ * `line-height: snug` — was byte-identical to `.ny-text` plus `.ny-text--size-xs`,
+ * leaving a colour as the only thing that distinguished them. That is a prop,
+ * not a component.
+ *
+ * The error message is deliberately not `role="alert"`: a server-rendered form
+ * arrives with its errors already on the page, and an alert role would make
+ * every one of them announce on load. The message reaches assistive tech through
+ * the control's `aria-describedby` and `aria-invalid`, which is what a screen
+ * reader user is actually listening for when they focus the field.
  */
 export function Field({ label, help, error, required = false, id, children, className }: FieldProps) {
   const generated = useId()
@@ -77,8 +90,16 @@ export function Field({ label, help, error, required = false, id, children, clas
         </Label>
       )}
       <FieldContext.Provider value={control}>{children}</FieldContext.Provider>
-      {help != null && <HelpText id={helpId}>{help}</HelpText>}
-      {error != null && <ErrorText id={errorId}>{error}</ErrorText>}
+      {help != null && (
+        <Text as="p" size="xs" tone="muted" id={helpId}>
+          {help}
+        </Text>
+      )}
+      {error != null && (
+        <Text as="p" size="xs" tone="danger" id={errorId}>
+          {error}
+        </Text>
+      )}
     </div>
   )
 }
@@ -105,49 +126,5 @@ export function Label({ htmlFor, required = false, children, className }: LabelP
         </span>
       )}
     </label>
-  )
-}
-
-/* HelpText ----------------------------------------------------------------- */
-
-export interface HelpTextProps {
-  /** Referenced by the control's `aria-describedby`. `Field` fills it in. */
-  id?: string
-  children?: ReactNode
-  className?: string
-}
-
-/** Quiet guidance under a control — format hints, units, consequences. */
-export function HelpText({ id, children, className }: HelpTextProps) {
-  return (
-    <p id={id} className={['ny-help-text', className].filter(Boolean).join(' ')}>
-      {children}
-    </p>
-  )
-}
-
-/* ErrorText ---------------------------------------------------------------- */
-
-export interface ErrorTextProps {
-  /** Referenced by the control's `aria-describedby`. `Field` fills it in. */
-  id?: string
-  children?: ReactNode
-  className?: string
-}
-
-/**
- * The validation message for a control.
- *
- * Deliberately not `role="alert"`: a server-rendered form arrives with its
- * errors already on the page, and an alert role would make every one of them
- * announce on load. The message reaches assistive tech through the control's
- * `aria-describedby` and `aria-invalid`, which is what a screen reader user is
- * actually listening for when they focus the field.
- */
-export function ErrorText({ id, children, className }: ErrorTextProps) {
-  return (
-    <p id={id} className={['ny-error-text', className].filter(Boolean).join(' ')}>
-      {children}
-    </p>
   )
 }

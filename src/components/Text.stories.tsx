@@ -67,6 +67,31 @@ export const Tones: Story = {
       <Text as="p" tone="accent">
         accent — one figure pulled forward, never a whole paragraph
       </Text>
+      <Text as="p" tone="danger">
+        danger — something is wrong; a validation message, not a number that fell
+      </Text>
+    </div>
+  ),
+}
+
+export const FieldMessages: Story = {
+  name: 'Field messages',
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'What `Field` renders under a control. These were `HelpText` and `ErrorText` until their stylesheets turned out to be `.ny-text` plus `.ny-text--size-xs` exactly, leaving a colour as the only difference between them.',
+      },
+    },
+  },
+  render: () => (
+    <div style={stack}>
+      <Text as="p" size="xs" tone="muted">
+        Position size in millions of dollars.
+      </Text>
+      <Text as="p" size="xs" tone="danger">
+        Exceeds the mandate cap of $900m.
+      </Text>
     </div>
   ),
 }

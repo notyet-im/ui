@@ -3,8 +3,9 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
 import { renderInTheme } from '../test/render'
-import { ErrorText, Field, HelpText, Label } from './Field'
+import { Field, Label } from './Field'
 import { Input, Textarea } from './Input'
+import { Text } from './Text'
 
 describe('Field', () => {
   it('associates the label with the control it wraps', () => {
@@ -157,7 +158,7 @@ describe('Field', () => {
   })
 })
 
-/* Label, HelpText, ErrorText ------------------------------------------------ */
+/* Label ---------------------------------------------------------------------- */
 
 describe('Label', () => {
   it('names the control it points at', () => {
@@ -185,20 +186,32 @@ describe('Label', () => {
   })
 })
 
-describe('HelpText and ErrorText', () => {
-  it('can be referenced by a control on their own', () => {
+/**
+ * `HelpText` and `ErrorText` folded into `Text` — their whole stylesheet was
+ * `.ny-text` plus `.ny-text--size-xs`, so a colour was all that separated them.
+ * These cover what came across: the `id` that makes a message referenceable,
+ * and the deliberate absence of `role="alert"`.
+ */
+describe('field messages', () => {
+  it('can be referenced by a control standing on its own', () => {
     renderInTheme(
       <>
         <Input aria-label="Ticker" aria-describedby="hint" />
-        <HelpText id="hint">Uppercase symbols only.</HelpText>
+        <Text as="p" size="xs" tone="muted" id="hint">
+          Uppercase symbols only.
+        </Text>
       </>,
     )
 
     expect(screen.getByLabelText('Ticker')).toHaveAccessibleDescription('Uppercase symbols only.')
   })
 
-  it('does not announce itself on mount', () => {
-    renderInTheme(<ErrorText>No instrument matches that symbol.</ErrorText>)
+  it('does not announce the error on mount', () => {
+    renderInTheme(
+      <Field label="Ticker" error="No instrument matches that symbol.">
+        <Input />
+      </Field>,
+    )
 
     expect(screen.getByText('No instrument matches that symbol.')).not.toHaveAttribute('role', 'alert')
   })

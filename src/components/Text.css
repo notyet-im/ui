@@ -153,6 +153,13 @@
   color: var(--ny-accent);
 }
 
+/* Deliberately `--ny-danger-text`, not `--ny-negative`: one is the UI saying
+   something is wrong, the other is a number that fell. The palette separates
+   them so a chart never recolours when the danger colour is tuned. */
+.ny-ink--danger {
+  color: var(--ny-danger-text);
+}
+
 /* `Text` renders a span by default, so it needs `display: block` for the
    ellipsis to have a box to overflow; `Heading` is already a block. */
 .ny-truncate {

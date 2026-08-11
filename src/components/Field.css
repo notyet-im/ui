@@ -24,20 +24,3 @@
 .ny-label__required {
   color: var(--ny-danger-text);
 }
-
-/* Help and error text ------------------------------------------------------ */
-
-.ny-help-text,
-.ny-error-text {
-  margin: 0;
-  font-size: var(--ny-font-size-xs);
-  line-height: var(--ny-line-height-snug);
-}
-
-.ny-help-text {
-  color: var(--ny-text-muted);
-}
-
-.ny-error-text {
-  color: var(--ny-danger-text);
-}
