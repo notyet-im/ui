@@ -80,21 +80,35 @@ function stripKeys(text: string): string {
  * `.ny-skeleton` has no block, but `.ny-skeleton--rect` does. What the prefix
  * rule still catches is a whole family vanishing at once, which is exactly how
  * `.ny-select` was lost.
+ *
+ * Comments are stripped rather than requiring the name to sit against a quote.
+ * The quote rule kept prose out, but it also meant a name had to be the *whole*
+ * string: `"ny-select__input ny-input"` matched nothing, and neither did any
+ * `${cond ? ' ny-x--y' : ''}` modifier. That hid 61 of the 244 class names in
+ * the codebase — `ny-select__input` among them, the one this test exists for.
+ *
+ * `--ny-*` is excluded: a custom property is not a class, and components set
+ * plenty of them inline.
  */
 const literals = new Map<string, string>()
 const prefixes = new Map<string, string>()
 
+function stripComments(text: string): string {
+  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+}
+
 for (const file of sources) {
-  const text = stripKeys(readFileSync(file, 'utf8'))
+  const text = stripComments(stripKeys(readFileSync(file, 'utf8')))
   const rel = file.slice(SRC.length + 1)
 
   for (const match of text.matchAll(/`(ny-[a-zA-Z0-9_-]*)\$\{/g)) {
     if (!prefixes.has(match[1])) prefixes.set(match[1], rel)
   }
 
-  // Quoted strings only — a bare `ny-` in prose or a comment is not a class.
-  for (const match of text.matchAll(/['"](ny-[a-zA-Z0-9_-]+)['"]/g)) {
-    if (!literals.has(match[1])) literals.set(match[1], rel)
+  // Trailing `-` is trimmed: the static head of a template literal is a prefix,
+  // and the loop above already holds it as one.
+  for (const match of text.matchAll(/(?<!-)\bny-[a-zA-Z0-9_-]*[a-zA-Z0-9_]/g)) {
+    if (!literals.has(match[0])) literals.set(match[0], rel)
   }
 }
 

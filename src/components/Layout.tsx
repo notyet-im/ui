@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
+import type { SpaceToken } from '../tokens'
 import './Layout.css'
 
 /* Responsive values ------------------------------------------------------- */
@@ -6,8 +7,13 @@ import './Layout.css'
 /**
  * The spacing steps a layout gap may use — the value-named scale from
  * `tokens.css`, so `gap={16}` resolves to `var(--ny-space-16)`.
+ *
+ * Derived from `tokens.ts` rather than restated. It was written out here as a
+ * hand-kept union that had already lost `px`, so the docstring's claim to be
+ * "the scale from tokens.css" was false and adding a step to the scale would
+ * have left `gap` rejecting a token that exists.
  */
-export type SpaceToken = 0 | 2 | 4 | 8 | 12 | 16 | 20 | 24 | 32 | 40 | 48 | 64
+export type { SpaceToken }
 
 /**
  * A value that changes at the four system breakpoints (480 / 768 / 1024 /
@@ -95,8 +101,10 @@ export interface ContainerProps {
 /**
  * Centred page measure with the system gutter.
  *
- * Also opens a container query context named `ny-panel`, so anything inside can
- * reflow against the container's width rather than the viewport's.
+ * Also opens a container query context, so anything inside can reflow against
+ * the container's width rather than the viewport's. Deliberately anonymous —
+ * every `@container` query in the system is unnamed and binds to its nearest
+ * sized ancestor.
  */
 export function Container({ size = 'lg', children, className, style }: ContainerProps) {
   const classes = ['ny-container', `ny-container--${size}`, className]

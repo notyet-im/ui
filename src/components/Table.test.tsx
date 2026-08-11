@@ -139,12 +139,41 @@ describe('Table', () => {
     expect(onSortChange).toHaveBeenLastCalledWith('market', 'asc')
   })
 
-  it('hides the per-cell reflow labels from assistive tech', () => {
+  /**
+   * The stacked layout needs the column header beside each value. A string
+   * header rides on `data-label` and is drawn by CSS; only a `ReactNode` header
+   * — which cannot be an attribute — costs a real element.
+   *
+   * Either way the label must stay out of the accessibility tree: the `<th>`
+   * association already carries the header, so a second copy would read every
+   * column name on every row.
+   */
+  it('carries a string reflow label as an attribute, not as a node', () => {
     const { container } = renderInTheme(<Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />)
 
+    const cells = container.querySelectorAll('.ny-table__cell')
+    expect(cells).toHaveLength(ROWS.length * COLUMNS.length)
+    for (const cell of cells) expect(cell).toHaveAttribute('data-label')
+
+    // No hidden span per cell — that was a third of the body's DOM.
+    expect(container.querySelectorAll('.ny-table__label')).toHaveLength(0)
+  })
+
+  it('falls back to a hidden span when the header is not a string', () => {
+    const columns = [{ key: 'net', header: <em>Net flow</em>, render: (row: FlowRow) => row.net }]
+    const { container } = renderInTheme(<Table columns={columns} rows={ROWS} rowKey={(row) => row.id} />)
+
     const labels = container.querySelectorAll('.ny-table__label')
-    expect(labels).toHaveLength(ROWS.length * COLUMNS.length)
+    expect(labels).toHaveLength(ROWS.length)
     for (const label of labels) expect(label).toHaveAttribute('aria-hidden', 'true')
+    expect(container.querySelector('.ny-table__cell')).not.toHaveAttribute('data-label')
+  })
+
+  it('does not announce the column header twice per row', () => {
+    renderInTheme(<Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />)
+
+    // Once in the header row, and not again inside any cell.
+    expect(screen.getAllByRole('columnheader', { name: 'Market' })).toHaveLength(1)
   })
 
   it('is axe clean, sorted and empty alike', async () => {

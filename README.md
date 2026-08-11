@@ -110,13 +110,13 @@ a wide monitor reflows correctly.
 **Charts (6)** — SankeyFlow, RotationRing, Sparkline, HeatGrid, RotationMatrix,
 BreakdownBar.
 
-**UI (47)** — layout (Container, Grid, GridItem, Stack, Panel, PanelHeading,
-PageHeader, Card, MacroStrip), typography (Text, Heading, VisuallyHidden,
-Eyebrow), controls (Button, IconButton, GhostButton, Select, SegmentedControl,
-Tabs, ThemeToggle), forms (Input, Textarea, Checkbox, Radio, RadioGroup, Switch,
-Field, Label, HelpText, ErrorText), overlays (Dialog, Tooltip, Popover, Toast),
-feedback (Badge, Alert, Spinner, Skeleton, Avatar) and data display (StatTile,
-DataRow, NarrativeItem, MomentumCard, Legend, Table, Breadcrumb, Pagination).
+**UI (43)** — layout (Container, Grid, GridItem, Stack, Panel, PanelHeading,
+PageHeader, MacroStrip), typography (Text, Heading, VisuallyHidden, Eyebrow),
+controls (Button, InlineAction, Select, SegmentedControl, Tabs, ThemeToggle),
+forms (Input, Textarea, Checkbox, Radio, RadioGroup, Switch, Field, Label),
+overlays (Dialog, Tooltip, Popover, Toast), feedback (Badge, Alert, Spinner,
+Skeleton, Avatar) and data display (StatTile, DataRow, NarrativeItem,
+MomentumCard, Legend, Table, Breadcrumb, Pagination).
 
 Run `npm run storybook` for the live catalogue.
 

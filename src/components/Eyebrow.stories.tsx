@@ -8,7 +8,7 @@ const meta = {
     docs: {
       description: {
         component:
-          "Small uppercase monospace label — the system's quietest text role. Pick the variant by where it sits: `kicker` above a page title, `label` above a panel section, `tile` inside a compact stat tile.",
+          "Small uppercase monospace label — the system's quietest text role. Pick the variant by where it sits: `label` above a page title or a panel section, `tile` inside a compact stat tile, where the tighter box wants tighter tracking.",
       },
     },
   },

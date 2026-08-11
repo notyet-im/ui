@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { accent, breakpoints, deltaColors, fonts, motion, space, surfaces, zIndex } from './tokens'
@@ -13,6 +13,16 @@ import { accent, breakpoints, deltaColors, fonts, motion, space, surfaces, zInde
  */
 
 const css = readFileSync(join(process.cwd(), 'src/styles/tokens.css'), 'utf8')
+
+/** Every stylesheet under `src`, so an invariant can be checked against all of them. */
+function walkCss(dir: string, out: string[] = []): string[] {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name)
+    if (entry.isDirectory()) walkCss(path, out)
+    else if (path.endsWith('.css')) out.push(path)
+  }
+  return out
+}
 
 /** Comments describe the invalid patterns we check for, so strip them first. */
 const source = css.replace(/\/\*[\s\S]*?\*\//g, '')
@@ -158,17 +168,36 @@ describe('tokens.ts mirrors tokens.css', () => {
   })
 })
 
-describe('tokens.css invariants', () => {
+/**
+ * These read **every** stylesheet, not just `tokens.css`.
+ *
+ * They used to read only `tokens.css`, which contains exactly one media query —
+ * so the rule they exist to enforce, that responsiveness lives only in the
+ * layout primitives and the four declared breakpoints, was checked against the
+ * one file that could not break it. A component adding
+ * `@media (min-width: 900px)` passed the whole suite.
+ */
+describe('stylesheet invariants', () => {
+  const sheets = walkCss(join(process.cwd(), 'src'))
+  // Comments first: `tokens.css` documents the invalid `@media (min-width:
+  // var(--ny-bp-md))` pattern in prose, and a checker that cannot tell prose
+  // from code reports the warning as the offence.
+  const allCss = sheets.map((f) => readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')).join('\n')
+
+  it('finds every stylesheet, not just tokens.css', () => {
+    expect(sheets.length).toBeGreaterThan(20)
+  })
+
   it('never puts a custom property inside a @media condition', () => {
     // `@media (min-width: var(--ny-bp-md))` is invalid CSS and fails silently,
     // so this mistake is invisible without a check like this one.
-    const offenders = source.match(/@media[^{]*var\(--[^)]+\)[^{]*\{/g)
+    const offenders = allCss.match(/@media[^{]*var\(--[^)]+\)[^{]*\{/g)
     expect(offenders ?? []).toEqual([])
   })
 
   it('only ever breaks at the four declared breakpoints', () => {
-    const widths = [...source.matchAll(/@media[^{]*\((?:min|max)-width:\s*([^)]+)\)/g)].map((m) =>
-      m[1].trim(),
+    const widths = [...allCss.matchAll(/@(?:media|container)[^{]*\((?:min|max)-width:\s*([^)]+)\)/g)].map(
+      (m) => m[1].trim(),
     )
     const allowed = new Set(['480px', '767px', '768px', '1023px', '1024px', '1279px', '1280px'])
     for (const width of widths) expect(allowed.has(width), `unexpected breakpoint ${width}`).toBe(true)

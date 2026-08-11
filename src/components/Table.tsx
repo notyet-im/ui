@@ -172,17 +172,31 @@ export function Table<T>({
                     column.numeric === true && 'ny-table__cell--numeric',
                   ].filter(Boolean)
                   return (
-                    <td key={column.key} role="cell" className={classes.join(' ')}>
+                    <td
+                      key={column.key}
+                      role="cell"
+                      className={classes.join(' ')}
+                      data-label={typeof column.header === 'string' ? column.header : undefined}
+                    >
                       {/*
-                       * The per-cell label is what the stacked layout shows in
-                       * place of the column header. It is `aria-hidden` on
-                       * purpose: the `<th>` association still carries it to
-                       * assistive tech in both layouts, so announcing this too
-                       * would read every header twice.
+                       * The stacked layout shows the column header beside each
+                       * value. A string header rides on `data-label` and is
+                       * drawn by a `::before`, because a real element would be
+                       * one hidden node per cell — on a 200-row six-column
+                       * table that was 1,200 spans, a third of the body's DOM,
+                       * invisible at every width above the reflow point.
+                       *
+                       * A `ReactNode` header cannot be an attribute, so it
+                       * keeps the span. Either way it stays out of the
+                       * accessibility tree: the `<th>` association already
+                       * carries the header, and announcing it twice would read
+                       * every column name on every row.
                        */}
-                      <span className="ny-table__label" aria-hidden="true">
-                        {column.header}
-                      </span>
+                      {typeof column.header !== 'string' && (
+                        <span className="ny-table__label" aria-hidden="true">
+                          {column.header}
+                        </span>
+                      )}
                       <span className="ny-table__value">{cellContent(row, column)}</span>
                     </td>
                   )

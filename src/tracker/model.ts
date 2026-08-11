@@ -1,4 +1,4 @@
-import { formatDelta } from '../lib/format'
+import { formatDelta, formatPercent } from '../lib/format'
 import { hash, rnd } from '../lib/prng'
 import { walkSeries } from '../lib/series'
 import type { BucketKey, MetricKey, RangeKey, RegionCode, SectorKey } from './data'
@@ -283,12 +283,12 @@ export function sectorMomentum(
 
   return SECTOR_KEYS.map((sector) => {
     const value = sums[sector]
-    const share = ((Math.abs(value) / (total || 1)) * 100).toFixed(1)
+    const share = (value / (total || 1)) * 100
     return {
       key: sector,
       name: locale.sec[sector],
       value,
-      share: `${value >= 0 ? '+' : '−'}${share}${locale.ui.ofFlow}`,
+      share: formatPercent(share, 1, locale.ui.ofFlow),
       series: walkSeries(sector + range, 22, value),
       focusKey: REGION_CODES.map((region) => `${region}|${sector}`).sort(
         (a, b) => (cellValues[b] || 0) - (cellValues[a] || 0),
@@ -315,7 +315,7 @@ export function macroReadings(range: RangeKey, locale: Locale): MacroReading[] {
       label,
       value,
       change,
-      changeText: `${change >= 0 ? '+' : '−'}${Math.abs(change).toFixed(1)}%`,
+      changeText: formatPercent(change),
       series: walkSeries(label + range, 14, change),
     }
   })

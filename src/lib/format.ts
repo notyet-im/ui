@@ -28,8 +28,8 @@ export function formatDelta(value: number, signed = false): string {
  * Formats a value in millions as a bare signed number of billions — for dense
  * grid cells where a `$` and a `B` on every cell would be noise.
  */
-export function formatCompact(value: number): string {
-  const sign = value > 0 ? '+' : value < 0 ? MINUS : ''
+export function formatCompact(value: number, signed = true): string {
+  const sign = !signed ? '' : value > 0 ? '+' : value < 0 ? MINUS : ''
   const abs = Math.abs(value)
   return sign + (abs / 1000).toFixed(abs >= 9950 ? 0 : 1)
 }

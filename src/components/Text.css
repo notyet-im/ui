@@ -125,9 +125,9 @@
 /**
  * `Text` and `Heading` carried byte-identical copies of this table — six
  * colours each, and a truncate rule differing only by a `display`. They are the
- * same six roles whatever the element, so they are one table now: add a tone
- * here and both components gain it, which is what "same six" is supposed to
- * mean.
+ * same roles whatever the element, so they are one table now: add a tone here
+ * and both components gain it. Both unions must list it too, or the table is
+ * one table and the API is two.
  */
 .ny-ink--default {
   color: var(--ny-text);

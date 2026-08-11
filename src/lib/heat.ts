@@ -6,6 +6,8 @@
  * "small positive".
  */
 
+import { deltaColors } from '../tokens'
+
 export interface HeatStyle {
   /** CSS colour for the cell background. */
   background: string
@@ -13,8 +15,23 @@ export interface HeatStyle {
   color: string
 }
 
-const INFLOW_RGB = '47,191,168'
-const OUTFLOW_RGB = '224,112,63'
+/**
+ * `#rrggbb` → `r,g,b`, for dropping into `rgba()`.
+ *
+ * The ramp is derived from `deltaColors` rather than transcribed. It used to be
+ * two decimal triples written out here, which made the delta palette exist three
+ * times — `tokens.css`, `tokens.ts`, and this file — with only the first two
+ * pinned to each other by `tokens.parity.test.ts`. Retuning the data colour
+ * would have moved every chart and left every heat cell behind, in a system
+ * whose whole contract is that teal always means up.
+ */
+function rgbTriple(hex: string): string {
+  const n = Number.parseInt(hex.slice(1), 16)
+  return `${(n >> 16) & 255},${(n >> 8) & 255},${n & 255}`
+}
+
+const INFLOW_RGB = rgbTriple(deltaColors.positive)
+const OUTFLOW_RGB = rgbTriple(deltaColors.negative)
 
 /** Minimum alpha for a non-zero cell, so faint values stay perceptible. */
 const ALPHA_FLOOR = 0.1

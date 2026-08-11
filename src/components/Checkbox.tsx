@@ -79,7 +79,7 @@ export function Checkbox({
         <input
           ref={attachRef}
           type="checkbox"
-          className="ny-choice__input ny-checkbox__input"
+          className="ny-choice__input"
           checked={isChecked}
           onChange={(event) => setChecked(event.currentTarget.checked)}
           disabled={disabled}

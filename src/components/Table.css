@@ -186,6 +186,14 @@
     text-align: start;
   }
 
+  /* The `::before` is the string-header path and the span the ReactNode one;
+     they are the same label, so they carry the same rule. Declared only inside
+     this query, so above the reflow width neither generates a box. */
+  .ny-table__cell[data-label]::before {
+    content: attr(data-label);
+  }
+
+  .ny-table__cell[data-label]::before,
   .ny-table__label {
     display: block;
     flex: none;

@@ -149,5 +149,12 @@ export type {
   RingOptions,
   RingPairInput,
 } from './lib/ring'
-export { useAnchoredPosition, useControllableState, useEscapeKey, useMeasure, useRovingFocus } from './hooks'
+export {
+  useAnchoredPosition,
+  useControllableState,
+  useEscapeKey,
+  useMeasure,
+  useRovingFocus,
+  useTopLayer,
+} from './hooks'
 export type { AnchoredPosition, Measurements, Placement, RovingFocus, RovingFocusOptions } from './hooks'

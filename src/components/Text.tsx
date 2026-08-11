@@ -140,10 +140,13 @@ export interface HeadingProps {
    * `positive` — a heading naming a value that went up. Teal in both themes.
    * `negative` — a heading naming a value that went down. Rust in both themes.
    * `accent` — one heading pulled forward. Never more than one in a view.
+   * `danger` — names something that failed. See `TextProps.tone`.
    */
-  tone?: 'default' | 'muted' | 'subtle' | 'positive' | 'negative' | 'accent'
+  tone?: 'default' | 'muted' | 'subtle' | 'positive' | 'negative' | 'accent' | 'danger'
   /** Clamp to a single line with an ellipsis. See `TextProps.truncate`. */
   truncate?: boolean
+  /** Needed when something points at this heading — `aria-labelledby`, say. */
+  id?: string
   children?: ReactNode
   className?: string
   style?: CSSProperties
@@ -166,6 +169,7 @@ export function Heading({
   size = 'xl',
   tone,
   truncate = false,
+  id,
   children,
   className,
   style,
@@ -179,7 +183,7 @@ export function Heading({
     className,
   ]
   return (
-    <Tag className={classes.filter(Boolean).join(' ')} style={style}>
+    <Tag id={id} className={classes.filter(Boolean).join(' ')} style={style}>
       {children}
     </Tag>
   )

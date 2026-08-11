@@ -52,7 +52,7 @@ export function Radio({ value, label, disabled, id, ref, className }: RadioProps
         <input
           ref={ref}
           type="radio"
-          className="ny-choice__input ny-radio__input"
+          className="ny-choice__input"
           name={group?.name ?? standaloneName}
           value={value}
           id={id}
