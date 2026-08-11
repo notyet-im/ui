@@ -139,7 +139,13 @@ export function sankeyLayout(links: FlowLink[], options: SankeyOptions): SankeyL
   stack(targets, targetTotals, xTarget, 'target')
 
   // Enter the right-hand column in target order to minimise ribbon crossings.
-  const ordered = links.slice().sort((a, b) => targets.indexOf(a.to) - targets.indexOf(b.to))
+  //
+  // Ranked through a Map rather than `targets.indexOf` inside the comparator:
+  // this is exported API over an arbitrary link set, and a linear scan per
+  // comparison makes the sort O(n log n × m) — at a thousand links across five
+  // hundred targets, millions of string compares per layout, on every render.
+  const rank = new Map(targets.map((target, index) => [target, index]))
+  const ordered = links.slice().sort((a, b) => (rank.get(a.to) ?? 0) - (rank.get(b.to) ?? 0))
 
   const c1 = xSource + (xTarget - xSource) * CURVE_TENSION
   const c2 = xTarget - (xTarget - xSource) * CURVE_TENSION

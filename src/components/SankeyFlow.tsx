@@ -69,7 +69,8 @@ export function SankeyFlow({
   endCaption,
   className,
 }: SankeyFlowProps) {
-  const [ref, measured] = useMeasure<HTMLDivElement>()
+  // Only observe when the caller has not already told us the width.
+  const [ref, measured] = useMeasure<HTMLDivElement>(width == null)
   const resolvedWidth = width ?? measured.width
 
   // Nothing to draw until a width exists. On the measuring path that is one

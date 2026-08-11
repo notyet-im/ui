@@ -12,18 +12,43 @@ export interface Measurements {
  * The flow charts lay themselves out in real pixels rather than a scaled
  * viewBox — labels are HTML, so they must not scale with the drawing — which
  * means they need a measured width before they can draw anything.
+ *
+ * Pass `enabled: false` when the width is already known. A caller that supplies
+ * an explicit width still has to attach the ref (the element is the same one it
+ * draws into), so without this flag the observer runs and its result is thrown
+ * away on every frame of a resize — which is precisely the cost the caller was
+ * trying to avoid by measuring once itself.
  */
-export function useMeasure<T extends HTMLElement>(): [RefObject<T | null>, Measurements] {
+export function useMeasure<T extends HTMLElement>(enabled = true): [RefObject<T | null>, Measurements] {
   const ref = useRef<T>(null)
   const [measurements, setMeasurements] = useState<Measurements>({ width: 0 })
 
   useEffect(() => {
     const element = ref.current
-    if (!element) return
+    if (!element || !enabled) return
 
     const measure = () => {
       const width = element.clientWidth
       setMeasurements((previous) => (previous.width === width ? previous : { width }))
+    }
+
+    /**
+     * Coalesced to one measurement per frame, for the same reason
+     * `useAnchoredPosition` coalesces `place()`.
+     *
+     * `measure()` reads `clientWidth`, and the state it sets drives inline
+     * style writes on every chart label. A second read in the same frame lands
+     * after those writes and is a forced synchronous reflow rather than a
+     * cached one, so bursts of observer callbacks must not each get their own
+     * read.
+     */
+    let frame = 0
+    const schedule = () => {
+      if (frame !== 0) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        measure()
+      })
     }
 
     measure()
@@ -39,17 +64,18 @@ export function useMeasure<T extends HTMLElement>(): [RefObject<T | null>, Measu
     // twice per resize.
     let observer: ResizeObserver | undefined
     if (typeof ResizeObserver !== 'undefined') {
-      observer = new ResizeObserver(measure)
+      observer = new ResizeObserver(schedule)
       observer.observe(element)
     } else {
-      window.addEventListener('resize', measure)
+      window.addEventListener('resize', schedule)
     }
 
     return () => {
-      window.removeEventListener('resize', measure)
+      if (frame !== 0) cancelAnimationFrame(frame)
+      window.removeEventListener('resize', schedule)
       observer?.disconnect()
     }
-  }, [])
+  }, [enabled])
 
   return [ref, measurements]
 }
