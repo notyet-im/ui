@@ -117,6 +117,12 @@ button.ny-heat-grid__cell {
   --ny-heat-grid-min-cell: 26px;
 
   gap: var(--ny-space-2);
+  /* `.ny-matrix` carried this and the fold dropped it. Without it the grid's
+     min-height resolves to its content, so a `flex: 1` matrix in a column panel
+     can push the panel taller instead of fitting inside it. Set here rather
+     than on the block because the default density takes an explicit `minHeight`
+     prop, which this would sit underneath. */
+  min-height: 0;
 }
 
 .ny-heat-grid--compact .ny-heat-grid__header,
