@@ -3,9 +3,9 @@
 /**
  * The group is layout only — no border, no background.
  *
- * The bordered box is the `<input>` itself, exactly as `.ny-select` does it, so
- * the shared focus ring in base.css lands on the control's own edge instead of
- * somewhere inside a wrapper's padding.
+ * The bordered box is the `<input>` itself, so the shared focus ring in base.css
+ * lands on the control's own edge instead of somewhere inside a wrapper's
+ * padding. `Select` reuses `.ny-input` for exactly this reason.
  */
 .ny-input-group {
   position: relative;

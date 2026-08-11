@@ -18,10 +18,11 @@
 /* Container --------------------------------------------------------------- */
 
 .ny-container {
-  /* Named, so components inside can reflow with `@container ny-panel (…)`
-     against the container's width instead of the viewport's. */
+  /* Components inside reflow against this width rather than the viewport's.
+     Deliberately unnamed: every `@container` query in the system is anonymous
+     and binds to its nearest sized ancestor, so a name would only be a promise
+     nothing collects. */
   container-type: inline-size;
-  container-name: ny-panel;
 
   width: 100%;
   min-width: 0;

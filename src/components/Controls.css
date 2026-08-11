@@ -16,6 +16,35 @@
   color: var(--ny-text);
 }
 
+/* Select ------------------------------------------------------------------ */
+
+/**
+ * The box, the size ramp and every state come from `.ny-input`, which the
+ * `<select>` carries alongside these rules — a select is an input, and the two
+ * looked deliberately different only because this block used to restate the
+ * whole ramp by hand and then drifted from it.
+ *
+ * The wrapper hugs the control because the chevron is absolutely positioned
+ * against it: a wrapper that stretches (plain block) strands the chevron to the
+ * right of the box, and one that shrinks (an unguarded flex child) drags it
+ * inside. `flex: none` is the convention documented in base.css.
+ */
+.ny-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.ny-select__input {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  /* `.ny-input` fills its group; here the wrapper hugs instead, so the control
+     sizes to its widest option. */
+  width: auto;
+}
+
 /* Eyebrow ----------------------------------------------------------------- */
 
 .ny-eyebrow {

@@ -93,10 +93,10 @@ export function Text({
     'ny-text',
     `ny-text--size-${size}`,
     weight != null && `ny-text--weight-${weight}`,
-    tone != null && `ny-text--tone-${tone}`,
+    tone != null && `ny-ink--${tone}`,
     align != null && `ny-text--align-${align}`,
     numeric && 'ny-text--numeric',
-    truncate && 'ny-text--truncate',
+    truncate && 'ny-truncate',
     className,
   ]
   return (
@@ -168,8 +168,8 @@ export function Heading({
   const classes = [
     'ny-heading',
     `ny-heading--size-${size}`,
-    tone != null && `ny-heading--tone-${tone}`,
-    truncate && 'ny-heading--truncate',
+    tone != null && `ny-ink--${tone}`,
+    truncate && 'ny-truncate',
     className,
   ]
   return (

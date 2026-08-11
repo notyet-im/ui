@@ -4,12 +4,10 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 export interface Measurements {
   /** Measured content width of the observed element, in CSS pixels. 0 until first measure. */
   width: number
-  /** Current `window.innerWidth`, for viewport-level breakpoints. */
-  viewportWidth: number
 }
 
 /**
- * Measures an element and the viewport.
+ * Measures an element's content width.
  *
  * The flow charts lay themselves out in real pixels rather than a scaled
  * viewBox — labels are HTML, so they must not scale with the drawing — which
@@ -17,7 +15,7 @@ export interface Measurements {
  */
 export function useMeasure<T extends HTMLElement>(): [RefObject<T | null>, Measurements] {
   const ref = useRef<T>(null)
-  const [measurements, setMeasurements] = useState<Measurements>({ width: 0, viewportWidth: 0 })
+  const [measurements, setMeasurements] = useState<Measurements>({ width: 0 })
 
   useEffect(() => {
     const element = ref.current
@@ -25,25 +23,26 @@ export function useMeasure<T extends HTMLElement>(): [RefObject<T | null>, Measu
 
     const measure = () => {
       const width = element.clientWidth
-      const viewportWidth = window.innerWidth
-      setMeasurements((previous) =>
-        previous.width === width && previous.viewportWidth === viewportWidth
-          ? previous
-          : { width, viewportWidth },
-      )
+      setMeasurements((previous) => (previous.width === width ? previous : { width }))
     }
 
     measure()
-    window.addEventListener('resize', measure)
 
     // Only the element. Observing `document.body` as well fired every live
     // instance's callback on any reflow that changed page height — a DOM read
     // per instance for nothing, since the element observer already covers the
-    // element's own width and the `resize` listener covers the viewport.
+    // element's own width.
+    //
+    // The `resize` listener is the fallback, not a companion: where
+    // ResizeObserver exists, any viewport change that moves this element's
+    // width already fires the observer, so listening to both just measured
+    // twice per resize.
     let observer: ResizeObserver | undefined
     if (typeof ResizeObserver !== 'undefined') {
       observer = new ResizeObserver(measure)
       observer.observe(element)
+    } else {
+      window.addEventListener('resize', measure)
     }
 
     return () => {

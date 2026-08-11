@@ -47,12 +47,12 @@ export function Radio({ value, label, disabled, id, ref, className }: RadioProps
   const rovingProps = group?.itemProps(value)
 
   return (
-    <label className={['ny-radio', className].filter(Boolean).join(' ')}>
-      <span className="ny-radio__control">
+    <label className={['ny-choice', 'ny-radio', className].filter(Boolean).join(' ')}>
+      <span className="ny-choice__control">
         <input
           ref={ref}
           type="radio"
-          className="ny-radio__input"
+          className="ny-choice__input ny-radio__input"
           name={group?.name ?? standaloneName}
           value={value}
           id={id}
@@ -63,7 +63,7 @@ export function Radio({ value, label, disabled, id, ref, className }: RadioProps
         />
         <span className="ny-radio__dot" aria-hidden="true" />
       </span>
-      {label != null && <span className="ny-radio__label">{label}</span>}
+      {label != null && <span className="ny-choice__label">{label}</span>}
     </label>
   )
 }

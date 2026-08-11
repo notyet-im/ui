@@ -52,25 +52,5 @@
 }
 
 .ny-alert__dismiss {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: var(--ny-control-height-sm);
-  height: var(--ny-control-height-sm);
   margin-left: auto;
-  padding: var(--ny-space-0);
-  border: 0;
-  border-radius: var(--ny-radius-md);
-  background: transparent;
-  color: var(--ny-text-muted);
-  cursor: pointer;
-  transition:
-    background var(--ny-duration-fast) var(--ny-ease-standard),
-    color var(--ny-duration-fast) var(--ny-ease-standard);
-}
-
-.ny-alert__dismiss:hover {
-  background: var(--ny-surface-hover);
-  color: var(--ny-text);
 }

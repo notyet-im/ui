@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { useEffect, useId, useRef } from 'react'
 import './Dialog.css'
+import { Button } from './Button'
+import { CloseIcon } from './icons'
 
 export interface DialogProps {
   /** Whether the dialog is showing. Drives `showModal()` / `close()` on the element. */
@@ -98,20 +100,9 @@ export function Dialog({
             </p>
           )}
         </div>
-        <button type="button" className="ny-dialog__close" aria-label={closeLabel} onClick={onClose}>
-          <svg
-            viewBox="0 0 24 24"
-            width="14"
-            height="14"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            aria-hidden="true"
-          >
-            <path d="M6 6l12 12M18 6L6 18" />
-          </svg>
-        </button>
+        <Button iconOnly label={closeLabel} variant="ghost" size="sm" onClick={onClose}>
+          <CloseIcon />
+        </Button>
       </div>
       {children != null && <div className="ny-dialog__content">{children}</div>}
       {footer != null && <div className="ny-dialog__footer">{footer}</div>}

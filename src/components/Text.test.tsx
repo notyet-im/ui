@@ -1,13 +1,8 @@
-import { render, screen } from '@testing-library/react'
-import type { ReactNode } from 'react'
+import { screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Heading, Text, VisuallyHidden } from './Text'
-import { ThemeProvider } from './ThemeProvider'
-
-function renderInTheme(ui: ReactNode) {
-  return render(<ThemeProvider theme="dark">{ui}</ThemeProvider>)
-}
 
 describe('Text', () => {
   it('renders a span by default', () => {
@@ -59,7 +54,7 @@ describe('Text', () => {
 
     expect(screen.getByText('styled')).toHaveClass(
       'ny-text--weight-semibold',
-      'ny-text--tone-negative',
+      'ny-ink--negative',
       'ny-text--align-end',
     )
   })
@@ -71,7 +66,7 @@ describe('Text', () => {
       </Text>,
     )
 
-    expect(screen.getByText('+1,284.05')).toHaveClass('ny-text--numeric', 'ny-text--truncate')
+    expect(screen.getByText('+1,284.05')).toHaveClass('ny-text--numeric', 'ny-truncate')
   })
 
   it('keeps a caller className alongside the modifiers', () => {
@@ -109,10 +104,7 @@ describe('Heading', () => {
       </Heading>,
     )
 
-    expect(screen.getByRole('heading', { name: 'Inflows' })).toHaveClass(
-      'ny-heading--tone-positive',
-      'ny-heading--truncate',
-    )
+    expect(screen.getByRole('heading', { name: 'Inflows' })).toHaveClass('ny-ink--positive', 'ny-truncate')
   })
 })
 

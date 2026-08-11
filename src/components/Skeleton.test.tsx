@@ -1,12 +1,11 @@
-import { render } from '@testing-library/react'
 import type { ReactElement } from 'react'
 import { describe, expect, it } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Skeleton } from './Skeleton'
-import { ThemeProvider } from './ThemeProvider'
 
 function renderSkeleton(element: ReactElement) {
-  const { container } = render(<ThemeProvider>{element}</ThemeProvider>)
+  const { container } = renderInTheme(element)
   const root = container.querySelector('.ny-skeleton')
   if (root == null) throw new Error('skeleton did not render')
   return { container, root }
@@ -47,12 +46,12 @@ describe('Skeleton', () => {
   })
 
   it('has no axe violations for any shape', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Skeleton lines={3} />
         <Skeleton shape="rect" />
         <Skeleton shape="circle" />
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

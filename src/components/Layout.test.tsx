@@ -1,9 +1,8 @@
-import { render } from '@testing-library/react'
 import type { CSSProperties, ReactElement } from 'react'
 import { describe, expect, it } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Container, Grid, GridItem, Stack } from './Layout'
-import { ThemeProvider } from './ThemeProvider'
 
 /**
  * These components have no visible behaviour of their own — what they *do* is
@@ -13,7 +12,7 @@ import { ThemeProvider } from './ThemeProvider'
  */
 
 function renderLayout(ui: ReactElement) {
-  const { container } = render(<ThemeProvider>{ui}</ThemeProvider>)
+  const { container } = renderInTheme(ui)
   return container
 }
 

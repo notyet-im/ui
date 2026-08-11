@@ -55,30 +55,6 @@
   font-weight: var(--ny-font-weight-semibold);
 }
 
-.ny-text--tone-default {
-  color: var(--ny-text);
-}
-
-.ny-text--tone-muted {
-  color: var(--ny-text-muted);
-}
-
-.ny-text--tone-subtle {
-  color: var(--ny-text-subtle);
-}
-
-.ny-text--tone-positive {
-  color: var(--ny-positive);
-}
-
-.ny-text--tone-negative {
-  color: var(--ny-negative);
-}
-
-.ny-text--tone-accent {
-  color: var(--ny-accent);
-}
-
 .ny-text--align-start {
   text-align: start;
 }
@@ -101,14 +77,6 @@
 /* `display: block` because the default `span` cannot clip as an inline box.
    `min-width: 0` only helps when this element is itself the flex child — a
    truncating text inside a flex parent still needs `min-width: 0` there. */
-.ny-text--truncate {
-  display: block;
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 /* Heading ----------------------------------------------------------------- */
 
 /* `text-wrap: balance` is a progressive enhancement — where it is unsupported
@@ -152,31 +120,43 @@
   letter-spacing: var(--ny-tracking-tight);
 }
 
-.ny-heading--tone-default {
+/* Ink and truncation ------------------------------------------------------ */
+
+/**
+ * `Text` and `Heading` carried byte-identical copies of this table — six
+ * colours each, and a truncate rule differing only by a `display`. They are the
+ * same six roles whatever the element, so they are one table now: add a tone
+ * here and both components gain it, which is what "same six" is supposed to
+ * mean.
+ */
+.ny-ink--default {
   color: var(--ny-text);
 }
 
-.ny-heading--tone-muted {
+.ny-ink--muted {
   color: var(--ny-text-muted);
 }
 
-.ny-heading--tone-subtle {
+.ny-ink--subtle {
   color: var(--ny-text-subtle);
 }
 
-.ny-heading--tone-positive {
+.ny-ink--positive {
   color: var(--ny-positive);
 }
 
-.ny-heading--tone-negative {
+.ny-ink--negative {
   color: var(--ny-negative);
 }
 
-.ny-heading--tone-accent {
+.ny-ink--accent {
   color: var(--ny-accent);
 }
 
-.ny-heading--truncate {
+/* `Text` renders a span by default, so it needs `display: block` for the
+   ellipsis to have a box to overflow; `Heading` is already a block. */
+.ny-truncate {
+  display: block;
   min-width: 0;
   overflow: hidden;
   white-space: nowrap;

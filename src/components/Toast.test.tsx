@@ -1,44 +1,26 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
-import { ThemeProvider } from './ThemeProvider'
+import { renderInTheme, themed } from '../test/render'
+import { stubPopoverApi } from '../test/top-layer'
 import type { ToastProps } from './Toast'
 import { Toast, ToastViewport } from './Toast'
 
-/**
- * jsdom implements no part of the popover API, so the viewport never really
- * reaches the top layer here — the stubs only let the show path run.
- *
- * The inline `display` matters: jsdom *does* ship the UA rule
- * `[popover]:not(:popover-open) { display: none }`, and since `:popover-open`
- * can never match there, the viewport — and every toast inside it — would be
- * permanently hidden, invisible to `getByRole` and skipped by axe. Real
- * top-layer paint order is verified in Chromium by design-sync.
- */
-beforeEach(() => {
-  HTMLElement.prototype.showPopover = function showPopover() {
-    this.style.display = 'block'
-  }
-  HTMLElement.prototype.hidePopover = function hidePopover() {
-    this.style.display = 'none'
-  }
-})
+stubPopoverApi()
 
 function renderToast(props: Partial<ToastProps> = {}) {
-  return render(
-    <ThemeProvider theme="dark">
-      <ToastViewport>
-        <Toast
-          open
-          onClose={() => {}}
-          duration={0}
-          title="Rebalance queued"
-          description="Settles at the close."
-          {...props}
-        />
-      </ToastViewport>
-    </ThemeProvider>,
+  return renderInTheme(
+    <ToastViewport>
+      <Toast
+        open
+        onClose={() => {}}
+        duration={0}
+        title="Rebalance queued"
+        description="Settles at the close."
+        {...props}
+      />
+    </ToastViewport>,
   )
 }
 
@@ -90,11 +72,11 @@ describe('Toast', () => {
     expect(screen.getByRole('status')).toHaveAttribute('data-open')
 
     rerender(
-      <ThemeProvider theme="dark">
+      themed(
         <ToastViewport>
           <Toast open={false} onClose={() => {}} duration={0} title="Rebalance queued" />
-        </ToastViewport>
-      </ThemeProvider>,
+        </ToastViewport>,
+      ),
     )
 
     // Queried through the container, not by role: the stylesheet now hides it,

@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Breadcrumb } from './Breadcrumb'
-import { ThemeProvider } from './ThemeProvider'
 
 const ITEMS = [
   { label: 'Markets', href: '#markets' },
@@ -13,11 +13,7 @@ const ITEMS = [
 
 describe('Breadcrumb', () => {
   it('is a nav wrapping an ordered list', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Breadcrumb items={ITEMS} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Breadcrumb items={ITEMS} />)
 
     const nav = screen.getByRole('navigation', { name: 'Breadcrumb' })
     expect(nav).toBeInTheDocument()
@@ -26,11 +22,7 @@ describe('Breadcrumb', () => {
   })
 
   it('marks the last item as the current page and does not link it', () => {
-    render(
-      <ThemeProvider>
-        <Breadcrumb items={ITEMS} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Breadcrumb items={ITEMS} />)
 
     const current = screen.getByText('KR · Semiconductors')
     expect(current).toHaveAttribute('aria-current', 'page')
@@ -45,32 +37,20 @@ describe('Breadcrumb', () => {
     const user = userEvent.setup()
     const onClick = vi.fn()
 
-    render(
-      <ThemeProvider>
-        <Breadcrumb items={[{ label: 'Markets', onClick }, { label: 'Asia Pacific' }]} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Breadcrumb items={[{ label: 'Markets', onClick }, { label: 'Asia Pacific' }]} />)
 
     await user.click(screen.getByRole('button', { name: 'Markets' }))
     expect(onClick).toHaveBeenCalledTimes(1)
   })
 
   it('uses the supplied accessible name for the nav', () => {
-    render(
-      <ThemeProvider>
-        <Breadcrumb items={ITEMS} label="Flow drill-down" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Breadcrumb items={ITEMS} label="Flow drill-down" />)
 
     expect(screen.getByRole('navigation', { name: 'Flow drill-down' })).toBeInTheDocument()
   })
 
   it('is axe clean', async () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Breadcrumb items={ITEMS} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Breadcrumb items={ITEMS} />)
 
     await expectNoAxeViolations(container)
   })

@@ -1,38 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
-import { ThemeProvider } from './ThemeProvider'
+import { renderInTheme } from '../test/render'
+import { stubPopoverApi } from '../test/top-layer'
 import { Tooltip } from './Tooltip'
 
-/**
- * jsdom implements no part of the popover API — no `showPopover`, no top layer,
- * no `:popover-open`. The component guards on that, so without the stubs below
- * the show path would never run at all.
- *
- * The inline `display` matters: jsdom *does* ship the UA rule
- * `[popover]:not(:popover-open) { display: none }`, and since `:popover-open`
- * can never match there, every popover would be permanently hidden — invisible
- * to `getByRole` and skipped by axe. Setting it inline is the smallest way to
- * model what `showPopover()` actually does. Whether the browser then paints it
- * in the top layer is verified in Chromium by design-sync, not here.
- */
-beforeEach(() => {
-  HTMLElement.prototype.showPopover = function showPopover() {
-    this.style.display = 'block'
-  }
-  HTMLElement.prototype.hidePopover = function hidePopover() {
-    this.style.display = 'none'
-  }
-})
+stubPopoverApi()
 
 function renderTooltip(props: { delay?: number; defaultOpen?: boolean } = {}) {
-  return render(
-    <ThemeProvider theme="dark">
-      <Tooltip content="Net of ETF creations." delay={0} {...props}>
-        <button type="button">Net flow</button>
-      </Tooltip>
-    </ThemeProvider>,
+  return renderInTheme(
+    <Tooltip content="Net of ETF creations." delay={0} {...props}>
+      <button type="button">Net flow</button>
+    </Tooltip>,
   )
 }
 

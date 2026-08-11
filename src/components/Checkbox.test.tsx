@@ -1,18 +1,14 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme, themed } from '../test/render'
 import { Checkbox } from './Checkbox'
-import { ThemeProvider } from './ThemeProvider'
 
 describe('Checkbox', () => {
   it('toggles when uncontrolled', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Checkbox label="Include ETF flows" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Checkbox label="Include ETF flows" />)
 
     const checkbox = screen.getByRole('checkbox', { name: 'Include ETF flows' })
     expect(checkbox).not.toBeChecked()
@@ -27,11 +23,7 @@ describe('Checkbox', () => {
   it('toggles when its label is clicked', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Checkbox label="Include ETF flows" onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Checkbox label="Include ETF flows" onChange={onChange} />)
 
     await user.click(screen.getByText('Include ETF flows'))
 
@@ -42,11 +34,7 @@ describe('Checkbox', () => {
   it('respects the checked prop when controlled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Checkbox label="Include ETF flows" checked={false} onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Checkbox label="Include ETF flows" checked={false} onChange={onChange} />)
 
     const checkbox = screen.getByRole('checkbox')
     await user.click(checkbox)
@@ -57,11 +45,7 @@ describe('Checkbox', () => {
   })
 
   it('exposes indeterminate as the DOM property and as aria-checked="mixed"', () => {
-    render(
-      <ThemeProvider>
-        <Checkbox label="All sources" indeterminate />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Checkbox label="All sources" indeterminate />)
 
     const checkbox = screen.getByRole('checkbox') as HTMLInputElement
     expect(checkbox.indeterminate).toBe(true)
@@ -70,17 +54,9 @@ describe('Checkbox', () => {
   })
 
   it('drops aria-checked once it is no longer mixed', () => {
-    const { rerender } = render(
-      <ThemeProvider>
-        <Checkbox label="All sources" indeterminate />
-      </ThemeProvider>,
-    )
+    const { rerender } = renderInTheme(<Checkbox label="All sources" indeterminate />)
 
-    rerender(
-      <ThemeProvider>
-        <Checkbox label="All sources" checked />
-      </ThemeProvider>,
-    )
+    rerender(themed(<Checkbox label="All sources" checked />))
 
     const checkbox = screen.getByRole('checkbox') as HTMLInputElement
     expect(checkbox.indeterminate).toBe(false)
@@ -91,11 +67,7 @@ describe('Checkbox', () => {
   it('blocks interaction when disabled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Checkbox label="Unavailable" disabled onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Checkbox label="Unavailable" disabled onChange={onChange} />)
 
     const checkbox = screen.getByRole('checkbox')
     await user.click(checkbox)
@@ -105,12 +77,12 @@ describe('Checkbox', () => {
   })
 
   it('has no axe violations', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Checkbox label="Include ETF flows" defaultChecked />
         <Checkbox label="All sources" indeterminate />
         <Checkbox label="Unavailable" disabled />
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

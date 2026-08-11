@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme, themed } from '../test/render'
 import type { DialogProps } from './Dialog'
 import { Dialog } from './Dialog'
-import { ThemeProvider } from './ThemeProvider'
 
 /**
  * jsdom 30 ships `HTMLDialogElement` with no methods at all — no `showModal`,
@@ -29,18 +29,10 @@ beforeEach(() => {
 })
 
 function renderDialog(props: Partial<DialogProps> = {}) {
-  return render(
-    <ThemeProvider theme="dark">
-      <Dialog
-        open
-        onClose={() => {}}
-        title="Rebalance the book"
-        description="Settles at the close."
-        {...props}
-      >
-        Institutional flow has run ahead of the ETF leg.
-      </Dialog>
-    </ThemeProvider>,
+  return renderInTheme(
+    <Dialog open onClose={() => {}} title="Rebalance the book" description="Settles at the close." {...props}>
+      Institutional flow has run ahead of the ETF leg.
+    </Dialog>,
   )
 }
 
@@ -49,25 +41,13 @@ describe('Dialog', () => {
     const showModal = vi.spyOn(HTMLDialogElement.prototype, 'showModal')
     const close = vi.spyOn(HTMLDialogElement.prototype, 'close')
 
-    const { rerender } = render(
-      <ThemeProvider theme="dark">
-        <Dialog open={false} onClose={() => {}} title="Rebalance" />
-      </ThemeProvider>,
-    )
+    const { rerender } = renderInTheme(<Dialog open={false} onClose={() => {}} title="Rebalance" />)
     expect(showModal).not.toHaveBeenCalled()
 
-    rerender(
-      <ThemeProvider theme="dark">
-        <Dialog open onClose={() => {}} title="Rebalance" />
-      </ThemeProvider>,
-    )
+    rerender(themed(<Dialog open onClose={() => {}} title="Rebalance" />))
     expect(showModal).toHaveBeenCalledTimes(1)
 
-    rerender(
-      <ThemeProvider theme="dark">
-        <Dialog open={false} onClose={() => {}} title="Rebalance" />
-      </ThemeProvider>,
-    )
+    rerender(themed(<Dialog open={false} onClose={() => {}} title="Rebalance" />))
     expect(close).toHaveBeenCalledTimes(1)
   })
 
@@ -88,11 +68,7 @@ describe('Dialog', () => {
 
     // Closing from props runs `close()`, which fires the same native event a
     // user dismissal does. Only the user dismissal should reach `onClose`.
-    rerender(
-      <ThemeProvider theme="dark">
-        <Dialog open={false} onClose={onClose} title="Rebalance the book" />
-      </ThemeProvider>,
-    )
+    rerender(themed(<Dialog open={false} onClose={onClose} title="Rebalance the book" />))
 
     expect(onClose).not.toHaveBeenCalled()
   })
@@ -110,11 +86,7 @@ describe('Dialog', () => {
   })
 
   it('omits the ARIA references when there is nothing to point at', () => {
-    const { container } = render(
-      <ThemeProvider theme="dark">
-        <Dialog open onClose={() => {}} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Dialog open onClose={() => {}} />)
     const dialog = container.querySelector('dialog')
 
     expect(dialog).not.toHaveAttribute('aria-labelledby')

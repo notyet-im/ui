@@ -1,19 +1,15 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Switch } from './Switch'
-import { ThemeProvider } from './ThemeProvider'
 
 describe('Switch', () => {
   it('toggles when uncontrolled and reports the new state', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Switch label="Live updates" onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Switch label="Live updates" onChange={onChange} />)
 
     const control = screen.getByRole('switch', { name: 'Live updates' })
     expect(control).toHaveAttribute('aria-checked', 'false')
@@ -29,11 +25,7 @@ describe('Switch', () => {
 
   it('is operable with Space and Enter', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Switch label="Live updates" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Switch label="Live updates" />)
 
     const control = screen.getByRole('switch')
     await user.tab()
@@ -48,11 +40,7 @@ describe('Switch', () => {
 
   it('toggles when its label text is clicked', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Switch label="Live updates" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Switch label="Live updates" />)
 
     await user.click(screen.getByText('Live updates'))
     expect(screen.getByRole('switch')).toBeChecked()
@@ -61,11 +49,7 @@ describe('Switch', () => {
   it('respects the checked prop when controlled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Switch label="Live updates" checked={false} onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Switch label="Live updates" checked={false} onChange={onChange} />)
 
     const control = screen.getByRole('switch')
     await user.click(control)
@@ -78,11 +62,7 @@ describe('Switch', () => {
   it('blocks interaction when disabled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Switch label="Unavailable" disabled onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Switch label="Unavailable" disabled onChange={onChange} />)
 
     const control = screen.getByRole('switch')
     await user.click(control)
@@ -93,12 +73,12 @@ describe('Switch', () => {
   })
 
   it('has no axe violations', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Switch label="Live updates" defaultChecked />
         <Switch label="Compact" size="sm" />
         <Switch label="Unavailable" disabled />
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

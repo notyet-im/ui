@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import './Controls.css'
+// Select wears `.ny-input`, so its stylesheet has to be loaded alongside this one.
+import './Input.css'
 
 /* Inline action ------------------------------------------------------------ */
 
@@ -44,12 +46,19 @@ export interface SelectProps<T extends string> {
   className?: string
 }
 
-/** A native `<select>` restyled to match the control row, with a drawn chevron. */
+/**
+ * A native `<select>` wearing `Input`'s box, with a drawn chevron.
+ *
+ * It carries `.ny-input` deliberately: the border, radius, fill, hover and
+ * disabled treatment are all Input's, so the two controls cannot drift apart.
+ * The chevron reuses Input's end-affix, which is already positioned and already
+ * lets clicks fall through to the control.
+ */
 export function Select<T extends string>({ options, value, onChange, label, className }: SelectProps<T>) {
   return (
     <div className={['ny-select', className].filter(Boolean).join(' ')}>
       <select
-        className="ny-select__input"
+        className="ny-select__input ny-input ny-input--md ny-input--with-suffix"
         value={value}
         aria-label={label}
         onChange={(event) => onChange(event.target.value as T)}
@@ -69,7 +78,7 @@ export function Select<T extends string>({ options, value, onChange, label, clas
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
-        className="ny-select__chevron"
+        className="ny-input-group__affix ny-input-group__affix--end"
         aria-hidden="true"
       >
         <path d="M6 9.5l6 6 6-6" />

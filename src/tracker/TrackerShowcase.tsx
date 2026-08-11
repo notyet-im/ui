@@ -1,9 +1,11 @@
+import type { ReactNode } from 'react'
 import { useCallback, useMemo, useState } from 'react'
 import type { ThemeName } from '..'
 import {
   BreakdownBar,
   Container,
   DataRow,
+  deltaColor,
   deltaColors,
   Eyebrow,
   formatDelta,
@@ -33,8 +35,10 @@ import {
   useMeasure,
 } from '..'
 import type { BucketKey, LangKey, MetricKey, RangeKey, ViewKey } from './data'
-import { LANG_KEYS, METRIC_KEYS, RANGE_KEYS, REGION_CODES, SECTOR_KEYS, VIEW_KEYS } from './data'
+import { METRIC_KEYS, RANGE_KEYS, REGION_CODES, SECTOR_KEYS, VIEW_KEYS } from './data'
+import type { UiStrings } from './i18n'
 import { LOCALES, WHY } from './i18n'
+import type { SelectionDetail } from './model'
 import {
   bucketNets,
   buildEdges,
@@ -65,14 +69,147 @@ export interface TrackerShowcaseProps {
 /** Number of flows drawn in the ribbon view — beyond this it stops being readable. */
 const RIBBON_LIMIT = 9
 
-const LANGUAGE_LABELS: Record<LangKey, string> = {
-  en: 'English',
-  zh: '中文',
-  ko: '한국어',
-  ja: '日本語',
+/**
+ * The language picker, in display order.
+ *
+ * One list, not three. A label map plus a separate order array plus `LANG_KEYS`
+ * described the same four languages in two different orders, with a comment
+ * explaining that the mismatch was intentional — which is exactly the shape a
+ * fifth language would get wrong.
+ */
+const LANGUAGES: ReadonlyArray<{ value: LangKey; label: string }> = [
+  { value: 'en', label: 'English' },
+  { value: 'zh', label: '中文' },
+  { value: 'ko', label: '한국어' },
+  { value: 'ja', label: '日本語' },
+]
+
+/**
+ * The two halves of the ticker panel differ by a data key, a colour, and the
+ * sign the value is shown with. That is a row of a table, not a second block of
+ * markup — the two `<Stack>`s underneath were the same sixteen lines twice.
+ */
+const TICKER_SIDES = [
+  { key: 'bought', color: deltaColors.positive, sign: 1 },
+  { key: 'sold', color: deltaColors.negative, sign: -1 },
+] as const
+
+/** An eyebrow over a list. The detail rail is three of these. */
+function DetailSection({
+  title,
+  divided = false,
+  children,
+}: {
+  title: ReactNode
+  divided?: boolean
+  children: ReactNode
+}) {
+  const classes = ['ny-showcase-detail__section', divided && 'ny-showcase-detail__section--divided']
+  return (
+    <div className={classes.filter(Boolean).join(' ')}>
+      <Eyebrow>{title}</Eyebrow>
+      {children}
+    </div>
+  )
 }
-/** Display order for the language picker, which differs from `LANG_KEYS`. */
-const LANGUAGE_ORDER: LangKey[] = ['en', 'zh', 'ko', 'ja']
+
+/**
+ * The right-hand rail: what is selected, its shape over time, and its parts.
+ *
+ * Split out of the page render, which reads this whole block but only through
+ * these five values — nothing else in the render touches `detail`.
+ */
+function DetailRail({
+  detail,
+  selected,
+  onClear,
+  ui,
+  rangeLabel,
+}: {
+  detail: SelectionDetail
+  selected: BucketKey | null
+  onClear: () => void
+  ui: UiStrings
+  rangeLabel: string
+}) {
+  const net = deltaColor(detail.net)
+  return (
+    <Panel column className="ny-showcase-detail">
+      <div className="ny-showcase-detail__head">
+        <div className="ny-showcase-detail__head-row">
+          <Eyebrow>{ui.selected}</Eyebrow>
+          {selected != null && <InlineAction onClick={onClear}>✕ {ui.clear}</InlineAction>}
+        </div>
+        <div className="ny-showcase-detail__title">{detail.title}</div>
+        <div className="ny-showcase-detail__figures">
+          <span className="ny-showcase-detail__net" style={{ color: net }}>
+            {formatDelta(detail.net, true)}
+          </span>
+          <span className="ny-showcase-detail__net-caption">
+            {ui.netOver} {rangeLabel}
+          </span>
+        </div>
+        {selected == null && <div className="ny-showcase-detail__auto">{ui.auto}</div>}
+      </div>
+
+      <div>
+        <Sparkline
+          values={detail.series}
+          width={330}
+          height={74}
+          pad={8}
+          color={net}
+          area
+          areaOpacity={0.12}
+          strokeWidth={1.7}
+          baseline
+          fluid
+        />
+        <div className="ny-showcase-detail__chart-caption">
+          <span>{ui.cumFlow}</span>
+          <span>{ui.asOfShort}</span>
+        </div>
+      </div>
+
+      <DetailSection title={detail.breakdownLabel}>
+        {detail.breakdown.map((entry) => (
+          <BreakdownBar
+            key={entry.name}
+            label={entry.name}
+            value={formatDelta(entry.value, true)}
+            fraction={entry.fraction}
+            tone={entry.value}
+          />
+        ))}
+      </DetailSection>
+
+      <DetailSection divided title={ui.counterparties}>
+        {detail.counterparties.map((entry) => (
+          <DataRow
+            key={entry.key}
+            leading={entry.arrow}
+            label={entry.name}
+            value={formatDelta(entry.value, true)}
+            tone={entry.value}
+          />
+        ))}
+      </DetailSection>
+
+      <DetailSection divided title={ui.topNames}>
+        {detail.names.map((entry) => (
+          <DataRow
+            key={entry.key}
+            monoLabel
+            label={entry.symbol}
+            caption={entry.name}
+            value={formatDelta(entry.value, true)}
+            tone={entry.value}
+          />
+        ))}
+      </DetailSection>
+    </Panel>
+  )
+}
 
 export function TrackerShowcase({
   theme: initialTheme = 'dark',
@@ -187,12 +324,7 @@ export function TrackerShowcase({
                   value={range}
                   onChange={setRange}
                 />
-                <Select
-                  label="Language"
-                  options={LANGUAGE_ORDER.map((key) => ({ value: key, label: LANGUAGE_LABELS[key] }))}
-                  value={lang}
-                  onChange={(next) => setLang(LANG_KEYS.includes(next) ? next : 'en')}
-                />
+                <Select label="Language" options={LANGUAGES} value={lang} onChange={setLang} />
                 <ThemeToggle theme={theme} onChange={setTheme} />
               </>
             }
@@ -278,86 +410,13 @@ export function TrackerShowcase({
             </GridItem>
 
             <GridItem span={{ base: 1, lg: 4 }}>
-              <Panel column className="ny-showcase-detail">
-                <div className="ny-showcase-detail__head">
-                  <div className="ny-showcase-detail__head-row">
-                    <Eyebrow>{ui.selected}</Eyebrow>
-                    {selected != null && <InlineAction onClick={clearSelection}>✕ {ui.clear}</InlineAction>}
-                  </div>
-                  <div className="ny-showcase-detail__title">{detail.title}</div>
-                  <div className="ny-showcase-detail__figures">
-                    <span
-                      className="ny-showcase-detail__net"
-                      style={{ color: detail.net >= 0 ? deltaColors.positive : deltaColors.negative }}
-                    >
-                      {formatDelta(detail.net, true)}
-                    </span>
-                    <span className="ny-showcase-detail__net-caption">
-                      {ui.netOver} {locale.rlab[range]}
-                    </span>
-                  </div>
-                  {selected == null && <div className="ny-showcase-detail__auto">{ui.auto}</div>}
-                </div>
-
-                <div>
-                  <Sparkline
-                    values={detail.series}
-                    width={330}
-                    height={74}
-                    pad={8}
-                    color={detail.net >= 0 ? deltaColors.positive : deltaColors.negative}
-                    area
-                    areaOpacity={0.12}
-                    strokeWidth={1.7}
-                    baseline
-                    fluid
-                  />
-                  <div className="ny-showcase-detail__chart-caption">
-                    <span>{ui.cumFlow}</span>
-                    <span>{ui.asOfShort}</span>
-                  </div>
-                </div>
-
-                <div className="ny-showcase-detail__section">
-                  <Eyebrow>{detail.breakdownLabel}</Eyebrow>
-                  {detail.breakdown.map((entry) => (
-                    <BreakdownBar
-                      key={entry.name}
-                      label={entry.name}
-                      value={formatDelta(entry.value, true)}
-                      fraction={entry.fraction}
-                      tone={entry.value}
-                    />
-                  ))}
-                </div>
-
-                <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
-                  <Eyebrow>{ui.counterparties}</Eyebrow>
-                  {detail.counterparties.map((entry) => (
-                    <DataRow
-                      key={entry.key}
-                      leading={entry.arrow}
-                      label={entry.name}
-                      value={formatDelta(entry.value, true)}
-                      tone={entry.value}
-                    />
-                  ))}
-                </div>
-
-                <div className="ny-showcase-detail__section ny-showcase-detail__section--divided">
-                  <Eyebrow>{ui.topNames}</Eyebrow>
-                  {detail.names.map((entry) => (
-                    <DataRow
-                      key={entry.key}
-                      monoLabel
-                      label={entry.symbol}
-                      caption={entry.name}
-                      value={formatDelta(entry.value, true)}
-                      tone={entry.value}
-                    />
-                  ))}
-                </div>
-              </Panel>
+              <DetailRail
+                detail={detail}
+                selected={selected}
+                onClear={clearSelection}
+                ui={ui}
+                rangeLabel={locale.rlab[range]}
+              />
             </GridItem>
           </Grid>
 
@@ -365,38 +424,24 @@ export function TrackerShowcase({
             <Panel column>
               <PanelHeading title={ui.tickerTitle} subtitle={`${ui.tickerSub} ${locale.rlab[range]}`} />
               <Grid columns={{ base: 1, sm: 2 }} gap={12}>
-                <Stack gap={4}>
-                  <Eyebrow variant="tile" style={{ color: deltaColors.positive }}>
-                    {ui.bought}
-                  </Eyebrow>
-                  {extremes.bought.map((entry) => (
-                    <DataRow
-                      key={entry.key}
-                      layout="stacked"
-                      monoLabel
-                      label={entry.symbol}
-                      caption={entry.name}
-                      value={formatDelta(entry.value)}
-                      valueColor={deltaColors.positive}
-                    />
-                  ))}
-                </Stack>
-                <Stack gap={4}>
-                  <Eyebrow variant="tile" style={{ color: deltaColors.negative }}>
-                    {ui.sold}
-                  </Eyebrow>
-                  {extremes.sold.map((entry) => (
-                    <DataRow
-                      key={entry.key}
-                      layout="stacked"
-                      monoLabel
-                      label={entry.symbol}
-                      caption={entry.name}
-                      value={formatDelta(-entry.value)}
-                      valueColor={deltaColors.negative}
-                    />
-                  ))}
-                </Stack>
+                {TICKER_SIDES.map(({ key, color, sign }) => (
+                  <Stack key={key} gap={4}>
+                    <Eyebrow variant="tile" style={{ color }}>
+                      {ui[key]}
+                    </Eyebrow>
+                    {extremes[key].map((entry) => (
+                      <DataRow
+                        key={entry.key}
+                        layout="stacked"
+                        monoLabel
+                        label={entry.symbol}
+                        caption={entry.name}
+                        value={formatDelta(sign * entry.value)}
+                        valueColor={color}
+                      />
+                    ))}
+                  </Stack>
+                ))}
               </Grid>
             </Panel>
 

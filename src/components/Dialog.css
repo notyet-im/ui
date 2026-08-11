@@ -82,29 +82,6 @@
   margin: 0;
 }
 
-.ny-dialog__close {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--ny-control-height-sm);
-  height: var(--ny-control-height-sm);
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: var(--ny-radius-md);
-  background: transparent;
-  color: var(--ny-text-muted);
-  cursor: pointer;
-  transition:
-    color var(--ny-duration-fast) var(--ny-ease-standard),
-    background-color var(--ny-duration-fast) var(--ny-ease-standard);
-}
-
-.ny-dialog__close:hover {
-  color: var(--ny-text);
-  background: var(--ny-surface-hover);
-}
-
 /* The only scrolling region — the header and footer stay put. */
 .ny-dialog__content {
   padding: 0 var(--ny-gutter) var(--ny-gutter);

@@ -1,37 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
+import { stubPopoverApi } from '../test/top-layer'
 import { Popover } from './Popover'
-import { ThemeProvider } from './ThemeProvider'
 
-/**
- * jsdom implements no part of the popover API — no `showPopover`, no top layer,
- * no light dismiss. The component guards on that, so without the stubs below the
- * show path would never run at all.
- *
- * The inline `display` matters: jsdom *does* ship the UA rule
- * `[popover]:not(:popover-open) { display: none }`, and since `:popover-open`
- * can never match there, every popover would be permanently hidden — invisible
- * to `getByRole` and skipped by axe. The browser half (light dismiss, top-layer
- * paint order) is verified in Chromium by design-sync, not here.
- */
-beforeEach(() => {
-  HTMLElement.prototype.showPopover = function showPopover() {
-    this.style.display = 'block'
-  }
-  HTMLElement.prototype.hidePopover = function hidePopover() {
-    this.style.display = 'none'
-  }
-})
+stubPopoverApi()
 
 function renderPopover(props: { defaultOpen?: boolean; onOpenChange?: (open: boolean) => void } = {}) {
-  return render(
-    <ThemeProvider theme="dark">
-      <Popover content={<a href="#method">How this is derived</a>} {...props}>
-        <button type="button">Method</button>
-      </Popover>
-    </ThemeProvider>,
+  return renderInTheme(
+    <Popover content={<a href="#method">How this is derived</a>} {...props}>
+      <button type="button">Method</button>
+    </Popover>,
   )
 }
 

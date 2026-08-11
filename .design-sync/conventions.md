@@ -33,8 +33,7 @@ inline styles reading these tokens:
 | Surface | `--ny-bg` `--ny-surface` `--ny-surface-sunken` `--ny-surface-raised` `--ny-surface-hover` `--ny-surface-active` `--ny-surface-selected` `--ny-overlay` |
 | Border | `--ny-border` `--ny-border-strong` |
 | Text | `--ny-text` `--ny-text-muted` `--ny-text-subtle` `--ny-text-disabled` `--ny-text-inverse` |
-| Accent | `--ny-accent` `--ny-accent-hover` `--ny-accent-active` `--ny-accent-subtle` `--ny-accent-text` `--ny-text-on-accent` |
-| Feedback | `--ny-{success,warning,danger,info}` plus `-subtle` (tint), `-text` (ink on tint), and `--ny-text-on-{tone}` (ink on solid) |
+| Tones | `--ny-{accent,success,warning,danger,info,neutral}` — six tones, each with the **same eight tokens**: the bare name (solid) plus `-hover` `-active`, `-subtle` `-subtle-hover` (tints), `-border` (hairline on tint), `-text` (ink on tint), and `--ny-text-on-{tone}` (ink on solid, theme-invariant). `accent` and `neutral` are ordinary tones here, not special cases |
 | Data (theme-invariant) | `--ny-positive` `--ny-negative` `--ny-neutral` |
 | Type size | `--ny-font-size-` `2xs` `xs` `sm` `md` `lg` `xl` `2xl` `3xl` `4xl` — in `rem`, `md` is the body default |
 | Type detail | `--ny-line-height-{tight,snug,normal}` `--ny-font-weight-{regular,medium,semibold}` `--ny-tracking-{tight,normal,wide,wider}` |
@@ -54,7 +53,7 @@ keeps padding, margin and gutter consistent. The one utility class is `.ny-mono`
 ### 3. Layout: use the primitives, don't hand-roll a grid
 
 ```jsx
-<Container size="lg">                        {/* 720 | 960 | 1280 | full */}
+<Container size="lg">                        {/* sm 720 | md 960 | lg 1280 | xl 1560 | full */}
   <Grid columns={{ base: 1, md: 12 }} gap={16}>
     <GridItem span={{ base: 1, md: 8 }}>…</GridItem>
     <GridItem span={{ base: 1, md: 4 }}>…</GridItem>
@@ -74,9 +73,11 @@ in via container queries, and the four breakpoints live in the primitives.
   signed raw value that picks the accent colour (`tone`, `changeValue`). Use the
   exported `formatDelta(millions, signed)` / `formatCompact(v)` — they emit
   U+2212 MINUS (`−`), which keeps signed columns optically flush.
-- **`SankeyFlow` and `RotationRing` need a measured pixel `width`.** They lay out
-  in real CSS pixels because their labels are HTML and must not scale. The
-  exported `useMeasure()` hook returns one. A missing or zero width renders nothing.
+- **Charts measure themselves — do not hardcode a `width`.** `SankeyFlow` and
+  `RotationRing` lay out in real CSS pixels because their labels are HTML and must
+  not scale, so they read their own container. Omit `width` and they fit whatever
+  you put them in; pass one only to pin a chart to a fixed size, which will
+  overflow a narrower parent.
 - **`StatTile` only works inside `MacroStrip`**, which supplies the tile
   background and the hairline rules between tiles.
 - **Colour by value, not by hand:** `deltaColor(value)` returns the right teal or

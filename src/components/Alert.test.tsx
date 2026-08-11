@@ -1,28 +1,24 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme, themed } from '../test/render'
 import { Alert } from './Alert'
-import { ThemeProvider } from './ThemeProvider'
 
 describe('Alert', () => {
   it('renders the title and the message', () => {
-    render(
-      <ThemeProvider>
-        <Alert title="Upload rejected">Rows 12 and 19 reference unknown accounts.</Alert>
-      </ThemeProvider>,
-    )
+    renderInTheme(<Alert title="Upload rejected">Rows 12 and 19 reference unknown accounts.</Alert>)
 
     expect(screen.getByText('Upload rejected')).toBeInTheDocument()
     expect(screen.getByText('Rows 12 and 19 reference unknown accounts.')).toBeInTheDocument()
   })
 
   it('announces danger and warning assertively, via role="alert"', () => {
-    render(
-      <ThemeProvider>
+    renderInTheme(
+      <>
         <Alert tone="danger">Connection lost</Alert>
         <Alert tone="warning">Drift over threshold</Alert>
-      </ThemeProvider>,
+      </>,
     )
 
     expect(screen.getAllByRole('alert')).toHaveLength(2)
@@ -30,11 +26,11 @@ describe('Alert', () => {
   })
 
   it('announces info and success politely, via role="status"', () => {
-    render(
-      <ThemeProvider>
+    renderInTheme(
+      <>
         <Alert tone="info">Positions are delayed</Alert>
         <Alert tone="success">Rebalance queued</Alert>
-      </ThemeProvider>,
+      </>,
     )
 
     expect(screen.getAllByRole('status')).toHaveLength(2)
@@ -45,19 +41,15 @@ describe('Alert', () => {
     const user = userEvent.setup()
     let dismissed = 0
 
-    const { rerender } = render(
-      <ThemeProvider>
-        <Alert tone="success">Rebalance queued</Alert>
-      </ThemeProvider>,
-    )
+    const { rerender } = renderInTheme(<Alert tone="success">Rebalance queued</Alert>)
     expect(screen.queryByRole('button', { name: 'Dismiss' })).not.toBeInTheDocument()
 
     rerender(
-      <ThemeProvider>
+      themed(
         <Alert tone="success" onDismiss={() => (dismissed += 1)}>
           Rebalance queued
-        </Alert>
-      </ThemeProvider>,
+        </Alert>,
+      ),
     )
 
     await user.click(screen.getByRole('button', { name: 'Dismiss' }))
@@ -65,20 +57,18 @@ describe('Alert', () => {
   })
 
   it('hides a decorative icon from assistive technology', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Alert tone="warning" title="Drift" icon={<svg aria-hidden="true" />}>
-          Two sleeves are off target.
-        </Alert>
-      </ThemeProvider>,
+    const { container } = renderInTheme(
+      <Alert tone="warning" title="Drift" icon={<svg aria-hidden="true" />}>
+        Two sleeves are off target.
+      </Alert>,
     )
 
     expect(container.querySelector('.ny-alert__icon')).toHaveAttribute('aria-hidden', 'true')
   })
 
   it('has no axe violations across every tone, with and without a dismiss control', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Alert tone="info" title="Delayed">
           Feeds are behind.
         </Alert>
@@ -91,7 +81,7 @@ describe('Alert', () => {
         <Alert tone="danger" title="Rejected" onDismiss={() => {}}>
           Two rows are invalid.
         </Alert>
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

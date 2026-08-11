@@ -1,40 +1,7 @@
-.ny-checkbox {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--ny-space-8);
-  cursor: pointer;
-  font-size: var(--ny-font-size-md);
-  line-height: var(--ny-line-height-snug);
-  color: var(--ny-text);
-}
-
-/* The label is not a form control, so it never matches `:disabled` — key off
-   the input it wraps instead of adding a modifier class. */
-.ny-checkbox:has(.ny-checkbox__input:disabled) {
-  cursor: not-allowed;
-  color: var(--ny-text-disabled);
-}
-
-/** Sizing box for the input and its painted twin, which are stacked. */
-.ny-checkbox__control {
-  position: relative;
-  flex: none;
-  display: inline-flex;
-  width: var(--ny-icon-size-md);
-  height: var(--ny-icon-size-md);
-}
-
-/**
- * The real input, stripped of its native rendering but kept at full size and
- * on top: it stays the hit target, and the shared focus ring in base.css lands
- * on it rather than on a decorative stand-in.
- */
-.ny-checkbox__input {
-  appearance: none;
-  width: 100%;
-  height: 100%;
-  margin: var(--ny-space-0);
-  cursor: inherit;
+/* The radius the shared chassis deliberately leaves to each control — it is
+   what shapes the focus ring, and it is the only thing Checkbox and Radio
+   disagreed about in 39 otherwise identical lines. */
+.ny-checkbox .ny-choice__input {
   border-radius: var(--ny-radius-sm);
 }
 
@@ -54,43 +21,43 @@
     border-color var(--ny-duration-fast) var(--ny-ease-standard);
 }
 
-.ny-checkbox__input:hover:not(:disabled) + .ny-checkbox__box {
+.ny-choice__input:hover:not(:disabled) + .ny-checkbox__box {
   border-color: var(--ny-accent);
   background: var(--ny-surface-hover);
 }
 
-.ny-checkbox__input:checked + .ny-checkbox__box,
-.ny-checkbox__input:indeterminate + .ny-checkbox__box {
+.ny-choice__input:checked + .ny-checkbox__box,
+.ny-choice__input:indeterminate + .ny-checkbox__box {
   background: var(--ny-accent);
   border-color: var(--ny-accent);
 }
 
-.ny-checkbox__input:checked:hover:not(:disabled) + .ny-checkbox__box,
-.ny-checkbox__input:indeterminate:hover:not(:disabled) + .ny-checkbox__box {
+.ny-choice__input:checked:hover:not(:disabled) + .ny-checkbox__box,
+.ny-choice__input:indeterminate:hover:not(:disabled) + .ny-checkbox__box {
   background: var(--ny-accent-hover);
   border-color: var(--ny-accent-hover);
 }
 
-.ny-checkbox__input:active:not(:disabled) + .ny-checkbox__box {
+.ny-choice__input:active:not(:disabled) + .ny-checkbox__box {
   background: var(--ny-surface-active);
 }
 
-.ny-checkbox__input:checked:active:not(:disabled) + .ny-checkbox__box,
-.ny-checkbox__input:indeterminate:active:not(:disabled) + .ny-checkbox__box {
+.ny-choice__input:checked:active:not(:disabled) + .ny-checkbox__box,
+.ny-choice__input:indeterminate:active:not(:disabled) + .ny-checkbox__box {
   background: var(--ny-accent-active);
   border-color: var(--ny-accent-active);
 }
 
 /* Disabled is a real colour change, never opacity — opacity compounds through
    the nested glyph and destroys the contrast the palette was picked for. */
-.ny-checkbox__input:disabled + .ny-checkbox__box {
+.ny-choice__input:disabled + .ny-checkbox__box {
   background: var(--ny-surface-sunken);
   border-color: var(--ny-border);
   color: var(--ny-text-disabled);
 }
 
-.ny-checkbox__input:checked:disabled + .ny-checkbox__box,
-.ny-checkbox__input:indeterminate:disabled + .ny-checkbox__box {
+.ny-choice__input:checked:disabled + .ny-checkbox__box,
+.ny-choice__input:indeterminate:disabled + .ny-checkbox__box {
   background: var(--ny-surface-active);
   border-color: var(--ny-border-strong);
 }
@@ -106,14 +73,10 @@
   display: none;
 }
 
-.ny-checkbox__input:checked:not(:indeterminate) + .ny-checkbox__box .ny-checkbox__check {
+.ny-choice__input:checked:not(:indeterminate) + .ny-checkbox__box .ny-checkbox__check {
   display: block;
 }
 
-.ny-checkbox__input:indeterminate + .ny-checkbox__box .ny-checkbox__dash {
+.ny-choice__input:indeterminate + .ny-checkbox__box .ny-checkbox__dash {
   display: block;
-}
-
-.ny-checkbox__label {
-  min-width: 0;
 }

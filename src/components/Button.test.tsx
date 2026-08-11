@@ -1,21 +1,17 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import type { FormEvent } from 'react'
 import { createRef } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Button } from './Button'
-import { ThemeProvider } from './ThemeProvider'
 
 describe('Button', () => {
   it('calls onClick when pressed', async () => {
     const user = userEvent.setup()
     const onClick = vi.fn()
-    render(
-      <ThemeProvider>
-        <Button onClick={onClick}>Rebalance</Button>
-      </ThemeProvider>,
-    )
+    renderInTheme(<Button onClick={onClick}>Rebalance</Button>)
 
     await user.click(screen.getByRole('button', { name: 'Rebalance' }))
 
@@ -23,11 +19,7 @@ describe('Button', () => {
   })
 
   it('defaults to type="button" so it never submits a form by accident', () => {
-    render(
-      <ThemeProvider>
-        <Button>Rebalance</Button>
-      </ThemeProvider>,
-    )
+    renderInTheme(<Button>Rebalance</Button>)
 
     expect(screen.getByRole('button', { name: 'Rebalance' })).toHaveAttribute('type', 'button')
   })
@@ -35,12 +27,10 @@ describe('Button', () => {
   it('submits its form when type is submit', async () => {
     const user = userEvent.setup()
     const onSubmit = vi.fn((event: FormEvent) => event.preventDefault())
-    render(
-      <ThemeProvider>
-        <form onSubmit={onSubmit}>
-          <Button type="submit">Save</Button>
-        </form>
-      </ThemeProvider>,
+    renderInTheme(
+      <form onSubmit={onSubmit}>
+        <Button type="submit">Save</Button>
+      </form>,
     )
 
     await user.click(screen.getByRole('button', { name: 'Save' }))
@@ -51,12 +41,10 @@ describe('Button', () => {
   it('blocks clicks when disabled', async () => {
     const user = userEvent.setup()
     const onClick = vi.fn()
-    render(
-      <ThemeProvider>
-        <Button disabled onClick={onClick}>
-          Rebalance
-        </Button>
-      </ThemeProvider>,
+    renderInTheme(
+      <Button disabled onClick={onClick}>
+        Rebalance
+      </Button>,
     )
 
     await user.click(screen.getByRole('button', { name: 'Rebalance' }))
@@ -68,12 +56,10 @@ describe('Button', () => {
   it('blocks clicks and announces busy while loading', async () => {
     const user = userEvent.setup()
     const onClick = vi.fn()
-    render(
-      <ThemeProvider>
-        <Button loading onClick={onClick}>
-          Fetching flows
-        </Button>
-      </ThemeProvider>,
+    renderInTheme(
+      <Button loading onClick={onClick}>
+        Fetching flows
+      </Button>,
     )
 
     const button = screen.getByRole('button', { name: 'Fetching flows' })
@@ -86,37 +72,31 @@ describe('Button', () => {
 
   it('exposes the underlying element through ref', () => {
     const ref = createRef<HTMLButtonElement>()
-    render(
-      <ThemeProvider>
-        <Button ref={ref}>Rebalance</Button>
-      </ThemeProvider>,
-    )
+    renderInTheme(<Button ref={ref}>Rebalance</Button>)
 
     expect(ref.current).toBeInstanceOf(HTMLButtonElement)
   })
 
   it('keeps icons out of the accessible name', () => {
-    render(
-      <ThemeProvider>
-        <Button iconStart={<svg aria-hidden="true" />} iconEnd={<svg aria-hidden="true" />}>
-          Download
-        </Button>
-      </ThemeProvider>,
+    renderInTheme(
+      <Button iconStart={<svg aria-hidden="true" />} iconEnd={<svg aria-hidden="true" />}>
+        Download
+      </Button>,
     )
 
     expect(screen.getByRole('button', { name: 'Download' })).toBeInTheDocument()
   })
 
   it('is axe clean across every variant, including disabled and loading', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Button variant="primary">Rebalance</Button>
         <Button variant="secondary">Compare</Button>
         <Button variant="ghost">Reset</Button>
         <Button variant="danger">Delete</Button>
         <Button disabled>Locked</Button>
         <Button loading>Fetching</Button>
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

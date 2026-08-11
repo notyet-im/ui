@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 import './Toast.css'
+import { Button } from './Button'
+import { CloseIcon } from './icons'
 
 export interface ToastViewportProps {
   /** Which edge the stack grows from. Default `bottom`. */
@@ -112,20 +114,9 @@ export function Toast({
         {title != null && <div className="ny-toast__title">{title}</div>}
         {description != null && <div className="ny-toast__description">{description}</div>}
       </div>
-      <button type="button" className="ny-toast__close" aria-label={closeLabel} onClick={onClose}>
-        <svg
-          viewBox="0 0 24 24"
-          width="13"
-          height="13"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          aria-hidden="true"
-        >
-          <path d="M6 6l12 12M18 6L6 18" />
-        </svg>
-      </button>
+      <Button iconOnly label={closeLabel} variant="ghost" size="sm" onClick={onClose}>
+        <CloseIcon />
+      </Button>
     </div>
   )
 }

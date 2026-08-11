@@ -74,12 +74,12 @@ export function Checkbox({
   }, [indeterminate])
 
   return (
-    <label className={['ny-checkbox', className].filter(Boolean).join(' ')}>
-      <span className="ny-checkbox__control">
+    <label className={['ny-choice', 'ny-checkbox', className].filter(Boolean).join(' ')}>
+      <span className="ny-choice__control">
         <input
           ref={attachRef}
           type="checkbox"
-          className="ny-checkbox__input"
+          className="ny-choice__input ny-checkbox__input"
           checked={isChecked}
           onChange={(event) => setChecked(event.currentTarget.checked)}
           disabled={disabled}
@@ -111,7 +111,7 @@ export function Checkbox({
           </svg>
         </span>
       </span>
-      {label != null && <span className="ny-checkbox__label">{label}</span>}
+      {label != null && <span className="ny-choice__label">{label}</span>}
     </label>
   )
 }

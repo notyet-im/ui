@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Radio, RadioGroup } from './Radio'
-import { ThemeProvider } from './ThemeProvider'
 
 const SOURCES = [
   { value: 'inst', label: 'Institutional' },
@@ -15,10 +15,8 @@ describe('RadioGroup', () => {
   it('is a single tab stop whose arrow keys move focus and selection', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" onChange={onChange} />
-      </ThemeProvider>,
+    renderInTheme(
+      <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" onChange={onChange} />,
     )
 
     const [first, second, third] = screen.getAllByRole('radio')
@@ -60,11 +58,7 @@ describe('RadioGroup', () => {
 
   it('wraps from the first option to the last', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" />)
 
     const radios = screen.getAllByRole('radio')
     await user.tab()
@@ -76,18 +70,16 @@ describe('RadioGroup', () => {
 
   it('steps over disabled options instead of stranding focus on them', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <RadioGroup
-          label="Settlement"
-          defaultValue="daily"
-          options={[
-            { value: 'daily', label: 'Daily' },
-            { value: 'intraday', label: 'Intraday', disabled: true },
-            { value: 'weekly', label: 'Weekly' },
-          ]}
-        />
-      </ThemeProvider>,
+    renderInTheme(
+      <RadioGroup
+        label="Settlement"
+        defaultValue="daily"
+        options={[
+          { value: 'daily', label: 'Daily' },
+          { value: 'intraday', label: 'Intraday', disabled: true },
+          { value: 'weekly', label: 'Weekly' },
+        ]}
+      />,
     )
 
     const [daily, intraday, weekly] = screen.getAllByRole('radio')
@@ -105,10 +97,8 @@ describe('RadioGroup', () => {
   it('selects an option when its label is clicked', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" onChange={onChange} />
-      </ThemeProvider>,
+    renderInTheme(
+      <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" onChange={onChange} />,
     )
 
     await user.click(screen.getByText('Combined'))
@@ -120,11 +110,7 @@ describe('RadioGroup', () => {
   it('respects the value prop when controlled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} value="inst" onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<RadioGroup label="Flow source" options={SOURCES} value="inst" onChange={onChange} />)
 
     await user.click(screen.getByRole('radio', { name: 'ETF' }))
 
@@ -137,10 +123,8 @@ describe('RadioGroup', () => {
   it('blocks interaction when the whole group is disabled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" disabled onChange={onChange} />
-      </ThemeProvider>,
+    renderInTheme(
+      <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" disabled onChange={onChange} />,
     )
 
     for (const radio of screen.getAllByRole('radio')) expect(radio).toBeDisabled()
@@ -150,11 +134,7 @@ describe('RadioGroup', () => {
   })
 
   it('shares one generated name across the group', () => {
-    render(
-      <ThemeProvider>
-        <RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<RadioGroup label="Flow source" options={SOURCES} defaultValue="inst" />)
 
     const names = screen.getAllByRole('radio').map((radio) => radio.getAttribute('name'))
     expect(names[0]).toBeTruthy()
@@ -162,18 +142,16 @@ describe('RadioGroup', () => {
   })
 
   it('has no axe violations', async () => {
-    const { container } = render(
-      <ThemeProvider>
-        <RadioGroup
-          label="Settlement"
-          defaultValue="daily"
-          options={[
-            { value: 'daily', label: 'Daily' },
-            { value: 'intraday', label: 'Intraday', disabled: true },
-            { value: 'weekly', label: 'Weekly' },
-          ]}
-        />
-      </ThemeProvider>,
+    const { container } = renderInTheme(
+      <RadioGroup
+        label="Settlement"
+        defaultValue="daily"
+        options={[
+          { value: 'daily', label: 'Daily' },
+          { value: 'intraday', label: 'Intraday', disabled: true },
+          { value: 'weekly', label: 'Weekly' },
+        ]}
+      />,
     )
 
     await expectNoAxeViolations(container)
@@ -183,11 +161,7 @@ describe('RadioGroup', () => {
 describe('Radio', () => {
   it('renders a labelled native radio on its own', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Radio value="etf" label="ETF" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Radio value="etf" label="ETF" />)
 
     const radio = screen.getByRole('radio', { name: 'ETF' })
     expect(radio).toHaveAttribute('value', 'etf')
@@ -198,11 +172,7 @@ describe('Radio', () => {
 
   it('blocks interaction when disabled', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Radio value="etf" label="ETF" disabled />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Radio value="etf" label="ETF" disabled />)
 
     const radio = screen.getByRole('radio', { name: 'ETF' })
     await user.click(radio)

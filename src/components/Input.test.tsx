@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Input, Textarea } from './Input'
-import { ThemeProvider } from './ThemeProvider'
 
 function ControlledInput({ onChange }: { onChange: (value: string) => void }) {
   const [value, setValue] = useState('NV')
@@ -23,11 +23,7 @@ function ControlledInput({ onChange }: { onChange: (value: string) => void }) {
 describe('Input', () => {
   it('updates its own value when uncontrolled', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" defaultValue="NV" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" defaultValue="NV" />)
 
     const input = screen.getByLabelText('Ticker')
     await user.type(input, 'DA')
@@ -38,11 +34,7 @@ describe('Input', () => {
   it('respects a controlled value and reports changes as a string', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <ControlledInput onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<ControlledInput onChange={onChange} />)
 
     const input = screen.getByLabelText('Ticker')
     await user.type(input, 'D')
@@ -53,11 +45,7 @@ describe('Input', () => {
 
   it('pins the value when controlled without an onChange', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" value="NVDA" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" value="NVDA" />)
 
     const input = screen.getByLabelText('Ticker')
     await user.type(input, 'XYZ')
@@ -68,11 +56,7 @@ describe('Input', () => {
   it('blocks typing when disabled', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" defaultValue="NVDA" disabled onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" defaultValue="NVDA" disabled onChange={onChange} />)
 
     const input = screen.getByLabelText('Ticker')
     await user.type(input, 'XYZ')
@@ -85,11 +69,7 @@ describe('Input', () => {
   it('blocks typing when read-only but stays reachable', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" defaultValue="NVDA" readOnly onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" defaultValue="NVDA" readOnly onChange={onChange} />)
 
     const input = screen.getByLabelText('Ticker')
     await user.type(input, 'XYZ')
@@ -99,31 +79,19 @@ describe('Input', () => {
   })
 
   it('marks itself invalid through aria-invalid', () => {
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" defaultValue="AAPLL" invalid />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" defaultValue="AAPLL" invalid />)
 
     expect(screen.getByLabelText('Ticker')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('leaves aria-describedby off when nothing describes it', () => {
-    render(
-      <ThemeProvider>
-        <Input aria-label="Ticker" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Ticker" />)
 
     expect(screen.getByLabelText('Ticker')).not.toHaveAttribute('aria-describedby')
   })
 
   it('hides decorative affixes from assistive tech', () => {
-    render(
-      <ThemeProvider>
-        <Input aria-label="Allocation" type="number" defaultValue="250" prefix="$" suffix="m" />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Input aria-label="Allocation" type="number" defaultValue="250" prefix="$" suffix="m" />)
 
     expect(screen.getByLabelText('Allocation')).toHaveAccessibleName('Allocation')
     expect(screen.getByText('$')).toHaveAttribute('aria-hidden', 'true')
@@ -133,11 +101,11 @@ describe('Input', () => {
     const user = userEvent.setup()
     const onFocus = vi.fn()
     const onBlur = vi.fn()
-    render(
-      <ThemeProvider>
+    renderInTheme(
+      <>
         <Input aria-label="Ticker" onFocus={onFocus} onBlur={onBlur} />
         <Input aria-label="Book" />
-      </ThemeProvider>,
+      </>,
     )
 
     await user.click(screen.getByLabelText('Ticker'))
@@ -148,13 +116,13 @@ describe('Input', () => {
   })
 
   it('is axe clean', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Input aria-label="Ticker" defaultValue="NVDA" />
         <Input aria-label="Invalid ticker" defaultValue="AAPLL" invalid />
         <Input aria-label="Locked ticker" defaultValue="NVDA" disabled />
         <Input aria-label="Allocation" type="number" defaultValue="250" prefix="$" suffix="m" />
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)
@@ -166,11 +134,7 @@ describe('Input', () => {
 describe('Textarea', () => {
   it('updates its own value when uncontrolled', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Textarea aria-label="Note" defaultValue="Flows " />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Textarea aria-label="Note" defaultValue="Flows " />)
 
     const textarea = screen.getByLabelText('Note')
     await user.type(textarea, 'reversed')
@@ -181,11 +145,7 @@ describe('Textarea', () => {
   it('respects a controlled value and reports changes as a string', async () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
-    render(
-      <ThemeProvider>
-        <Textarea aria-label="Note" value="Flows" onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Textarea aria-label="Note" value="Flows" onChange={onChange} />)
 
     const textarea = screen.getByLabelText('Note')
     await user.type(textarea, '!')
@@ -196,11 +156,7 @@ describe('Textarea', () => {
 
   it('blocks typing when disabled', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Textarea aria-label="Note" defaultValue="Flows" disabled />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Textarea aria-label="Note" defaultValue="Flows" disabled />)
 
     const textarea = screen.getByLabelText('Note')
     await user.type(textarea, 'XYZ')
@@ -211,11 +167,7 @@ describe('Textarea', () => {
 
   it('sizes itself to the content when autoGrow is on', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <Textarea aria-label="Note" autoGrow rows={2} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Textarea aria-label="Note" autoGrow rows={2} />)
 
     const textarea = screen.getByLabelText('Note')
     await user.type(textarea, 'one{enter}two{enter}three')
@@ -226,22 +178,18 @@ describe('Textarea', () => {
   })
 
   it('marks itself invalid through aria-invalid', () => {
-    render(
-      <ThemeProvider>
-        <Textarea aria-label="Note" defaultValue="Too short." invalid />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Textarea aria-label="Note" defaultValue="Too short." invalid />)
 
     expect(screen.getByLabelText('Note')).toHaveAttribute('aria-invalid', 'true')
   })
 
   it('is axe clean', async () => {
-    const { container } = render(
-      <ThemeProvider>
+    const { container } = renderInTheme(
+      <>
         <Textarea aria-label="Note" defaultValue="Flows reversed" />
         <Textarea aria-label="Invalid note" defaultValue="Too short." invalid />
         <Textarea aria-label="Locked note" defaultValue="Flows reversed" disabled />
-      </ThemeProvider>,
+      </>,
     )
 
     await expectNoAxeViolations(container)

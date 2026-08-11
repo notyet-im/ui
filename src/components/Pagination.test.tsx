@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import { Pagination, paginationRange } from './Pagination'
-import { ThemeProvider } from './ThemeProvider'
 
 describe('paginationRange', () => {
   it('lists every page while they all fit', () => {
@@ -61,11 +61,7 @@ describe('paginationRange', () => {
 
 describe('Pagination', () => {
   it('is a nav wrapping a list, with a spelled-out name per page', () => {
-    render(
-      <ThemeProvider>
-        <Pagination page={1} pageCount={5} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Pagination page={1} pageCount={5} onChange={() => {}} />)
 
     const nav = screen.getByRole('navigation', { name: 'Pagination' })
     expect(nav.querySelector('ul')).not.toBeNull()
@@ -75,31 +71,19 @@ describe('Pagination', () => {
   })
 
   it('marks the current page with aria-current', () => {
-    render(
-      <ThemeProvider>
-        <Pagination page={3} pageCount={5} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Pagination page={3} pageCount={5} onChange={() => {}} />)
 
     expect(screen.getByRole('button', { name: 'Go to page 3' })).toHaveAttribute('aria-current', 'page')
     expect(screen.getByRole('button', { name: 'Go to page 2' })).not.toHaveAttribute('aria-current')
   })
 
   it('disables previous on the first page and next on the last', () => {
-    const first = render(
-      <ThemeProvider>
-        <Pagination page={1} pageCount={5} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    const first = renderInTheme(<Pagination page={1} pageCount={5} onChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Go to previous page' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Go to next page' })).toBeEnabled()
     first.unmount()
 
-    render(
-      <ThemeProvider>
-        <Pagination page={5} pageCount={5} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Pagination page={5} pageCount={5} onChange={() => {}} />)
     expect(screen.getByRole('button', { name: 'Go to previous page' })).toBeEnabled()
     expect(screen.getByRole('button', { name: 'Go to next page' })).toBeDisabled()
   })
@@ -108,11 +92,7 @@ describe('Pagination', () => {
     const user = userEvent.setup()
     const onChange = vi.fn()
 
-    render(
-      <ThemeProvider>
-        <Pagination page={3} pageCount={10} onChange={onChange} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Pagination page={3} pageCount={10} onChange={onChange} />)
 
     await user.click(screen.getByRole('button', { name: 'Go to page 4' }))
     expect(onChange).toHaveBeenLastCalledWith(4)
@@ -125,11 +105,7 @@ describe('Pagination', () => {
   })
 
   it('renders the truncation markers outside the accessibility tree', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Pagination page={60} pageCount={120} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Pagination page={60} pageCount={120} onChange={() => {}} />)
 
     const markers = container.querySelectorAll('.ny-pagination__ellipsis')
     expect(markers).toHaveLength(2)
@@ -137,11 +113,7 @@ describe('Pagination', () => {
   })
 
   it('is axe clean', async () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Pagination page={60} pageCount={120} onChange={() => {}} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Pagination page={60} pageCount={120} onChange={() => {}} />)
 
     await expectNoAxeViolations(container)
   })

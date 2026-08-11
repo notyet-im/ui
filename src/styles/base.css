@@ -59,9 +59,14 @@
  * Badge, Alert and Toast each wrote this mapping out per tone. That was right
  * while the tones differed in kind: Badge's neutral once borrowed the generic
  * surface roles, Alert's border once used the solid fill. Since every tone
- * gained the same seven-slot contract there is no per-tone knowledge left in
+ * gained the same five-slot contract there is no per-tone knowledge left in
  * any of them — they were the same table, three times, and had already drifted
  * apart (Badge carried neutral and accent, Alert did not).
+ *
+ * Five slots, every one of them read. A sixth, `--ny-tone-tint-hover`, was
+ * carried here for a while with no reader: nothing tone-tinted is hoverable
+ * today. Add it back when something is, rather than keeping a slot the table
+ * advertises and no component can use.
  *
  * A component opts in by adding `ny-tone--<tone>` beside its own class and
  * reading these generic slots. Indirection is unchanged: tokens → tone locals
@@ -74,7 +79,6 @@
 .ny-tone--neutral {
   --ny-tone-fill: var(--ny-neutral);
   --ny-tone-tint: var(--ny-neutral-subtle);
-  --ny-tone-tint-hover: var(--ny-neutral-subtle-hover);
   --ny-tone-line: var(--ny-neutral-border);
   --ny-tone-ink: var(--ny-neutral-text);
   --ny-tone-on-fill: var(--ny-text-on-neutral);
@@ -83,7 +87,6 @@
 .ny-tone--accent {
   --ny-tone-fill: var(--ny-accent);
   --ny-tone-tint: var(--ny-accent-subtle);
-  --ny-tone-tint-hover: var(--ny-accent-subtle-hover);
   --ny-tone-line: var(--ny-accent-border);
   --ny-tone-ink: var(--ny-accent-text);
   --ny-tone-on-fill: var(--ny-text-on-accent);
@@ -92,7 +95,6 @@
 .ny-tone--success {
   --ny-tone-fill: var(--ny-success);
   --ny-tone-tint: var(--ny-success-subtle);
-  --ny-tone-tint-hover: var(--ny-success-subtle-hover);
   --ny-tone-line: var(--ny-success-border);
   --ny-tone-ink: var(--ny-success-text);
   --ny-tone-on-fill: var(--ny-text-on-success);
@@ -101,7 +103,6 @@
 .ny-tone--warning {
   --ny-tone-fill: var(--ny-warning);
   --ny-tone-tint: var(--ny-warning-subtle);
-  --ny-tone-tint-hover: var(--ny-warning-subtle-hover);
   --ny-tone-line: var(--ny-warning-border);
   --ny-tone-ink: var(--ny-warning-text);
   --ny-tone-on-fill: var(--ny-text-on-warning);
@@ -110,7 +111,6 @@
 .ny-tone--danger {
   --ny-tone-fill: var(--ny-danger);
   --ny-tone-tint: var(--ny-danger-subtle);
-  --ny-tone-tint-hover: var(--ny-danger-subtle-hover);
   --ny-tone-line: var(--ny-danger-border);
   --ny-tone-ink: var(--ny-danger-text);
   --ny-tone-on-fill: var(--ny-text-on-danger);
@@ -119,7 +119,6 @@
 .ny-tone--info {
   --ny-tone-fill: var(--ny-info);
   --ny-tone-tint: var(--ny-info-subtle);
-  --ny-tone-tint-hover: var(--ny-info-subtle-hover);
   --ny-tone-line: var(--ny-info-border);
   --ny-tone-ink: var(--ny-info-text);
   --ny-tone-on-fill: var(--ny-text-on-info);
@@ -152,6 +151,63 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/**
+ * Choice-control chassis, shared by Checkbox and Radio.
+ *
+ * The two stylesheets were the same 39 opening lines twice — label row,
+ * `:has`-driven disabled state, sizing box, and the native input stripped of
+ * its rendering — differing by exactly one declaration, a `border-radius`. That
+ * is not two components' worth of knowledge, it is one, so it lives here for
+ * the same reason `.ny-tone--*` does.
+ *
+ * What genuinely differs stays with each component: the painted twin beside the
+ * input (a square carrying a glyph, or a circle carrying a dot) and the state
+ * ladder that drives it. Each also sets the radius on `.ny-choice__input`,
+ * because that is what shapes the focus ring.
+ */
+.ny-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ny-space-8);
+  cursor: pointer;
+  font-size: var(--ny-font-size-md);
+  line-height: var(--ny-line-height-snug);
+  color: var(--ny-text);
+}
+
+/* The label is not a form control, so it never matches `:disabled` — key off
+   the input it wraps instead of adding a modifier class. */
+.ny-choice:has(.ny-choice__input:disabled) {
+  cursor: not-allowed;
+  color: var(--ny-text-disabled);
+}
+
+/** Sizing box for the input and its painted twin, which are stacked. */
+.ny-choice__control {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  width: var(--ny-icon-size-md);
+  height: var(--ny-icon-size-md);
+}
+
+/**
+ * The real input, stripped of its native rendering but kept at full size and
+ * on top: it stays the hit target, and the shared focus ring above lands on it
+ * rather than on a decorative stand-in.
+ */
+.ny-choice__input {
+  appearance: none;
+  width: 100%;
+  height: 100%;
+  margin: var(--ny-space-0);
+  cursor: inherit;
+}
+
+.ny-choice__label {
+  min-width: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

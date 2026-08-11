@@ -6,7 +6,6 @@
  */
 .ny-heat-grid {
   --ny-heat-grid-min-cell: 40px;
-  --ny-heat-grid-min-label: 96px;
 
   display: flex;
   flex-direction: column;

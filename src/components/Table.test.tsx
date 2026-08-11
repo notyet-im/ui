@@ -1,11 +1,11 @@
-import { render, screen, within } from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { expectNoAxeViolations } from '../test/axe'
+import { renderInTheme } from '../test/render'
 import type { TableColumn, TableSort } from './Table'
 import { Table } from './Table'
-import { ThemeProvider } from './ThemeProvider'
 
 interface FlowRow {
   id: string
@@ -40,10 +40,8 @@ function SortableTable() {
 
 describe('Table', () => {
   it('renders real table semantics: caption, column headers and rows', () => {
-    render(
-      <ThemeProvider>
-        <Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} caption="Net flow by market" />
-      </ThemeProvider>,
+    renderInTheme(
+      <Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} caption="Net flow by market" />,
     )
 
     const table = screen.getByRole('table', { name: 'Net flow by market' })
@@ -60,17 +58,15 @@ describe('Table', () => {
   })
 
   it('reads row[key] when a column has no render, and marks numeric columns', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Table
-          columns={[
-            { key: 'market', header: 'Market' },
-            { key: 'net', header: 'Net flow', numeric: true, render: (row) => `${row.net}m` },
-          ]}
-          rows={ROWS}
-          rowKey={(row) => row.id}
-        />
-      </ThemeProvider>,
+    const { container } = renderInTheme(
+      <Table
+        columns={[
+          { key: 'market', header: 'Market' },
+          { key: 'net', header: 'Net flow', numeric: true, render: (row) => `${row.net}m` },
+        ]}
+        rows={ROWS}
+        rowKey={(row) => row.id}
+      />,
     )
 
     expect(screen.getByText('KR')).toBeInTheDocument()
@@ -80,15 +76,13 @@ describe('Table', () => {
   })
 
   it('shows the empty state instead of the body when rows is empty', () => {
-    render(
-      <ThemeProvider>
-        <Table
-          columns={COLUMNS}
-          rows={[]}
-          rowKey={(row: FlowRow) => row.id}
-          empty="Nothing cleared the threshold."
-        />
-      </ThemeProvider>,
+    renderInTheme(
+      <Table
+        columns={COLUMNS}
+        rows={[]}
+        rowKey={(row: FlowRow) => row.id}
+        empty="Nothing cleared the threshold."
+      />,
     )
 
     expect(screen.getByText('Nothing cleared the threshold.')).toBeInTheDocument()
@@ -98,11 +92,7 @@ describe('Table', () => {
   })
 
   it('has no sort buttons and no aria-sort without onSortChange', () => {
-    render(
-      <ThemeProvider>
-        <Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />
-      </ThemeProvider>,
-    )
+    renderInTheme(<Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />)
 
     expect(screen.queryByRole('button')).toBeNull()
     for (const header of screen.getAllByRole('columnheader')) {
@@ -112,11 +102,7 @@ describe('Table', () => {
 
   it('flips aria-sort on the th when its header button is activated', async () => {
     const user = userEvent.setup()
-    render(
-      <ThemeProvider>
-        <SortableTable />
-      </ThemeProvider>,
-    )
+    renderInTheme(<SortableTable />)
 
     const [market, net] = screen.getAllByRole('columnheader')
     expect(market).toHaveAttribute('aria-sort', 'ascending')
@@ -136,16 +122,14 @@ describe('Table', () => {
     const user = userEvent.setup()
     const onSortChange = vi.fn()
 
-    render(
-      <ThemeProvider>
-        <Table
-          columns={COLUMNS}
-          rows={ROWS}
-          rowKey={(row) => row.id}
-          sort={{ key: 'net', direction: 'asc' }}
-          onSortChange={onSortChange}
-        />
-      </ThemeProvider>,
+    renderInTheme(
+      <Table
+        columns={COLUMNS}
+        rows={ROWS}
+        rowKey={(row) => row.id}
+        sort={{ key: 'net', direction: 'asc' }}
+        onSortChange={onSortChange}
+      />,
     )
 
     await user.click(screen.getByRole('button', { name: 'Net flow' }))
@@ -156,11 +140,7 @@ describe('Table', () => {
   })
 
   it('hides the per-cell reflow labels from assistive tech', () => {
-    const { container } = render(
-      <ThemeProvider>
-        <Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />
-      </ThemeProvider>,
-    )
+    const { container } = renderInTheme(<Table columns={COLUMNS} rows={ROWS} rowKey={(row) => row.id} />)
 
     const labels = container.querySelectorAll('.ny-table__label')
     expect(labels).toHaveLength(ROWS.length * COLUMNS.length)
@@ -168,17 +148,11 @@ describe('Table', () => {
   })
 
   it('is axe clean, sorted and empty alike', async () => {
-    const sorted = render(
-      <ThemeProvider>
-        <SortableTable />
-      </ThemeProvider>,
-    )
+    const sorted = renderInTheme(<SortableTable />)
     await expectNoAxeViolations(sorted.container)
 
-    const empty = render(
-      <ThemeProvider>
-        <Table columns={COLUMNS} rows={[]} rowKey={(row: FlowRow) => row.id} caption="Net flow" />
-      </ThemeProvider>,
+    const empty = renderInTheme(
+      <Table columns={COLUMNS} rows={[]} rowKey={(row: FlowRow) => row.id} caption="Net flow" />,
     )
     await expectNoAxeViolations(empty.container)
   })
