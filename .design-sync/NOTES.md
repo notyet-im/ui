@@ -162,3 +162,32 @@ render count before assuming it is fine.
   large `deletePaths` (all 22 old component dirs) and broke any artifact
   previously authored against the old global. Not repeatable — noted so the size
   of that diff isn't mistaken for a bug later.
+
+## Re-sync traps (2026-08-11)
+
+- **`storybookStatic` goes stale silently, and stale grades ride on it.**
+  `.design-sync/sb-reference` is *not* rebuilt by `resync.mjs` — `cfg.buildCmd`
+  only runs `build:lib`. A reference four days older than the source still
+  produces `ok: true` with every grade carried forward, because the carry
+  decision is keyed on `sourceKeys` (story sources), which a component-only
+  change does not touch. Rebuild it explicitly before trusting a compare:
+  `npx storybook build -o .design-sync/sb-reference`. Doing so flips the canary
+  trigger to `reference_drift` and correctly invalidates the carried grades.
+
+- **`renderHashes` do not move when a component's own source changes.** The
+  preview `.html`/`.js` are a card shell plus story args; the component code
+  lives in the shared `_ds_bundle.js`. So a change to `Checkbox.tsx` shows up as
+  `bundle: true` + `styling: true` and *no* per-component churn — which is
+  correct, because designs render from the bundle. What does churn is a change
+  to the story args, to markup the preview module inlines, or to any file that
+  co-resides with other components (adding an import to `Controls.tsx` churned
+  Eyebrow, InlineAction, Legend and Select together).
+
+- **A deleted CSS block is invisible to every gate except the eye.** Folding
+  `IconButton` into `Button` deleted `.ny-icon-button` and took the adjacent
+  `.ny-select` block with it; `Select` then passed `tsc`, biome, 211 unit tests,
+  axe, `package-validate`, and a 51/51 render check while rendering completely
+  unstyled — the render check only asks whether a preview drew *something*.
+  `src/styles.contract.test.ts` now asserts that every `.ny-*` class a component
+  emits has a rule somewhere. Keep it: jsdom applies no stylesheets, so it is the
+  only automated check that can see this class of break.
