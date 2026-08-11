@@ -2,6 +2,7 @@ import type { ReactNode, Ref } from 'react'
 import { createContext, useCallback, useContext, useId } from 'react'
 import { useControllableState, useRovingFocus } from '../hooks'
 import './Radio.css'
+import { cx } from '../lib/cx'
 
 /* Radio -------------------------------------------------------------------- */
 
@@ -47,7 +48,7 @@ export function Radio({ value, label, disabled, id, ref, className }: RadioProps
   const rovingProps = group?.itemProps(value)
 
   return (
-    <label className={['ny-choice', 'ny-radio', className].filter(Boolean).join(' ')}>
+    <label className={cx('ny-choice', 'ny-radio', className)}>
       <span className="ny-choice__control">
         <input
           ref={ref}
@@ -159,7 +160,7 @@ export function RadioGroup<T extends string>({
   return (
     <div
       id={id}
-      className={['ny-radio-group', `ny-radio-group--${orientation}`, className].filter(Boolean).join(' ')}
+      className={cx('ny-radio-group', `ny-radio-group--${orientation}`, className)}
       role="radiogroup"
       aria-label={label}
       aria-orientation={orientation}

@@ -125,7 +125,16 @@ export type { Breakpoint, DeltaDirection, ThemeName } from './tokens'
 
 /* Utilities --------------------------------------------------------------- */
 export { formatCompact, formatDelta, formatPercent, MINUS } from './lib/format'
-export { hash, rnd } from './lib/prng'
+/**
+ * `walkSeries` generates a deterministic demo series — the shape a `Sparkline`,
+ * `StatTile` or `MomentumCard` wants before real data exists. It is fixture
+ * plumbing rather than design-system API, and it ships because mocking a
+ * dashboard is the common case here.
+ *
+ * `hash` and `rnd`, the PRNG it is built on, deliberately do not: nothing
+ * outside the demo ever called them, and a seeded random number is not a thing
+ * a design system should be asked to own.
+ */
 export { seriesPath, walkSeries } from './lib/series'
 export type { SeriesPath } from './lib/series'
 export { heatStyle } from './lib/heat'

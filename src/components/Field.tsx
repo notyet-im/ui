@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { createContext, useContext, useId, useMemo } from 'react'
 import './Field.css'
+import { cx } from '../lib/cx'
 import { Text } from './Text'
 
 /* Field -------------------------------------------------------------------- */
@@ -83,7 +84,7 @@ export function Field({ label, help, error, required = false, id, children, clas
   }, [controlId, help, helpId, error, errorId, required])
 
   return (
-    <div className={['ny-field', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-field', className)}>
       {label != null && (
         <Label htmlFor={controlId} required={required}>
           {label}
@@ -118,7 +119,7 @@ export interface LabelProps {
 /** The name of a control. Prefer letting `Field` render it. */
 export function Label({ htmlFor, required = false, children, className }: LabelProps) {
   return (
-    <label htmlFor={htmlFor} className={['ny-label', className].filter(Boolean).join(' ')}>
+    <label htmlFor={htmlFor} className={cx('ny-label', className)}>
       {children}
       {required && (
         <span className="ny-label__required" aria-hidden="true">

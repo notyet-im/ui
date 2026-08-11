@@ -145,8 +145,8 @@ Run `npm run storybook` for the live catalogue.
 `deltaColor` / `deltaColors` · `formatDelta` / `formatCompact` / `formatPercent`
 · `useMeasure` / `useEscapeKey` / `useControllableState` / `useRovingFocus` /
 `useAnchoredPosition` / `useTopLayer` · `sankeyLayout` / `ringLayout` / `heatStyle` /
-`walkSeries` / `seriesPath` · `rnd` / `hash` (seeded PRNG, so the showcase data
-is deterministic).
+`walkSeries` / `seriesPath`. `walkSeries` is fixture plumbing — a deterministic
+demo series for a chart with no real data yet — not design-system API.
 
 ## Scripts
 

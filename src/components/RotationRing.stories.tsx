@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { REGION_CODES } from '../tracker/data'
-import { LOCALES } from '../tracker/i18n'
-import { buildEdges, regionAggregates } from '../tracker/model'
+import { marketName, RING_NODES, RING_PAIRS } from './chart-fixtures'
 import { Panel } from './Panel'
 import { RotationRing } from './RotationRing'
 
@@ -23,11 +21,8 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const regions = regionAggregates(buildEdges('15D', 'combined'))
-const nodes = REGION_CODES.map((code) => ({ id: code, net: regions.nets[code] }))
-const pairs = REGION_CODES.flatMap((from) =>
-  REGION_CODES.map((to) => ({ from, to, value: regions.pairs[from][to] })),
-)
+const nodes = RING_NODES
+const pairs = RING_PAIRS
 
 function Example({ initial = null }: { initial?: string | null }) {
   const [selected, setSelected] = useState<string | null>(initial)
@@ -38,7 +33,7 @@ function Example({ initial = null }: { initial?: string | null }) {
         pairs={pairs}
         selectedId={selected}
         onSelect={(id) => setSelected((current) => (current === id ? null : id))}
-        renderLabel={(id) => LOCALES.en.reg[id as (typeof REGION_CODES)[number]]}
+        renderLabel={marketName}
       />
     </Panel>
   )

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useRovingFocus } from '../hooks'
 import './Tabs.css'
+import { cx } from '../lib/cx'
 
 export interface TabItem<T extends string> {
   value: T
@@ -49,12 +50,7 @@ export function Tabs<T extends string>({ items, value, onChange, label, panelId,
   })
 
   return (
-    <div
-      className={['ny-tabs', className].filter(Boolean).join(' ')}
-      role="tablist"
-      aria-label={label}
-      onKeyDown={roving.onKeyDown}
-    >
+    <div className={cx('ny-tabs', className)} role="tablist" aria-label={label} onKeyDown={roving.onKeyDown}>
       {items.map((item, index) => (
         <button
           key={item.value}

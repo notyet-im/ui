@@ -7,6 +7,7 @@
 
 import type { ReactNode } from 'react'
 import './Table.css'
+import { cx } from '../lib/cx'
 
 /** Sort direction. Ascending means smallest — or alphabetically first — on top. */
 export type TableSortDirection = 'asc' | 'desc'
@@ -112,7 +113,7 @@ export function Table<T>({
   const hasWidths = columns.some((column) => column.width != null)
 
   return (
-    <div className={['ny-table', `ny-table--${density}`, className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-table', `ny-table--${density}`, className)}>
       <table role="table" className="ny-table__table">
         {caption != null && <caption className="ny-table__caption">{caption}</caption>}
         {hasWidths && (

@@ -3,6 +3,7 @@ import { deltaColor } from '../tokens'
 import { Eyebrow } from './Controls'
 import { Sparkline } from './Sparkline'
 import './MacroStrip.css'
+import { cx } from '../lib/cx'
 
 export interface StatTileProps {
   label: ReactNode
@@ -21,7 +22,7 @@ export interface StatTileProps {
 export function StatTile({ label, value, change, changeValue = 0, trend, className }: StatTileProps) {
   const accent = deltaColor(changeValue)
   return (
-    <div className={['ny-stat-tile', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-stat-tile', className)}>
       <div className="ny-stat-tile__body">
         <Eyebrow variant="tile">{label}</Eyebrow>
         <div className="ny-stat-tile__figures">
@@ -56,7 +57,7 @@ export interface MacroStripProps {
 /** Edge-to-edge row of `StatTile`s divided by hairlines. */
 export function MacroStrip({ children, className, style }: MacroStripProps) {
   return (
-    <div className={['ny-macro-strip', className].filter(Boolean).join(' ')} style={style}>
+    <div className={cx('ny-macro-strip', className)} style={style}>
       {children}
     </div>
   )

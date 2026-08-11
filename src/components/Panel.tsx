@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import './Panel.css'
+import { cx } from '../lib/cx'
 
 export interface PanelProps {
   /**
@@ -51,7 +52,7 @@ export function Panel({
     className,
   ]
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={style}>
+    <div className={cx(...classes)} style={style}>
       {header != null && <div className="ny-panel__header">{header}</div>}
       {slotted ? <div className="ny-panel__body">{children}</div> : children}
       {footer != null && <div className="ny-panel__footer">{footer}</div>}
@@ -71,7 +72,7 @@ export interface PanelHeadingProps {
 export function PanelHeading({ title, subtitle, inline = false, className }: PanelHeadingProps) {
   const classes = ['ny-panel-heading', inline && 'ny-panel-heading--inline', className]
   return (
-    <div className={classes.filter(Boolean).join(' ')}>
+    <div className={cx(...classes)}>
       <div className="ny-panel-heading__title">{title}</div>
       {subtitle != null && <div className="ny-panel-heading__subtitle">{subtitle}</div>}
     </div>

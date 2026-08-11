@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import './Alert.css'
+import { cx } from '../lib/cx'
 import { Button } from './Button'
 import { CloseIcon } from './icons'
 
@@ -38,7 +39,7 @@ export function Alert({ tone = 'info', title, children, icon, onDismiss, classNa
   const role = tone === 'danger' || tone === 'warning' ? 'alert' : 'status'
 
   return (
-    <div role={role} className={['ny-alert', `ny-tone--${tone}`, className].filter(Boolean).join(' ')}>
+    <div role={role} className={cx('ny-alert', `ny-tone--${tone}`, className)}>
       {icon != null && (
         <span className="ny-alert__icon" aria-hidden="true">
           {icon}

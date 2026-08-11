@@ -3,6 +3,7 @@ import { useCallback, useLayoutEffect, useRef } from 'react'
 import { useControllableState } from '../hooks'
 import { useFieldControl } from './Field'
 import './Input.css'
+import { cx } from '../lib/cx'
 
 /**
  * Joins the ids a control is described by, dropping the empty ones.
@@ -145,7 +146,7 @@ export function Input({
         onChange={(event) => setCurrent(event.target.value)}
         onBlur={onBlur}
         onFocus={onFocus}
-        className={classes.filter(Boolean).join(' ')}
+        className={cx(...classes)}
       />
       {suffix != null && (
         <span className="ny-input-group__affix ny-input-group__affix--end" aria-hidden="true">
@@ -270,7 +271,7 @@ export function Textarea({
       onChange={(event) => setCurrent(event.target.value)}
       onBlur={onBlur}
       onFocus={onFocus}
-      className={classes.filter(Boolean).join(' ')}
+      className={cx(...classes)}
     />
   )
 }

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { deltaColor } from '../tokens'
 import { Sparkline } from './Sparkline'
 import './Details.css'
+import { cx } from '../lib/cx'
 
 /* Breakdown bar ----------------------------------------------------------- */
 
@@ -30,7 +31,7 @@ export function BreakdownBar({
   const color = deltaColor(tone)
   const width = `${(Math.max(0, Math.min(1, fraction)) * 100).toFixed(0)}%`
   return (
-    <div className={['ny-breakdown', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-breakdown', className)}>
       <div className="ny-breakdown__head">
         <span>{label}</span>
         <span className="ny-breakdown__value" style={{ color }}>
@@ -79,7 +80,7 @@ export function DataRow({
 }: DataRowProps) {
   const color = valueColor ?? (tone === undefined ? undefined : deltaColor(tone))
   return (
-    <div className={['ny-data-row', `ny-data-row--${layout}`, className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-data-row', `ny-data-row--${layout}`, className)}>
       <span className="ny-data-row__main">
         {leading != null && (
           <span className="ny-data-row__leading" style={{ color }}>
@@ -114,7 +115,7 @@ export interface NarrativeItemProps {
 export function NarrativeItem({ title, value, children, tone = 1, color, className }: NarrativeItemProps) {
   const accent = color ?? deltaColor(tone)
   return (
-    <div className={['ny-narrative', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-narrative', className)}>
       <div className="ny-narrative__rail" style={{ background: accent }} />
       <div className="ny-narrative__body">
         <div className="ny-narrative__head">
@@ -151,7 +152,7 @@ export interface MomentumCardProps {
 export function MomentumCard({ name, value, share, tone, trend, onClick, className }: MomentumCardProps) {
   const color = deltaColor(tone)
   return (
-    <button type="button" onClick={onClick} className={['ny-momentum', className].filter(Boolean).join(' ')}>
+    <button type="button" onClick={onClick} className={cx('ny-momentum', className)}>
       <div className="ny-momentum__name">{name}</div>
       <div className="ny-momentum__figures">
         <span className="ny-momentum__value" style={{ color }}>

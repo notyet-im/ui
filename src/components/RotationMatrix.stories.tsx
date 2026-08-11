@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { REGION_CODES } from '../tracker/data'
-import { buildEdges, regionAggregates } from '../tracker/model'
+import { MARKET_CODES, PAIR_MAX, pairValue } from './chart-fixtures'
 import { RotationMatrix } from './HeatGrid'
 import { Panel, PanelHeading } from './Panel'
 
@@ -15,22 +14,16 @@ const meta = {
       },
     },
   },
-  args: { codes: REGION_CODES, value: () => 0 },
+  args: { label: 'Market rotation', codes: MARKET_CODES, value: pairValue, max: PAIR_MAX },
 } satisfies Meta<typeof RotationMatrix>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-const regions = regionAggregates(buildEdges('15D', 'combined'))
-
 export const Default: Story = {
   render: () => (
     <Panel style={{ maxWidth: 460 }}>
-      <RotationMatrix
-        codes={REGION_CODES}
-        value={(from, to) => regions.pairs[from][to]}
-        max={regions.maxPair}
-      />
+      <RotationMatrix label="Market rotation" codes={MARKET_CODES} value={pairValue} max={PAIR_MAX} />
     </Panel>
   ),
 }
@@ -39,11 +32,7 @@ export const WithHeading: Story = {
   render: () => (
     <Panel style={{ maxWidth: 460 }}>
       <PanelHeading title="Region rotation matrix" subtitle="Row sold → column bought, $B" />
-      <RotationMatrix
-        codes={REGION_CODES}
-        value={(from, to) => regions.pairs[from][to]}
-        max={regions.maxPair}
-      />
+      <RotationMatrix label="Market rotation" codes={MARKET_CODES} value={pairValue} max={PAIR_MAX} />
     </Panel>
   ),
 }

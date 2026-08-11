@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import { formatCompact } from '../lib/format'
 import { heatStyle } from '../lib/heat'
 import './HeatGrid.css'
+import { cx } from '../lib/cx'
 
 export interface HeatGridRow {
   key: string
@@ -104,12 +105,7 @@ export function HeatGrid({
   const classes = ['ny-heat-grid', density === 'compact' && 'ny-heat-grid--compact', className]
 
   return (
-    <div
-      role="grid"
-      aria-label={label}
-      className={classes.filter(Boolean).join(' ')}
-      style={{ minHeight, ...style }}
-    >
+    <div role="grid" aria-label={label} className={cx(...classes)} style={{ minHeight, ...style }}>
       <div role="row" className="ny-heat-grid__header">
         <div role="columnheader" className="ny-heat-grid__corner" style={{ width: rowLabelWidth }}>
           {/* Real text, not `aria-label`: an empty header is one assistive tech

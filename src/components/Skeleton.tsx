@@ -1,4 +1,5 @@
 import './Skeleton.css'
+import { cx } from '../lib/cx'
 
 export interface SkeletonProps {
   /**
@@ -31,7 +32,7 @@ export interface SkeletonProps {
  * once rather than once per bar.
  */
 export function Skeleton({ shape = 'text', width, height, lines = 1, className }: SkeletonProps) {
-  const classes = ['ny-skeleton', `ny-skeleton--${shape}`, className].filter(Boolean).join(' ')
+  const classes = cx('ny-skeleton', `ny-skeleton--${shape}`, className)
 
   if (shape !== 'text') {
     return <div aria-hidden="true" className={classes} style={{ width, height }} />

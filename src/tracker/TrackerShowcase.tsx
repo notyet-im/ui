@@ -52,6 +52,7 @@ import {
   tickerExtremes,
 } from './model'
 import './tracker.css'
+import { cx } from '../lib/cx'
 
 export interface TrackerShowcaseProps {
   /** Initial palette. The in-page toggle takes over from here. */
@@ -106,7 +107,7 @@ function DetailSection({
 }) {
   const classes = ['ny-showcase-detail__section', divided && 'ny-showcase-detail__section--divided']
   return (
-    <div className={classes.filter(Boolean).join(' ')}>
+    <div className={cx(...classes)}>
       <Eyebrow>{title}</Eyebrow>
       {children}
     </div>

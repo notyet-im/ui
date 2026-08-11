@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react'
 import type { SpaceToken } from '../tokens'
 import './Layout.css'
+import { cx } from '../lib/cx'
 
 /* Responsive values ------------------------------------------------------- */
 
@@ -109,7 +110,7 @@ export interface ContainerProps {
 export function Container({ size = 'lg', children, className, style }: ContainerProps) {
   const classes = ['ny-container', `ny-container--${size}`, className]
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={style}>
+    <div className={cx(...classes)} style={style}>
       {children}
     </div>
   )
@@ -143,7 +144,7 @@ export function Grid({ columns = 12, gap, columnGap, rowGap, align, children, cl
   }
   const classes = ['ny-grid', align != null && `ny-grid--align-${align}`, className]
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={withVars(vars, style)}>
+    <div className={cx(...classes)} style={withVars(vars, style)}>
       {children}
     </div>
   )
@@ -170,7 +171,7 @@ export function GridItem({ span, start, children, className, style }: GridItemPr
   }
   const classes = ['ny-grid-item', className]
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={withVars(vars, style)}>
+    <div className={cx(...classes)} style={withVars(vars, style)}>
       {children}
     </div>
   )
@@ -219,7 +220,7 @@ export function Stack({
     className,
   ]
   return (
-    <div className={classes.filter(Boolean).join(' ')} style={withVars(vars, style)}>
+    <div className={cx(...classes)} style={withVars(vars, style)}>
       {children}
     </div>
   )

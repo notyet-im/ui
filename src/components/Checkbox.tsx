@@ -2,6 +2,7 @@ import type { ReactNode, Ref } from 'react'
 import { useCallback, useEffect, useRef } from 'react'
 import { useControllableState } from '../hooks'
 import './Checkbox.css'
+import { cx } from '../lib/cx'
 
 export interface CheckboxProps {
   /** Checked state. Pass it to control the checkbox; omit for uncontrolled use. */
@@ -74,7 +75,7 @@ export function Checkbox({
   }, [indeterminate])
 
   return (
-    <label className={['ny-choice', 'ny-checkbox', className].filter(Boolean).join(' ')}>
+    <label className={cx('ny-choice', 'ny-checkbox', className)}>
       <span className="ny-choice__control">
         <input
           ref={attachRef}

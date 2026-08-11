@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useRovingFocus } from '../hooks'
 import './SegmentedControl.css'
+import { cx } from '../lib/cx'
 
 export interface SegmentedControlItem<T extends string> {
   value: T
@@ -60,7 +61,7 @@ export function SegmentedControl<T extends string>({
 
   return (
     <div
-      className={['ny-segmented', className].filter(Boolean).join(' ')}
+      className={cx('ny-segmented', className)}
       role="radiogroup"
       aria-label={label}
       aria-disabled={disabled || undefined}

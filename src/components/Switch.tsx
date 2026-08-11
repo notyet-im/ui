@@ -1,6 +1,7 @@
 import type { ReactNode, Ref } from 'react'
 import { useControllableState } from '../hooks'
 import './Switch.css'
+import { cx } from '../lib/cx'
 
 export interface SwitchProps {
   /** On/off state. Pass it to control the switch; omit for uncontrolled use. */
@@ -52,7 +53,7 @@ export function Switch({
       id={id}
       disabled={disabled}
       aria-checked={isChecked}
-      className={['ny-switch', `ny-switch--${size}`, className].filter(Boolean).join(' ')}
+      className={cx('ny-switch', `ny-switch--${size}`, className)}
       onClick={() => setChecked(!isChecked)}
     >
       <span className="ny-switch__track" aria-hidden="true">

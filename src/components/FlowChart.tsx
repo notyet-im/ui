@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useMeasure } from '../hooks'
 import { deltaColors } from '../tokens'
 import './FlowChart.css'
+import { cx } from '../lib/cx'
 
 /**
  * The shell `SankeyFlow` and `RotationRing` are both drawn inside.
@@ -65,7 +66,7 @@ export function FlowField({ width, height, className, children }: FlowFieldProps
   const resolved = width ?? measured.width
 
   return (
-    <div ref={ref} className={['ny-flow', className].filter(Boolean).join(' ')} style={{ height }}>
+    <div ref={ref} className={cx('ny-flow', className)} style={{ height }}>
       {resolved > 0 && children(resolved)}
     </div>
   )

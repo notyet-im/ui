@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from 'react'
 import './Text.css'
+import { cx } from '../lib/cx'
 
 /* Text -------------------------------------------------------------------- */
 
@@ -106,7 +107,7 @@ export function Text({
     className,
   ]
   return (
-    <Tag id={id} className={classes.filter(Boolean).join(' ')} style={style}>
+    <Tag id={id} className={cx(...classes)} style={style}>
       {children}
     </Tag>
   )
@@ -183,7 +184,7 @@ export function Heading({
     className,
   ]
   return (
-    <Tag id={id} className={classes.filter(Boolean).join(' ')} style={style}>
+    <Tag id={id} className={cx(...classes)} style={style}>
       {children}
     </Tag>
   )
@@ -213,5 +214,5 @@ export interface VisuallyHiddenProps {
  */
 export function VisuallyHidden({ as = 'span', children, className }: VisuallyHiddenProps) {
   const Tag = as
-  return <Tag className={['ny-visually-hidden', className].filter(Boolean).join(' ')}>{children}</Tag>
+  return <Tag className={cx('ny-visually-hidden', className)}>{children}</Tag>
 }

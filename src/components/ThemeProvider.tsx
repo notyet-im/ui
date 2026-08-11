@@ -3,6 +3,7 @@ import { createContext, useContext, useMemo } from 'react'
 import type { ThemeName } from '../tokens'
 import '../styles/tokens.css'
 import '../styles/base.css'
+import { cx } from '../lib/cx'
 
 interface ThemeContextValue {
   theme: ThemeName
@@ -36,7 +37,7 @@ export function ThemeProvider({ theme = 'dark', children, className, style }: Th
   const value = useMemo(() => ({ theme }), [theme])
   return (
     <ThemeContext.Provider value={value}>
-      <div data-theme={theme} className={['ny-root', className].filter(Boolean).join(' ')} style={style}>
+      <div data-theme={theme} className={cx('ny-root', className)} style={style}>
         {children}
       </div>
     </ThemeContext.Provider>

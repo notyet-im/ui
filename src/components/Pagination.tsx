@@ -1,4 +1,5 @@
 import './Pagination.css'
+import { cx } from '../lib/cx'
 
 /** One slot in the rendered page list: a page number, or a truncation marker. */
 export type PaginationItem = number | 'ellipsis'
@@ -82,7 +83,7 @@ export function Pagination({
   const items = paginationRange(current, total, siblingCount)
 
   return (
-    <nav className={['ny-pagination', className].filter(Boolean).join(' ')} aria-label={label}>
+    <nav className={cx('ny-pagination', className)} aria-label={label}>
       <ul className="ny-pagination__list">
         <li className="ny-pagination__item">
           <button

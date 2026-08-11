@@ -1,5 +1,6 @@
 import type { ReactNode, Ref } from 'react'
 import './Button.css'
+import { cx } from '../lib/cx'
 
 interface ButtonBaseProps {
   /**
@@ -127,7 +128,7 @@ export function Button({
       aria-busy={loading || undefined}
       aria-label={label}
       onClick={onClick}
-      className={classes.filter(Boolean).join(' ')}
+      className={cx(...classes)}
     >
       {loading ? (
         <ButtonSpinner />

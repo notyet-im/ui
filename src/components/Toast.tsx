@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 import './Toast.css'
 import { useTopLayer } from '../hooks'
+import { cx } from '../lib/cx'
 import { Button } from './Button'
 import { CloseIcon } from './icons'
 
@@ -101,7 +102,7 @@ export function Toast({
       role="status"
       aria-live="polite"
       data-open={open ? '' : undefined}
-      className={['ny-toast', `ny-tone--${tone}`, className].filter(Boolean).join(' ')}
+      className={cx('ny-toast', `ny-tone--${tone}`, className)}
     >
       <div className="ny-toast__body">
         {title != null && <div className="ny-toast__title">{title}</div>}

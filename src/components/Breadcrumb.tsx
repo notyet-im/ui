@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import './Breadcrumb.css'
+import { cx } from '../lib/cx'
 
 /** One step in the trail. */
 export interface BreadcrumbItem {
@@ -33,7 +34,7 @@ export function Breadcrumb({ items, label = 'Breadcrumb', className }: Breadcrum
   const lastIndex = items.length - 1
 
   return (
-    <nav className={['ny-breadcrumb', className].filter(Boolean).join(' ')} aria-label={label}>
+    <nav className={cx('ny-breadcrumb', className)} aria-label={label}>
       <ol className="ny-breadcrumb__list">
         {items.map((item, index) => {
           const current = index === lastIndex

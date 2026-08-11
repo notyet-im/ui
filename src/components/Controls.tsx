@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from 'react'
 import './Controls.css'
 // Select wears `.ny-input`, so its stylesheet has to be loaded alongside this one.
 import './Input.css'
+import { cx } from '../lib/cx'
 
 /* Inline action ------------------------------------------------------------ */
 
@@ -20,11 +21,7 @@ export interface InlineActionProps {
  */
 export function InlineAction({ onClick, children, className }: InlineActionProps) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={['ny-inline-action', className].filter(Boolean).join(' ')}
-    >
+    <button type="button" onClick={onClick} className={cx('ny-inline-action', className)}>
       {children}
     </button>
   )
@@ -56,7 +53,7 @@ export interface SelectProps<T extends string> {
  */
 export function Select<T extends string>({ options, value, onChange, label, className }: SelectProps<T>) {
   return (
-    <div className={['ny-select', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-select', className)}>
       <select
         className="ny-select__input ny-input ny-input--md ny-input--with-suffix"
         value={value}
@@ -108,10 +105,7 @@ export interface EyebrowProps {
 /** Small uppercase monospace label. The system's quietest text role. */
 export function Eyebrow({ variant = 'label', children, className, style }: EyebrowProps) {
   return (
-    <div
-      className={['ny-eyebrow', `ny-eyebrow--${variant}`, className].filter(Boolean).join(' ')}
-      style={style}
-    >
+    <div className={cx('ny-eyebrow', `ny-eyebrow--${variant}`, className)} style={style}>
       {children}
     </div>
   )
@@ -134,7 +128,7 @@ export interface LegendProps {
 /** Colour key for a chart. */
 export function Legend({ items, note, className }: LegendProps) {
   return (
-    <div className={['ny-legend', className].filter(Boolean).join(' ')}>
+    <div className={cx('ny-legend', className)}>
       {items.map((item, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: static non-reordering list; LegendItem has no id, label is a ReactNode, colours are not unique
         <span key={i} className="ny-legend__item">

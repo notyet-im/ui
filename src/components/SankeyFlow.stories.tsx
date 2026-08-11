@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
-import { LOCALES } from '../tracker/i18n'
-import { buildEdges, makeLabeller } from '../tracker/model'
+import { FLOW_LINKS, flowLabel, flowLabelShort } from './chart-fixtures'
 import { Panel } from './Panel'
 import { SankeyFlow } from './SankeyFlow'
 
@@ -16,21 +15,15 @@ const meta = {
       },
     },
   },
-  args: {
-    links: buildEdges('15D', 'combined')
-      .slice(0, 9)
-      .map((edge) => ({ from: edge.from, to: edge.to, value: edge.value })),
-  },
+  args: { links: FLOW_LINKS },
 } satisfies Meta<typeof SankeyFlow>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-const links = buildEdges('15D', 'combined')
-  .slice(0, 9)
-  .map((edge) => ({ from: edge.from, to: edge.to, value: edge.value }))
-
-const { label, shortLabel } = makeLabeller(LOCALES.en)
+const links = FLOW_LINKS
+const label = flowLabel
+const shortLabel = flowLabelShort
 
 /** `maxWidth` constrains the *container*; the chart measures whatever it gets. */
 function Example({ narrow = false, maxWidth }: { narrow?: boolean; maxWidth?: number }) {

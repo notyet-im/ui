@@ -1,4 +1,5 @@
 import './Spinner.css'
+import { cx } from '../lib/cx'
 
 export interface SpinnerProps {
   /**
@@ -28,11 +29,7 @@ export interface SpinnerProps {
  */
 export function Spinner({ size = 'md', label = 'Loading', className }: SpinnerProps) {
   return (
-    <span
-      role="status"
-      aria-label={label}
-      className={['ny-spinner', `ny-spinner--${size}`, className].filter(Boolean).join(' ')}
-    >
+    <span role="status" aria-label={label} className={cx('ny-spinner', `ny-spinner--${size}`, className)}>
       <span className="ny-spinner__ring" aria-hidden="true" />
       <span className="ny-visually-hidden">{label}</span>
     </span>
