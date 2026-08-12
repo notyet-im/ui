@@ -1,9 +1,0 @@
-{
-  "namespace": "CapitalFlowDS",
-  "source": "@notyet/capital-flow-ds@0.1.0",
-  "shape": "storybook",
-  "provider": null,
-  "componentCount": 22,
-  "skippedStoryIds": [],
-  "runtimeFontPrefixes": []
-}

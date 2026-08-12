@@ -1,9 +1,30 @@
 {
-  "name": "@notyet/ui",
+  "name": "@notyet.im/ui",
   "version": "0.1.0",
   "description": "NotYet UI — a dense, dark-first React design system: UI components and data-visualisation charts.",
   "type": "module",
-  "license": "UNLICENSED",
+  "license": "MIT",
+  "author": "NotYet",
+  "homepage": "https://github.com/notyet-im/ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/notyet-im/ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/notyet-im/ui/issues"
+  },
+  "keywords": [
+    "react",
+    "design-system",
+    "component-library",
+    "ui-components",
+    "design-tokens",
+    "dataviz",
+    "charts",
+    "dark-mode",
+    "typescript",
+    "a11y"
+  ],
   "files": [
     "dist"
   ],
@@ -12,20 +33,32 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
     },
     "./styles.css": "./dist/styles.css",
-    "./fonts.css": "./dist/fonts.css"
+    "./fonts.css": "./dist/fonts.css",
+    "./package.json": "./package.json"
   },
   "sideEffects": [
     "**/*.css"
   ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "npm run build:lib && npm run build:app",
-    "build:lib": "vite build --config vite.lib.config.ts && cp src/styles/fonts.css dist/fonts.css",
+    "build:lib": "vite build --config vite.lib.config.ts && cp src/styles/fonts.css dist/fonts.css && cp dist/index.d.ts dist/index.d.cts",
     "build:app": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
@@ -35,7 +68,9 @@
     "test:watch": "vitest",
     "check": "npm run lint && npm run typecheck && npm run test",
     "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "prepack": "npm run build:lib",
+    "prepublishOnly": "npm run check"
   },
   "peerDependencies": {
     "react": ">=19",

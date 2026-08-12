@@ -1,4 +1,7 @@
-# @notyet/ui
+# @notyet.im/ui
+
+[![npm](https://img.shields.io/npm/v/@notyet.im/ui.svg)](https://www.npmjs.com/package/@notyet.im/ui)
+[![license](https://img.shields.io/npm/l/@notyet.im/ui.svg)](./LICENSE)
 
 **NotYet UI** — a dense, dark-first React design system in two halves: **UI**
 components for building interfaces, and **Charts** for encoding data.
@@ -24,13 +27,13 @@ src/
 ## Quick start
 
 ```bash
-npm install @notyet/ui
+npm install @notyet.im/ui
 ```
 
 ```jsx
-import { ThemeProvider, Container, Grid, GridItem, Panel, Button } from '@notyet/ui'
-import '@notyet/ui/styles.css'
-import '@notyet/ui/fonts.css' // optional — IBM Plex from Google Fonts
+import { ThemeProvider, Container, Grid, GridItem, Panel, Button } from '@notyet.im/ui'
+import '@notyet.im/ui/styles.css'
+import '@notyet.im/ui/fonts.css' // optional — IBM Plex from Google Fonts
 
 export function App() {
   return (
@@ -163,6 +166,24 @@ demo series for a chart with no real data yet — not design-system API.
 off), which is what the design-sync consumer expects. It is ~55 kB raw, ~8.5 kB
 gzipped.
 
+## Stability
+
+**`0.x` — the API is not frozen.** Under semver a `0.x` minor bump may break you,
+and this system has not yet been consumed outside its own repo, so it will. Pin
+an exact version if that matters to you; `CHANGELOG.md` records what moved and
+why. The 1.0 line commits to the usual guarantees.
+
+Ships ESM and CJS with types for both, so `import` and `require` are equally
+supported under `moduleResolution: "node16"`.
+
+## Releasing
+
+Releases are cut by CI, not by hand: push a `v*` tag matching `package.json`'s
+version and `.github/workflows/release.yml` runs the gate and publishes with
+build provenance — an attestation binding the tarball to the commit and workflow
+that produced it. There is no publish token; CI authenticates with a short-lived
+OIDC credential via npm trusted publishing.
+
 ## Accessibility
 
 - **One focus ring for the system**, in `base.css` behind `--ny-focus-ring`.
@@ -178,3 +199,7 @@ gzipped.
 - `prefers-reduced-motion` collapses every transition, globally.
 - Every component has an axe assertion in its test. Colour contrast is verified
   visually instead, because jsdom performs no layout and axe cannot compute it.
+
+## Licence
+
+MIT — see [LICENSE](./LICENSE).

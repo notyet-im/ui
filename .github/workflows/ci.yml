@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Read-only. Nothing here publishes or writes back to the repo.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          # 24 is the Active LTS. The repo builds on newer Node too; CI pins the
+          # LTS so a green build means "works on what consumers actually run".
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      # The gate: biome, then tsc, then vitest. Same command a human runs.
+      - name: Gate
+        run: npm run check
+
+      - name: Build library
+        run: npm run build:lib
+
+      # A story that fails to build is invisible to the test suite but breaks
+      # the design-sync upload, so it is a gate too.
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      # Packaging gates. These are what keep the exports map honest — without
+      # them, a regression in the ESM/CJS type split only surfaces in a
+      # consumer's editor, long after release.
+      - name: Lint the published manifest
+        run: npx --yes publint
+
+      - name: Check type resolution across module systems
+        # styles.css and fonts.css are excluded because attw resolves type
+        # declarations, and a stylesheet has none — it reports every CSS
+        # subpath as unresolvable no matter how correct the exports map is.
+        run: npx --yes @arethetypeswrong/cli@latest --pack . --exclude-entrypoints styles.css fonts.css

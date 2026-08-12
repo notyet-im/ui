@@ -1,5 +1,5 @@
 /**
- * NotYet UI — `@notyet/ui`
+ * NotYet UI — `@notyet.im/ui`
  *
  * A dense, dark-first design system in two halves: **UI** components for
  * building interfaces, and **Charts** for encoding data.

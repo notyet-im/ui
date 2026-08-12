@@ -22,7 +22,14 @@
         // Tabs/SegmentedControl put role="tab"/"radio" on <button> deliberately —
         // that is the WAI-ARIA APG pattern, and native <input type="radio"> cannot
         // carry the pill styling. Semantics are asserted in the component tests.
-        "useSemanticElements": "off"
+        "useSemanticElements": "off",
+        // HeatGrid's row/columnheader/rowheader/gridcell are ARIA *structural*
+        // roles inside role="grid", not interactive widgets — the grid delegates
+        // activation to real <button>s in its cells. The rule's interactive-role
+        // list is over-broad here; making a structural role focusable would add a
+        // tab stop per cell for no gain. HeatGrid.test.tsx asserts the whole role
+        // structure by name and count, so nothing is left uncovered.
+        "useFocusableInteractive": "off"
       },
       "complexity": {
         // The prefers-reduced-motion block in styles/tokens.css must beat every

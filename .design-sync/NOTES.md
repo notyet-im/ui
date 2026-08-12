@@ -1,4 +1,4 @@
-# design-sync notes — @notyet/ui
+# design-sync notes — @notyet.im/ui
 
 Repo-specific knowledge for future syncs. Read this before running the driver.
 
@@ -7,7 +7,7 @@ Repo-specific knowledge for future syncs. Read this before running the driver.
 - **Shape**: storybook. Config dir `.storybook/`, reference built to
   `.design-sync/sb-reference` (gitignored — rebuild it whenever stories or DS
   source change; they must move together).
-- **Entry**: the package is its own source repo, so `node_modules/@notyet/ui`
+- **Entry**: the package is its own source repo, so `node_modules/@notyet.im/ui`
   does not exist — the converter needs `--entry dist/index.js`, and
   `--node-modules ./node_modules` (repo root).
 - **Build order**: `npm run build:lib` must run before the storybook reference —

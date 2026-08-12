@@ -1,7 +1,7 @@
 {
   "projectId": "08a144c3-b949-4751-9eef-342d9527b153",
   "shape": "storybook",
-  "pkg": "@notyet/ui",
+  "pkg": "@notyet.im/ui",
   "globalName": "NotYetUI",
   "storybookConfigDir": ".storybook",
   "storybookStatic": ".design-sync/sb-reference",
