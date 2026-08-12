@@ -85,9 +85,8 @@ export function ringLayout(
   const { width, height = 472, minNodeRadius = 9, nodeRadiusRange = 20 } = options
 
   const cx = width / 2
-  // Derived, not an option. `centerY` defaulted to 236 independently of
-  // `height`, so `<RotationRing height={600}>` drew the ring 64px above centre —
-  // a misconfiguration the caller could not see and never asked for.
+  // Derived, not an option: a `centerY` that does not follow `height` puts the
+  // ring off-centre at every size but the default, invisibly to the caller.
   const cy = height / 2
   const radius = ringRadius(width)
 
@@ -120,24 +119,31 @@ export function ringLayout(
     })
   })
 
-  const maxPair = Math.max(...pairs.map((p) => p.value), 0) || 1
+  /*
+   * Scale over the chords that are DRAWN, not over every pair handed in. A
+   * self-pair, a non-positive value, or an endpoint with no node draws nothing,
+   * so letting one set the maximum thins every chord that IS drawn against a
+   * number nothing on screen explains.
+   *
+   * `reduce`, not `Math.max(...)`: a dense matrix spreads n² arguments.
+   */
+  const drawn = pairs.filter((p) => p.from !== p.to && p.value > 0 && positions[p.from] && positions[p.to])
+  const maxPair = drawn.reduce((max, p) => Math.max(max, p.value), 0) || 1
 
-  const chords: RingChord[] = pairs
-    .filter((p) => p.from !== p.to && p.value > 0 && positions[p.from] && positions[p.to])
-    .map((p) => {
-      const [x0, y0] = positions[p.from]
-      const [x1, y1] = positions[p.to]
-      const qx = cx + (x0 + x1 - 2 * cx) * CHORD_BOW
-      const qy = cy + (y0 + y1 - 2 * cy) * CHORD_BOW
-      return {
-        key: `${p.from}->${p.to}`,
-        from: p.from,
-        to: p.to,
-        value: p.value,
-        width: 1.5 + 15 * (p.value / maxPair),
-        d: `M${x0.toFixed(1)} ${y0.toFixed(1)} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`,
-      }
-    })
+  const chords: RingChord[] = drawn.map((p) => {
+    const [x0, y0] = positions[p.from]
+    const [x1, y1] = positions[p.to]
+    const qx = cx + (x0 + x1 - 2 * cx) * CHORD_BOW
+    const qy = cy + (y0 + y1 - 2 * cy) * CHORD_BOW
+    return {
+      key: `${p.from}->${p.to}`,
+      from: p.from,
+      to: p.to,
+      value: p.value,
+      width: 1.5 + 15 * (p.value / maxPair),
+      d: `M${x0.toFixed(1)} ${y0.toFixed(1)} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`,
+    }
+  })
 
   return { nodes, chords, labels, width, height, center: { x: cx, y: cy }, radius }
 }

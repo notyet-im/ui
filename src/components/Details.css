@@ -171,6 +171,16 @@
   border-color: var(--ny-text-subtle);
 }
 
+/*
+ * Must stay after `:hover`, and must match it — `.ny-momentum--selected:hover`
+ * and `.ny-momentum:hover` are both (0,2,0), so source order is the only
+ * tie-break. Declared earlier, hovering the selected card erases its ring.
+ */
+.ny-momentum--selected,
+.ny-momentum--selected:hover {
+  border-color: var(--ny-text);
+}
+
 .ny-momentum__name {
   font-size: var(--ny-font-size-xs);
   font-weight: var(--ny-font-weight-medium);

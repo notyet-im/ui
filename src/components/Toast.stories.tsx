@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useState } from 'react'
 import { InlineAction } from './Controls'
-import { Toast, ToastViewport } from './Toast'
+import { Toast, type ToastProps, ToastViewport } from './Toast'
 
 const meta = {
   title: 'UI/Toast',
@@ -45,32 +45,76 @@ function TriggerExample() {
   )
 }
 
+type ToastSpec = Omit<ToastProps, 'open' | 'onClose'>
+
+/**
+ * Holds real state per toast, and gives the docs page a way to summon the stack.
+ *
+ * `meta.args` pairs `open: true` with a no-op `onClose` and `duration: 0`, which
+ * is a toast that can never leave by any route — the dismiss button calls
+ * nothing and the timer never runs. On the canvas that is what the card capture
+ * needs. On the docs page it meant a stack of them floating in the top layer
+ * over the props table, permanently.
+ */
+function ToastDemo({
+  startOpen,
+  toasts,
+  placement,
+}: {
+  startOpen: boolean
+  toasts: ToastSpec[]
+  placement?: 'top' | 'bottom'
+}) {
+  const all = toasts.map((_, index) => index)
+  const [visible, setVisible] = useState(() => (startOpen ? all : []))
+
+  return (
+    <div style={{ minHeight: 32 }}>
+      <InlineAction onClick={() => setVisible(all)}>Show the toasts</InlineAction>
+      <ToastViewport placement={placement}>
+        {toasts.map((toast, index) => (
+          <Toast
+            // biome-ignore lint/suspicious/noArrayIndexKey: fixed story fixtures, never reordered
+            key={index}
+            {...toast}
+            open={visible.includes(index)}
+            onClose={() => setVisible((current) => current.filter((i) => i !== index))}
+          />
+        ))}
+      </ToastViewport>
+    </div>
+  )
+}
+
 export const Open: Story = {
   name: 'Open (no interaction)',
-  render: (args) => (
-    <ToastViewport>
-      <Toast {...args} />
-    </ToastViewport>
+  render: ({ open: _open, onClose: _onClose, ...args }, { viewMode }) => (
+    <ToastDemo startOpen={viewMode !== 'docs'} toasts={[args]} />
   ),
 }
 
 export const Tones: Story = {
-  render: (args) => (
-    <ToastViewport>
-      <Toast {...args} tone="info" title="Tape reconnected" description="Resumed at 09:31:04." />
-      <Toast {...args} tone="success" title="Rebalance queued" description="Settles at the close." />
-      <Toast {...args} tone="warning" title="Stale quotes" description="KR feed is 42s behind." />
-      <Toast {...args} tone="danger" title="Order rejected" description="Desk limit exceeded." />
-    </ToastViewport>
+  render: ({ open: _open, onClose: _onClose, ...args }, { viewMode }) => (
+    <ToastDemo
+      startOpen={viewMode !== 'docs'}
+      toasts={[
+        { ...args, tone: 'info', title: 'Tape reconnected', description: 'Resumed at 09:31:04.' },
+        { ...args, tone: 'success', title: 'Rebalance queued', description: 'Settles at the close.' },
+        { ...args, tone: 'warning', title: 'Stale quotes', description: 'KR feed is 42s behind.' },
+        { ...args, tone: 'danger', title: 'Order rejected', description: 'Desk limit exceeded.' },
+      ]}
+    />
   ),
 }
 
 export const TopPlacement: Story = {
   name: 'Top placement',
-  render: (args) => (
-    <ToastViewport placement="top">
-      <Toast {...args} tone="warning" title="Stale quotes" description="KR feed is 42s behind." />
-    </ToastViewport>
+  render: ({ open: _open, onClose: _onClose, ...args }, { viewMode }) => (
+    <ToastDemo
+      startOpen={viewMode !== 'docs'}
+      placement="top"
+      toasts={[{ ...args, tone: 'warning', title: 'Stale quotes', description: 'KR feed is 42s behind.' }]}
+    />
   ),
 }
 

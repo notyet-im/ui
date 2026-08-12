@@ -39,6 +39,13 @@ export interface SparklineProps {
  * The vertical domain always spans zero, so a line that never crosses zero
  * still reads as entirely-above or entirely-below it — which is the whole point
  * when the quantity is a signed flow.
+ *
+ * Fewer than two points renders nothing at all — no `<svg>`, so no reserved
+ * box. `seriesPath` already refuses to emit a path for a series that short, but
+ * that is the maths; whether a chart with nothing to draw should still occupy
+ * its width is this component's decision to make, and it has to make it once.
+ * Callers were answering it individually and disagreeing: `StatTile` hid the
+ * chart, `MomentumCard` left a 60x24 hole.
  */
 export function Sparkline({
   values,
@@ -54,6 +61,8 @@ export function Sparkline({
   className,
   style,
 }: SparklineProps) {
+  if (values.length < 2) return null
+
   const path = seriesPath(values, width, height, pad, { closeAt: baseline ? 'zero' : 'floor' })
   const stroke = color ?? deltaColor(values[values.length - 1] ?? 0)
 

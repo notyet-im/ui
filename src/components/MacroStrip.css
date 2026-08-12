@@ -4,12 +4,10 @@
  * line never doubles up, and `overflow: hidden` trims the ring at the strip's
  * own border.
  *
- * The strip used to paint `--ny-border` as a substrate and let the gaps show it
- * through, which is a tile cheaper — but the substrate is only hidden where a
- * tile covers it. Any row that does not divide evenly into the column count
- * left an empty cell showing a solid block of border colour: five tiles across
- * three columns, and the sixth cell reads as a hole. Painting outward from the
- * tiles instead means an empty cell is simply the strip's own surface.
+ * Do not switch this to a `--ny-border` substrate showing through the gaps: a
+ * substrate is only hidden where a tile covers it, so with `auto-fit` any tile
+ * count that does not divide evenly leaves an empty cell painted solid border
+ * colour. Painting outward from the tiles makes an empty cell just surface.
  */
 .ny-macro-strip {
   display: grid;

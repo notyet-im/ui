@@ -131,3 +131,122 @@ describe('RotationMatrix', () => {
     await expectNoAxeViolations(container)
   })
 })
+
+/**
+ * Roving focus is derived from `onSelect`, so all three branches need pinning:
+ * the derived default, the explicit opt-out, and the explicit opt-in. The
+ * default is the one worth guarding — it is the branch nobody writes down, and
+ * a regression there silently returns a 63-cell grid to 63 tab stops.
+ */
+describe('HeatGrid roving focus', () => {
+  const grid3x3 = {
+    rows: [
+      { key: 'a', code: 'A' },
+      { key: 'b', code: 'B' },
+      { key: 'c', code: 'C' },
+    ],
+    columns: [
+      { key: 'x', label: 'X' },
+      { key: 'y', label: 'Y' },
+      { key: 'z', label: 'Z' },
+    ],
+    value: () => 1,
+  }
+
+  const tabIndexes = () => screen.getAllByRole('button').map((b) => b.getAttribute('tabindex'))
+
+  it('is a single tab stop whenever the cells are selectable', () => {
+    // No `roving` passed: a grid with `onSelect` derives it, because those are
+    // exactly the cells that hold a focusable element.
+    renderInTheme(<HeatGrid label="G" {...grid3x3} onSelect={() => {}} />)
+    expect(tabIndexes().filter((t) => t === '0')).toHaveLength(1)
+    expect(tabIndexes().filter((t) => t === '-1')).toHaveLength(8)
+  })
+
+  it('leaves every cell independently tabbable when opted out', () => {
+    renderInTheme(<HeatGrid label="G" roving={false} {...grid3x3} onSelect={() => {}} />)
+    expect(tabIndexes()).toEqual([null, null, null, null, null, null, null, null, null])
+  })
+
+  it('collapses to a single tab stop when asked explicitly', () => {
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    expect(tabIndexes().filter((t) => t === '0')).toHaveLength(1)
+    expect(tabIndexes().filter((t) => t === '-1')).toHaveLength(8)
+  })
+
+  it('moves focus on both axes', async () => {
+    const user = userEvent.setup()
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    const cells = screen.getAllByRole('button')
+
+    cells[0]?.focus()
+    await user.keyboard('{ArrowRight}')
+    expect(document.activeElement).toBe(cells[1])
+    await user.keyboard('{ArrowDown}')
+    // Three columns per row.
+    expect(document.activeElement).toBe(cells[4])
+    await user.keyboard('{ArrowLeft}{ArrowUp}')
+    expect(document.activeElement).toBe(cells[0])
+  })
+
+  /*
+   * Clamping, not wrapping. Wrapping off the end of a row crosses a row AND a
+   * column boundary on one keystroke, which reads as a glitch rather than as
+   * navigation — the deliberate difference from `useRovingFocus`.
+   */
+  it('clamps at every edge instead of wrapping', async () => {
+    const user = userEvent.setup()
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    const cells = screen.getAllByRole('button')
+
+    cells[0]?.focus()
+    await user.keyboard('{ArrowUp}{ArrowLeft}')
+    expect(document.activeElement).toBe(cells[0])
+
+    cells[8]?.focus()
+    await user.keyboard('{ArrowDown}{ArrowRight}')
+    expect(document.activeElement).toBe(cells[8])
+  })
+
+  it('takes Home/End to the ends of the row, and Ctrl+Home/End to the corners', async () => {
+    const user = userEvent.setup()
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    const cells = screen.getAllByRole('button')
+
+    cells[4]?.focus()
+    await user.keyboard('{End}')
+    expect(document.activeElement).toBe(cells[5])
+    await user.keyboard('{Home}')
+    expect(document.activeElement).toBe(cells[3])
+
+    await user.keyboard('{Control>}{End}{/Control}')
+    expect(document.activeElement).toBe(cells[8])
+    await user.keyboard('{Control>}{Home}{/Control}')
+    expect(document.activeElement).toBe(cells[0])
+  })
+
+  it('leaves Tab alone, so the grid is escapable', async () => {
+    const user = userEvent.setup()
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    const cells = screen.getAllByRole('button')
+
+    cells[0]?.focus()
+    await user.tab()
+    expect(document.activeElement).not.toBe(cells[1])
+  })
+
+  it('still selects the focused cell', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={onSelect} />)
+
+    screen.getAllByRole('button')[0]?.focus()
+    await user.keyboard('{ArrowRight}{Enter}')
+    expect(onSelect).toHaveBeenCalledWith('a|y', 'a', 'y')
+  })
+
+  it('has no axe violations', async () => {
+    const { container } = renderInTheme(<HeatGrid label="G" roving {...grid3x3} onSelect={() => {}} />)
+    await expectNoAxeViolations(container)
+  })
+})

@@ -53,9 +53,20 @@ function FilterExample() {
   )
 }
 
+/**
+ * Overlays start open on the canvas and closed on the docs page.
+ *
+ * Open is right for a card capture and for browsing one story. On the docs page
+ * every story renders at once, and these live in the top layer, so a panel ends
+ * up floating over the prose and the props table at whatever position its
+ * trigger happened to land. Closed, the reader gets the trigger and can click.
+ */
+const openOnCanvas = (viewMode: string) => viewMode !== 'docs'
+
 export const Open: Story = {
   name: 'Open (no interaction)',
   args: { defaultOpen: true },
+  render: (args, { viewMode }) => <Popover {...args} defaultOpen={openOnCanvas(viewMode)} />,
 }
 
 export const Closed: Story = {
@@ -74,9 +85,9 @@ export const WithControls: Story = {
 export const Above: Story = {
   name: 'Placement: top',
   args: { defaultOpen: true, placement: 'top', content: 'Net of ETF creations.' },
-  render: (args) => (
+  render: (args, { viewMode }) => (
     <div style={{ paddingTop: 96 }}>
-      <Popover {...args}>
+      <Popover {...args} defaultOpen={openOnCanvas(viewMode)}>
         <InlineAction>Method</InlineAction>
       </Popover>
     </div>

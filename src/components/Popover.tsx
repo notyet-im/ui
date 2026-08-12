@@ -27,14 +27,13 @@ export interface PopoverProps {
  * and `Dialog` when the rest of the page must be blocked until the user is
  * done.
  *
- * Built on `popover="auto"`, so the browser provides light dismiss (a click
- * outside, Escape) and the top layer. Nothing here portals or sets a z-index.
- * Note that only one `auto` popover can be open at a time — opening a second
+ * Built on `popover="auto"`, so the browser provides light dismiss and the top
+ * layer. Only one `auto` popover can be open at a time — opening a second
  * closes the first, which is the browser's behaviour, not this component's.
  *
- * `aria-expanded` is cloned onto the trigger, which requires the trigger to pass
- * the prop through to its DOM node. Plain elements always do; a wrapper
- * component only does if it accepts the prop.
+ * `aria-expanded` is cloned onto the trigger, so the trigger must pass the prop
+ * through to its DOM node — plain elements do, a wrapper component only if it
+ * accepts it.
  */
 export function Popover({
   open,

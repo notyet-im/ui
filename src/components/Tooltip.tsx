@@ -25,14 +25,13 @@ export interface TooltipProps {
  * the user has to reach: a link, a field, a button. A tooltip is not reachable,
  * because it closes the instant focus moves.
  *
- * Opens on hover **and** on focus, so a keyboard user gets the same label a
- * mouse user does. The delay applies to hover only; on focus the intent is
- * already explicit. Rendered in the browser top layer via `popover="manual"`,
- * so no ancestor's `overflow` can clip it and no z-index is involved.
+ * Opens on hover **and** on focus, so a keyboard user gets the same label; the
+ * delay applies to hover only. Rendered in the top layer via `popover="manual"`,
+ * so no ancestor's `overflow` can clip it.
  *
- * `aria-describedby` is cloned onto the trigger, which requires the trigger to
- * pass the prop through to its DOM node. Plain elements always do; a wrapper
- * component only does if it accepts the prop.
+ * `aria-describedby` is cloned onto the trigger, so the trigger must pass the
+ * prop through to its DOM node — plain elements do, a wrapper component only if
+ * it accepts it.
  */
 export function Tooltip({
   content,

@@ -4,13 +4,10 @@
  * Deliberately literal, and deliberately not `.stories.tsx` — the story-title
  * lint would demand a title for a module that renders nothing.
  *
- * The four chart stories used to import `buildEdges`, `regionAggregates` and
- * the locale tables from `src/tracker/`, which is a demo and is not exported.
- * That made four *library* components undocumentable without a fictional
- * fund-flow domain that ships in no bundle: rename a market code and four doc
- * pages break, and a consumer reading them sees an API expressed in concepts
- * they cannot import. These values were captured from that demo, so the stories
- * render exactly as before — they just no longer reach across the boundary.
+ * Chart stories must not import from `src/tracker/` — that is a demo, ships in
+ * no bundle, and is not exported. Documenting a library component in terms a
+ * consumer cannot import makes it undocumentable. These values were captured
+ * from that demo so the stories render identically without reaching across.
  */
 
 export const MARKETS = [

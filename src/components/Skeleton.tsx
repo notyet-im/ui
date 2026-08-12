@@ -20,16 +20,14 @@ export interface SkeletonProps {
 /**
  * A grey placeholder holding the space that real content is about to occupy.
  *
- * Use `Skeleton` when the shape of the result is already known — it reserves the
- * layout so nothing jumps when the data lands. Use `Spinner` when there is no
- * shape to reserve, or when the wait is too short for a skeleton to be anything
- * but a flicker.
+ * Use `Skeleton` when the shape of the result is known — it reserves the layout
+ * so nothing jumps when the data lands. Use `Spinner` when there is no shape to
+ * reserve, or the wait is too short for a skeleton to be anything but a flicker.
  *
- * The element is `aria-hidden` and announces nothing: a screen reader user
- * gains nothing from hearing about placeholder boxes. **The loading semantics
+ * The element is `aria-hidden` and announces nothing. **The loading semantics
  * belong to the container** — put `aria-busy="true"` on the region being filled,
- * or render a single `Spinner` beside the skeletons, so the wait is announced
- * once rather than once per bar.
+ * or render one `Spinner` beside the skeletons, so the wait is announced once
+ * rather than once per bar.
  */
 export function Skeleton({ shape = 'text', width, height, lines = 1, className }: SkeletonProps) {
   const classes = cx('ny-skeleton', `ny-skeleton--${shape}`, className)

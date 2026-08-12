@@ -20,9 +20,8 @@
 
 /**
  * The box, the size ramp and every state come from `.ny-input`, which the
- * `<select>` carries alongside these rules — a select is an input, and the two
- * looked deliberately different only because this block used to restate the
- * whole ramp by hand and then drifted from it.
+ * `<select>` carries alongside these rules. Do not restate the ramp here — a
+ * select is an input, and a second copy only drifts from it.
  *
  * The wrapper hugs the control because the chevron is absolutely positioned
  * against it: a wrapper that stretches (plain block) strands the chevron to the

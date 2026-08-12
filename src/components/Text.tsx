@@ -6,18 +6,18 @@ import { cx } from '../lib/cx'
 
 export interface TextProps {
   /**
-   * Which element to render. The default `span` is inert — it is safe to nest
-   * inside other text and adds no block box.
+   * Which element to render. `span`, the default, adds no block box and is safe
+   * to nest inside other text.
    *
    * `p` — a real paragraph of prose.
-   * `span` — a run of text inside a larger line. The default.
+   * `span` — a run of text inside a larger line.
    * `div` — a standalone block that is not prose.
    * `label` — a caption sitting next to a control it wraps.
    */
   as?: 'p' | 'span' | 'div' | 'label'
   /**
-   * Step on the type scale. Each step pairs a font-size with the line-height it
-   * was drawn against — that pairing is most of why this component exists.
+   * Step on the type scale. Each step carries the line-height it was drawn
+   * against.
    *
    * `2xs` — micro copy: matrix cells, annotations.
    * `xs` — captions and help text.
@@ -54,6 +54,12 @@ export interface TextProps {
    */
   numeric?: boolean
   /**
+   * The monospace face, without `numeric`'s tabular figures. For a timestamp,
+   * a ticker or region code, a caption — where the face is the point and the
+   * digits are not in a column.
+   */
+  mono?: boolean
+  /**
    * Clamp to a single line with an ellipsis. The parent must be able to shrink:
    * inside a flex or grid child, that means `min-width: 0` on the parent, or
    * the text pushes the track wider instead of truncating.
@@ -71,16 +77,11 @@ export interface TextProps {
 }
 
 /**
- * Body text at a chosen step of the type scale.
+ * Body text at a chosen step of the type scale, with the matching line-height.
+ * The system has no text tokens or utility classes, so this is how you set type.
  *
- * The system ships no composite text tokens and no utility classes, so this is
- * the supported way to set type: a `font` shorthand custom property silently
- * resets `line-height`, and a composite token cannot be partially overridden.
- * `Text` binds each size to its line-height for you.
- *
- * Use `Heading` for anything that is a document heading — `Text` never enters
- * the heading outline. Use `Eyebrow` for the uppercase monospace label above a
- * section; it is a fixed role, not a size on this scale.
+ * Use `Heading` for a document heading — `Text` never enters the heading
+ * outline — and `Eyebrow` for the uppercase label above a section.
  */
 export function Text({
   as = 'span',
@@ -88,6 +89,7 @@ export function Text({
   weight,
   tone,
   numeric = false,
+  mono = false,
   truncate = false,
   align,
   id,
@@ -103,6 +105,7 @@ export function Text({
     tone != null && `ny-ink--${tone}`,
     align != null && `ny-text--align-${align}`,
     numeric && 'ny-text--numeric',
+    mono && 'ny-mono',
     truncate && 'ny-truncate',
     className,
   ]
@@ -202,15 +205,9 @@ export interface VisuallyHiddenProps {
 /**
  * Text removed from the visual layout but left in the accessibility tree.
  *
- * For the name of a control that has none — an icon button, say — prefer
- * `aria-label`: it is one attribute and no DOM. Reach for `VisuallyHidden` when
- * the text is *content* rather than a name: the expansion of an abbreviated
- * column header, a "sorted ascending" annotation, a skip link that appears only
- * on focus, or a live-region message with no visual counterpart.
- *
- * It renders the shared `.ny-visually-hidden` class from the base layer, so it
- * stays clip-path based — `display: none` and `visibility: hidden` would take
- * the text out of the accessibility tree too, which defeats the purpose.
+ * To *name* a control that has none, prefer `aria-label` — one attribute, no
+ * DOM. Use this when the text is content rather than a name: the expansion of
+ * an abbreviated column header, a "sorted ascending" annotation, a skip link.
  */
 export function VisuallyHidden({ as = 'span', children, className }: VisuallyHiddenProps) {
   const Tag = as

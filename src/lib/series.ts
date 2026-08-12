@@ -70,6 +70,17 @@ export function seriesPath(
   const span = max - min || 1
   const y = (v: number) => height - pad - ((v - min) / span) * (height - pad * 2)
 
+  /*
+   * Fewer than two points is not a line, and every way of pretending otherwise
+   * emits an invalid `d`:
+   *   • empty  → `line` is '', and `area` then starts with `L`, which the SVG
+   *              parser rejects outright ("Expected moveto path command").
+   *   • one    → `i / (length - 1)` divides by zero, so `x` is `NaN`.
+   * Both render nothing anyway, so say so in a way the parser accepts. Callers
+   * were guarding this one at a time — `StatTile` did, `MomentumCard` did not.
+   */
+  if (values.length < 2) return { line: '', area: '', zeroY: y(0) }
+
   const line = values
     .map((v, i) => {
       const x = (i / (values.length - 1)) * width
