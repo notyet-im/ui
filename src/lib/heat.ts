@@ -18,12 +18,10 @@ export interface HeatStyle {
 /**
  * `#rrggbb` → `r,g,b`, for dropping into `rgba()`.
  *
- * The ramp is derived from `deltaColors` rather than transcribed. It used to be
- * two decimal triples written out here, which made the delta palette exist three
- * times — `tokens.css`, `tokens.ts`, and this file — with only the first two
- * pinned to each other by `tokens.parity.test.ts`. Retuning the data colour
- * would have moved every chart and left every heat cell behind, in a system
- * whose whole contract is that teal always means up.
+ * The ramp is derived from `deltaColors`, never transcribed. Hard-coding the
+ * triples here would give the delta palette a third home that nothing pins to
+ * the other two, so retuning the data colour would move every chart and leave
+ * every heat cell behind.
  */
 function rgbTriple(hex: string): string {
   const n = Number.parseInt(hex.slice(1), 16)

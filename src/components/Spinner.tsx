@@ -17,15 +17,12 @@ export interface SpinnerProps {
  * An indeterminate progress mark, for waits with no measurable percentage.
  *
  * Use `Spinner` when the wait is short and the layout it replaces is small — a
- * button, a cell, a toolbar. Use `Skeleton` when the wait resolves into a known
- * block of content: a skeleton holds the space and stops the page jumping,
- * which a spinner cannot do.
+ * button, a cell, a toolbar. Use `Skeleton` when the result has a known shape,
+ * because a skeleton holds the space and stops the page jumping.
  *
- * The name is carried by `aria-label` *and* by visually hidden text on purpose.
- * `role="status"` takes its name from the author only — text inside it is not
- * a name — so `aria-label` is what gives the element a name in the tree, while
- * the hidden text is what the polite live region actually has to announce when
- * the spinner mounts.
+ * The name is carried by `aria-label` *and* by visually hidden text on purpose:
+ * `role="status"` takes its name from the author only, so `aria-label` names the
+ * element while the hidden text is what the live region announces on mount.
  */
 export function Spinner({ size = 'md', label = 'Loading', className }: SpinnerProps) {
   return (

@@ -85,9 +85,8 @@ export function ringLayout(
   const { width, height = 472, minNodeRadius = 9, nodeRadiusRange = 20 } = options
 
   const cx = width / 2
-  // Derived, not an option. `centerY` defaulted to 236 independently of
-  // `height`, so `<RotationRing height={600}>` drew the ring 64px above centre —
-  // a misconfiguration the caller could not see and never asked for.
+  // Derived, not an option: a `centerY` that does not follow `height` puts the
+  // ring off-centre at every size but the default, invisibly to the caller.
   const cy = height / 2
   const radius = ringRadius(width)
 

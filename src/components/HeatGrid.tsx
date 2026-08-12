@@ -255,12 +255,9 @@ export interface RotationMatrixProps {
  * rotating with itself is not a cross-border flow — but `diagonalText={null}`
  * renders it, for a caller whose diagonal carries real intra-market data.
  *
- * It is a `HeatGrid` whose two axes are the same set: same header-plus-rows
- * structure, same `heatStyle` ramp, same cell geometry. It used to be a second
- * copy of that render and a second copy of its stylesheet, which had already
- * diverged on whether to take the absolute value when computing the ramp
- * maximum. Kept as its own component because "both axes are this one list" is
- * real knowledge a caller should not have to restate.
+ * It is a `HeatGrid` whose two axes are the same set, and stays its own
+ * component because "both axes are this one list" is real knowledge a caller
+ * should not have to restate.
  */
 export function RotationMatrix({
   codes,

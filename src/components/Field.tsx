@@ -51,21 +51,13 @@ export interface FieldProps {
  *
  * It generates one id with `useId` and hands it to both the `Label`'s `htmlFor`
  * and — through context — the control's `id`, then points the control's
- * `aria-describedby` at whichever of `help` and `error` are present. Nothing
- * here has to be repeated at the call site, which is the whole point: hand-wired
- * `htmlFor` is the single most common accessibility defect in a form.
+ * `aria-describedby` at whichever of `help` and `error` are present. None of
+ * that has to be repeated at the call site.
  *
- * The two messages are plain `Text`. They used to be `HelpText` and `ErrorText`,
- * two components whose entire stylesheet — `margin: 0`, `font-size: xs`,
- * `line-height: snug` — was byte-identical to `.ny-text` plus `.ny-text--size-xs`,
- * leaving a colour as the only thing that distinguished them. That is a prop,
- * not a component.
- *
- * The error message is deliberately not `role="alert"`: a server-rendered form
- * arrives with its errors already on the page, and an alert role would make
- * every one of them announce on load. The message reaches assistive tech through
- * the control's `aria-describedby` and `aria-invalid`, which is what a screen
- * reader user is actually listening for when they focus the field.
+ * The error is deliberately not `role="alert"`: a server-rendered form arrives
+ * with its errors already on the page, and an alert role would announce every
+ * one of them on load. It reaches assistive tech through `aria-describedby` and
+ * `aria-invalid` instead.
  */
 export function Field({ label, help, error, required = false, id, children, className }: FieldProps) {
   const generated = useId()

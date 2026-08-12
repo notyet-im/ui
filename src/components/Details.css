@@ -172,11 +172,9 @@
 }
 
 /*
- * After `:hover`, and matching it — `.ny-momentum--selected:hover` and
- * `.ny-momentum:hover` are both (0,2,0), so order is the only tie-break.
- * Declared before it, the selection ring lost and pointing at the selected card
- * erased it. That is exactly what happened to the first consumer that tried to
- * express this from outside with a single-class rule.
+ * Must stay after `:hover`, and must match it — `.ny-momentum--selected:hover`
+ * and `.ny-momentum:hover` are both (0,2,0), so source order is the only
+ * tie-break. Declared earlier, hovering the selected card erases its ring.
  */
 .ny-momentum--selected,
 .ny-momentum--selected:hover {

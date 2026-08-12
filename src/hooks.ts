@@ -169,9 +169,8 @@ export interface RovingFocus {
  * Arrow-key roving focus for a composite widget — the interaction half of
  * `radiogroup`, `tablist` and friends.
  *
- * The library previously shipped the ARIA roles without this, which the APG
- * treats as incomplete: a radiogroup is expected to be one tab stop that arrow
- * keys move within, not N separate tab stops.
+ * The APG expects a radiogroup or tablist to be one tab stop that arrow keys
+ * move within, not N separate tab stops.
  *
  * Items are found by their `data-roving-item` attribute within the container
  * the handler is attached to, so the hook needs no refs and works with any
