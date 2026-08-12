@@ -7,6 +7,19 @@ you until 1.0.
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-08-12
+
+No functional change. The library code, styles and types are identical to
+`0.1.0`.
+
+### Changed
+
+- **First release published by CI, with build provenance.** `0.1.0` was
+  published by hand and carries no attestation; from this version on, releases
+  are cut by pushing a `v*` tag and npm records a signed link from the tarball
+  back to the commit and workflow that built it. Verify with
+  `npm audit signatures`.
+
 ## [0.1.0] — 2026-08-12
 
 First public release.
@@ -41,5 +54,6 @@ First public release.
   component styles itself with; outside it they render unstyled.
 - Zero runtime dependencies.
 
-[Unreleased]: https://github.com/notyet-im/ui/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/notyet-im/ui/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/notyet-im/ui/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/notyet-im/ui/releases/tag/v0.1.0
