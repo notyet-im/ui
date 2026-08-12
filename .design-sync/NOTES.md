@@ -163,6 +163,31 @@ render count before assuming it is fine.
   previously authored against the old global. Not repeatable — noted so the size
   of that diff isn't mistaken for a bug later.
 
+## Re-sync traps (2026-08-12)
+
+- **Renaming `pkg` re-uploads all 49 components while reporting `changed: 0`.**
+  The npm rename `@notyet/ui` → `@notyet.im/ui` produced a diff of
+  `unchanged: 49, changed: 0, added: 0, removed: 0, renderChurned: []` and
+  `styleChanged: false` — and an upload set of *every* component. Both are
+  correct and not a contradiction: the changed/unchanged split is keyed on
+  `sourceKeys` (story sources, untouched), but each `.prompt.md` opens with
+  `<Name> from <pkg>`, so `sourceHashes` moved for all 49. `bundle: true` and
+  `aux: true` came from the version bump landing in the bundle header and README.
+  Do not go hunting for a component change on a rename-only sync.
+
+- **The local `ds-bundle/_ds_sync.json` is a valid remote anchor *only* if the
+  last sync completed and nothing has rebuilt since.** Check before trusting it:
+  `bundleSha12`, `styleSha`, `auxSha` and `scriptsSha` must all equal the remote
+  copy fetched with `get_file`. They did here, which saved re-emitting 10 KB of
+  JSON. When they don't, fetch the remote — seeding from a *rebuilt* local bundle
+  makes it compare against itself and report nothing changed.
+
+- **The conventions.md token audit has a known false positive.** The type-size
+  family is written as a prefix plus separate suffixes —
+  `` `--ny-font-size-` `2xs` `xs` … `` — so a `` `(--ny-[a-z0-9-]+)` `` regex
+  reports the bare prefix `--ny-font-size-` as unresolved. All nine members do
+  exist. Expand the family by hand before believing that one.
+
 ## Re-sync traps (2026-08-11)
 
 - **`storybookStatic` goes stale silently, and stale grades ride on it.**
