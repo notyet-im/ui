@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { InlineAction } from './Controls'
-import { Dialog } from './Dialog'
+import { Dialog, type DialogProps } from './Dialog'
 
 const meta = {
   title: 'UI/Dialog',
@@ -24,6 +25,38 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof meta>
+
+/**
+ * Holds real open state, so every story is dismissible and can be reopened.
+ *
+ * The stories that show an open dialog used to pass `open: true` with a no-op
+ * `onClose`, which is the exact defect `onClose`'s own documentation warns
+ * about: the browser closes the `<dialog>` on Escape while React still believes
+ * it is open, leaving a story that is blank until the page reloads.
+ *
+ * `startOpen` is false on the docs page and true on the canvas. A modal that
+ * opens itself is the right thing for a card capture and for browsing one
+ * story, and the wrong thing on a documentation page, where three of them stack
+ * over the prose and the props table with no way back.
+ */
+function DialogDemo({
+  startOpen,
+  children,
+  ...props
+}: Omit<DialogProps, 'open' | 'onClose'> & { startOpen: boolean; children: ReactNode }) {
+  const [open, setOpen] = useState(startOpen)
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, minHeight: 32 }}>
+      <InlineAction onClick={() => setOpen(true)}>Open the dialog</InlineAction>
+      <Dialog {...props} open={open} onClose={() => setOpen(false)}>
+        {children}
+      </Dialog>
+    </div>
+  )
+}
+
+const BODY =
+  'Institutional flow has run 3.2σ ahead of the ETF leg for six sessions. Queuing accepts the tracking error until the next reset.'
 
 function ConfirmExample() {
   const [open, setOpen] = useState(false)
@@ -60,11 +93,10 @@ function ConfirmExample() {
 }
 
 export const Open: Story = {
-  render: (args) => (
-    <Dialog {...args}>
-      Institutional flow has run 3.2σ ahead of the ETF leg for six sessions. Queuing accepts the tracking
-      error until the next reset.
-    </Dialog>
+  render: (args, { viewMode }) => (
+    <DialogDemo {...args} startOpen={viewMode !== 'docs'}>
+      {BODY}
+    </DialogDemo>
   ),
 }
 
@@ -77,11 +109,10 @@ export const WithFooter: Story = {
       </>
     ),
   },
-  render: (args) => (
-    <Dialog {...args}>
-      Institutional flow has run 3.2σ ahead of the ETF leg for six sessions. Queuing accepts the tracking
-      error until the next reset.
-    </Dialog>
+  render: (args, { viewMode }) => (
+    <DialogDemo {...args} startOpen={viewMode !== 'docs'}>
+      {BODY}
+    </DialogDemo>
   ),
 }
 
@@ -93,8 +124,8 @@ export const Scrolling: Story = {
     description: 'Every fill routed through the desk today.',
     footer: <InlineAction>Close</InlineAction>,
   },
-  render: (args) => (
-    <Dialog {...args}>
+  render: (args, { viewMode }) => (
+    <DialogDemo {...args} startOpen={viewMode !== 'docs'}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {Array.from({ length: 24 }, (_, index) => `09:${String(index).padStart(2, '0')}`).map((stamp) => (
           <div
@@ -106,7 +137,7 @@ export const Scrolling: Story = {
           </div>
         ))}
       </div>
-    </Dialog>
+    </DialogDemo>
   ),
 }
 
