@@ -39,9 +39,21 @@ const infoIcon = (
   </svg>
 )
 
+/**
+ * Overlays start open on the canvas and closed on the docs page.
+ *
+ * Open is right for a card capture and for browsing one story. On the docs page
+ * every story renders at once, and these live in the top layer, so several of
+ * them float over the prose and the props table at whatever position their
+ * trigger happened to land. Closed, the reader gets the trigger and can hover
+ * or focus it — which is what the component actually does.
+ */
+const openOnCanvas = (viewMode: string) => viewMode !== 'docs'
+
 export const Open: Story = {
   name: 'Open (no interaction)',
   args: { defaultOpen: true },
+  render: (args, { viewMode }) => <Tooltip {...args} defaultOpen={openOnCanvas(viewMode)} />,
 }
 
 export const OnHover: Story = {
@@ -50,7 +62,7 @@ export const OnHover: Story = {
 
 export const Placements: Story = {
   args: { defaultOpen: true, content: 'Flow, net of creations.' },
-  render: (args) => (
+  render: (args, { viewMode }) => (
     <div
       style={{
         display: 'grid',
@@ -61,7 +73,7 @@ export const Placements: Story = {
       }}
     >
       {(['top', 'bottom', 'left', 'right'] as const).map((placement) => (
-        <Tooltip key={placement} {...args} placement={placement}>
+        <Tooltip key={placement} {...args} defaultOpen={openOnCanvas(viewMode)} placement={placement}>
           <InlineAction>{placement}</InlineAction>
         </Tooltip>
       ))}
