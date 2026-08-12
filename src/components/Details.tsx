@@ -14,6 +14,22 @@ export interface BreakdownBarProps {
   fraction: number
   /** Signed magnitude; picks the bar colour. */
   tone?: number
+  /**
+   * Explicit colour, overriding `tone` — as on `DataRow`.
+   *
+   * It exists for the same reason it does there: a panel can hold two
+   * quantities that must not share the delta scale, and painting one of them
+   * off it is the only way to say so. Without this, a consumer's only route was
+   * an `!important` rule against this component's internal class names, since
+   * the colour below is written inline and no stylesheet outranks that.
+   */
+  color?: string
+  /**
+   * Explicit colour for the figure alone, overriding `tone` and `color` — the
+   * name `DataRow` uses. A monochrome bar often still wants its number at full
+   * reading contrast while the 5px fill stays quiet.
+   */
+  valueColor?: string
   /** Grow the bar from the right instead of the left. */
   align?: 'start' | 'end'
   className?: string
@@ -25,21 +41,24 @@ export function BreakdownBar({
   value,
   fraction,
   tone = 1,
+  color: explicitColor,
+  valueColor,
   align = 'start',
   className,
 }: BreakdownBarProps) {
-  const color = deltaColor(tone)
+  const fill = explicitColor ?? deltaColor(tone)
+  const figure = valueColor ?? fill
   const width = `${(Math.max(0, Math.min(1, fraction)) * 100).toFixed(0)}%`
   return (
     <div className={cx('ny-breakdown', className)}>
       <div className="ny-breakdown__head">
         <span>{label}</span>
-        <span className="ny-breakdown__value" style={{ color }}>
+        <span className="ny-breakdown__value" style={{ color: figure }}>
           {value}
         </span>
       </div>
       <div className={`ny-breakdown__track${align === 'end' ? ' ny-breakdown__track--end' : ''}`}>
-        <div className="ny-breakdown__fill" style={{ width, background: color }} />
+        <div className="ny-breakdown__fill" style={{ width, background: fill }} />
       </div>
     </div>
   )
@@ -144,15 +163,40 @@ export interface MomentumCardProps {
   tone: number
   /** Trend values for the card's area chart. */
   trend: number[]
+  /**
+   * Marks the card as the current choice — sets `aria-pressed` and the ring.
+   *
+   * A consumer cannot do this with `className` alone: the ring has to out-rank
+   * `:hover`, and `aria-pressed` is not a style at all. `HeatGrid` has
+   * `selectedKey` and `RotationRing` has `selectedId`; this is the same idea for
+   * a card.
+   */
+  selected?: boolean
   onClick?: () => void
   className?: string
 }
 
 /** A clickable tile pairing a headline figure with its path over time. */
-export function MomentumCard({ name, value, share, tone, trend, onClick, className }: MomentumCardProps) {
+export function MomentumCard({
+  name,
+  value,
+  share,
+  tone,
+  trend,
+  selected,
+  onClick,
+  className,
+}: MomentumCardProps) {
   const color = deltaColor(tone)
   return (
-    <button type="button" onClick={onClick} className={cx('ny-momentum', className)}>
+    <button
+      type="button"
+      onClick={onClick}
+      // Undefined omits the attribute, which is the point: a card that is not
+      // selectable should say nothing rather than claim `aria-pressed="false"`.
+      aria-pressed={selected}
+      className={cx('ny-momentum', selected && 'ny-momentum--selected', className)}
+    >
       <div className="ny-momentum__name">{name}</div>
       <div className="ny-momentum__figures">
         <span className="ny-momentum__value" style={{ color }}>

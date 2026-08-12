@@ -203,9 +203,12 @@ OIDC credential via npm trusted publishing.
   Components never declare their own.
 - **Disabled is never opacity-based** — opacity compounds through nesting and
   destroys the contrast the palette was chosen for.
-- **Composite widgets implement roving focus**: `Tabs`, `SegmentedControl`,
-  `RadioGroup` and `Pagination` are one tab stop that arrow keys move within,
-  with Home/End, per the WAI-ARIA APG.
+- **Composite widgets implement roving focus**: `Tabs`, `SegmentedControl` and
+  `RadioGroup` are one tab stop that arrow keys move within, with Home/End, per
+  the WAI-ARIA APG. `HeatGrid` does the same in two dimensions whenever its
+  cells are selectable, with arrows clamping at the edges rather than wrapping.
+  `Pagination` is deliberately not in this list: it is a `<nav>` of independent
+  page links, not a single composite control, so each link is its own tab stop.
 - **Overlays use the browser top layer** — `Dialog` is a native `<dialog>` with
   `showModal()`, so the focus trap, Escape handling and scrim are the browser's,
   not ours. Nothing sets `z-index`.

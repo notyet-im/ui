@@ -34,7 +34,8 @@ export function StatTile({ label, value, change, changeValue = 0, trend, classNa
           )}
         </div>
       </div>
-      {trend && trend.length > 1 && (
+      {/* No length check: `Sparkline` renders nothing below two points. */}
+      {trend && (
         <Sparkline
           values={trend}
           color={accent}

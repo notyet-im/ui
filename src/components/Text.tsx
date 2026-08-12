@@ -54,6 +54,16 @@ export interface TextProps {
    */
   numeric?: boolean
   /**
+   * The monospace face, without `numeric`'s tabular figures.
+   *
+   * `numeric` is for a column of numbers that must not jitter, and pays for it
+   * with tabular figures; this is for the quieter typographic role — a
+   * timestamp, a ticker or region code, a caption — where the face is the point
+   * and the digits are not in a column. Without it a consumer's only route is
+   * `font-family: var(--ny-font-mono)` in their own stylesheet.
+   */
+  mono?: boolean
+  /**
    * Clamp to a single line with an ellipsis. The parent must be able to shrink:
    * inside a flex or grid child, that means `min-width: 0` on the parent, or
    * the text pushes the track wider instead of truncating.
@@ -88,6 +98,7 @@ export function Text({
   weight,
   tone,
   numeric = false,
+  mono = false,
   truncate = false,
   align,
   id,
@@ -103,6 +114,7 @@ export function Text({
     tone != null && `ny-ink--${tone}`,
     align != null && `ny-text--align-${align}`,
     numeric && 'ny-text--numeric',
+    mono && 'ny-mono',
     truncate && 'ny-truncate',
     className,
   ]

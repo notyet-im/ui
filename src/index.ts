@@ -164,6 +164,16 @@ export {
   useEscapeKey,
   useMeasure,
   useRovingFocus,
+  useRovingGrid,
   useTopLayer,
 } from './hooks'
-export type { AnchoredPosition, Measurements, Placement, RovingFocus, RovingFocusOptions } from './hooks'
+export type {
+  AnchoredPosition,
+  Measurements,
+  Placement,
+  RovingFocus,
+  RovingFocusOptions,
+  RovingGrid,
+  RovingGridCell,
+  RovingGridOptions,
+} from './hooks'

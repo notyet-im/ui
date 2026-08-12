@@ -226,6 +226,129 @@ export function useRovingFocus({
   return { onKeyDown, getItemProps }
 }
 
+export interface RovingGridCell {
+  row: number
+  column: number
+}
+
+export interface RovingGridOptions {
+  rows: number
+  columns: number
+  /** The cell currently in the tab order. */
+  active: RovingGridCell
+  onMove: (cell: RovingGridCell) => void
+}
+
+export interface RovingGrid {
+  onKeyDown: (event: ReactKeyboardEvent<HTMLElement>) => void
+  /** Spread onto each cell's focusable element. */
+  getCellProps: (
+    row: number,
+    column: number,
+  ) => { tabIndex: 0 | -1; 'data-roving-cell': string; onFocus: () => void }
+}
+
+/**
+ * Module scope, not rebuilt per keystroke — they are fixed, and this is the
+ * keydown path. The four arrows differ only by which axis moves and by which
+ * direction, so a step table says that once instead of four times; adding
+ * PageUp/PageDown later is a row here rather than another branch below.
+ */
+const ARROW_STEPS: Record<string, RovingGridCell> = {
+  ArrowUp: { row: -1, column: 0 },
+  ArrowDown: { row: 1, column: 0 },
+  ArrowLeft: { row: 0, column: -1 },
+  ArrowRight: { row: 0, column: 1 },
+}
+
+function clampAxis(value: number, length: number): number {
+  return Math.max(0, Math.min(length - 1, value))
+}
+
+/**
+ * Two-dimensional roving focus for a `role="grid"` — one tab stop that arrow
+ * keys move within, per the WAI-ARIA APG grid pattern.
+ *
+ * `useRovingFocus` is the one-dimensional version and cannot stand in: a grid
+ * needs row *and* column movement, and Home/End have to mean the ends of a row
+ * rather than the ends of a flat list.
+ *
+ * ── Arrows CLAMP; they do not wrap. ────────────────────────────────────────
+ * The 1-D hook wraps, which is right for a tablist, where the items are peers
+ * in a ring. In a grid both axes carry meaning, so wrapping off the end of a
+ * row crosses a row boundary AND a column boundary on one keystroke, and reads
+ * as a glitch rather than as navigation. Ctrl+Home and Ctrl+End are the
+ * deliberate jumps to either end of the grid, as the APG specifies.
+ *
+ * Cells are found by `data-roving-cell` within the container the handler is
+ * attached to, so the hook needs no refs and works with any markup shape.
+ */
+export function useRovingGrid({ rows, columns, active, onMove }: RovingGridOptions): RovingGrid {
+  /*
+   * Clamped here, once, rather than by each caller. `rows`/`columns` belong to
+   * the consumer and can shrink under a stored index, and only the cell that
+   * matches `active` is tabbable — so an out-of-range one takes the whole grid
+   * out of the tab order. Both `onKeyDown` and `getCellProps` read the clamped
+   * pair, which is what makes that a guarantee of the hook rather than
+   * something every consumer has to know to restate.
+   */
+  const activeRow = clampAxis(active.row, rows)
+  const activeColumn = clampAxis(active.column, columns)
+
+  const onKeyDown = useCallback(
+    (event: ReactKeyboardEvent<HTMLElement>) => {
+      if (rows === 0 || columns === 0) return
+
+      const step = ARROW_STEPS[event.key]
+      let next: RovingGridCell | null = null
+      if (step) {
+        next = {
+          row: clampAxis(activeRow + step.row, rows),
+          column: clampAxis(activeColumn + step.column, columns),
+        }
+      } else if (event.key === 'Home') {
+        next = event.ctrlKey ? { row: 0, column: 0 } : { row: activeRow, column: 0 }
+      } else if (event.key === 'End') {
+        next = event.ctrlKey
+          ? { row: rows - 1, column: columns - 1 }
+          : { row: activeRow, column: columns - 1 }
+      } else {
+        // Not ours — Tab in particular has to leave the grid.
+        return
+      }
+
+      event.preventDefault()
+      if (next.row === activeRow && next.column === activeColumn) return
+      onMove(next)
+
+      const selector = `[data-roving-cell="${next.row}-${next.column}"]`
+      event.currentTarget.querySelector<HTMLElement>(selector)?.focus()
+    },
+    [activeColumn, activeRow, columns, onMove, rows],
+  )
+
+  const getCellProps = useCallback(
+    (row: number, column: number) => ({
+      tabIndex: (row === activeRow && column === activeColumn ? 0 : -1) as 0 | -1,
+      'data-roving-cell': `${row}-${column}`,
+      /*
+       * Focus is the source of truth, not just an effect of arrowing.
+       *
+       * Without this the active cell only ever moves via `onKeyDown`, so a
+       * click — which moves real DOM focus — leaves the two disagreeing, and
+       * the next arrow key jumps back to wherever the keyboard last was. The
+       * guard keeps `onMove` from firing on the focus this hook itself causes.
+       */
+      onFocus: () => {
+        if (row !== activeRow || column !== activeColumn) onMove({ row, column })
+      },
+    }),
+    [activeColumn, activeRow, onMove],
+  )
+
+  return { onKeyDown, getCellProps }
+}
+
 export type Placement = 'top' | 'bottom' | 'left' | 'right'
 
 /** Module scope, not inside `place()` — it is fixed, and `place()` is hot. */
