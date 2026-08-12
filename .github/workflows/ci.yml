@@ -5,9 +5,14 @@ on:
     branches: [main]
   pull_request:
 
-# Read-only. Nothing here publishes or writes back to the repo.
 permissions:
   contents: read
+  # Publishing the Storybook to Pages. deploy-pages authenticates with a
+  # short-lived OIDC token, the same mechanism the npm release uses, so
+  # there is no stored credential here either. Only the deploy job below
+  # can reach these, and only on a push to main.
+  pages: write
+  id-token: write
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -40,6 +45,14 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
+      # Capture the build we just made rather than building it again in the
+      # deploy job. Runs on pull requests too — uploading an artifact is not
+      # publishing, and it keeps this step on the same path CI already proves.
+      - name: Upload Storybook as a Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: storybook-static
+
       # Packaging gates. These are what keep the exports map honest — without
       # them, a regression in the ESM/CJS type split only surfaces in a
       # consumer's editor, long after release.
@@ -51,3 +64,24 @@ jobs:
         # declarations, and a stylesheet has none — it reports every CSS
         # subpath as unresolvable no matter how correct the exports map is.
         run: npx --yes @arethetypeswrong/cli@latest --pack . --exclude-entrypoints styles.css fonts.css
+
+  # Publishes the component catalogue to https://notyet-im.github.io/ui/.
+  #
+  # This lives in ci.yml rather than its own workflow so it can depend on the
+  # gate: `needs: check` means a Storybook can only be published from a commit
+  # where biome, tsc, the 227 tests and both packaging checks passed. A
+  # standalone workflow would race the gate and could publish a broken build —
+  # and would rebuild Storybook a second time on every push.
+  deploy:
+    needs: check
+    # Pull requests build and verify Storybook but never publish it. Without
+    # this fence a fork PR would reach the pages: write permission.
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      # No checkout or build: this consumes the artifact the check job made.
+      - id: deploy
+        uses: actions/deploy-pages@v5

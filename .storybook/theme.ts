@@ -52,7 +52,10 @@ export function chromeTheme(name: ThemeName) {
     base: name,
 
     brandTitle: brandLockup(palette.border),
-    brandUrl: '/',
+    // Relative, not '/'. GitHub project Pages serve this Storybook from
+    // /ui/, so an absolute '/' sends the brand link to the domain root —
+    // a 404. './' resolves to the root locally and to /ui/ when deployed.
+    brandUrl: './',
     brandTarget: '_self',
 
     colorPrimary: accent.base,

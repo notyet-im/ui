@@ -6,6 +6,11 @@ storybook-static/
 .DS_Store
 .playwright-mcp/
 
+# Per-developer Claude Code overrides. The shared .claude/settings.json is
+# committed; this one is personal and is machine-written, so biome should not
+# be formatting it either (it reads this file for its own ignore list).
+.claude/settings.local.json
+
 # design-sync
 .design-sync/sb-reference/
 .design-sync/learnings/

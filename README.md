@@ -2,9 +2,12 @@
 
 [![npm](https://img.shields.io/npm/v/@notyet.im/ui.svg)](https://www.npmjs.com/package/@notyet.im/ui)
 [![license](https://img.shields.io/npm/l/@notyet.im/ui.svg)](./LICENSE)
+[![storybook](https://img.shields.io/badge/storybook-live-ff4785)](https://notyet-im.github.io/ui/)
 
 **NotYet UI** — a dense, dark-first React design system in two halves: **UI**
 components for building interfaces, and **Charts** for encoding data.
+
+**[Browse every component →](https://notyet-im.github.io/ui/)**
 
 It is deliberately opinionated:
 
@@ -121,7 +124,16 @@ overlays (Dialog, Tooltip, Popover, Toast), feedback (Badge, Alert, Spinner,
 Skeleton, Avatar) and data display (StatTile, DataRow, NarrativeItem,
 MomentumCard, Legend, Table, Breadcrumb, Pagination).
 
-Run `npm run storybook` for the live catalogue.
+### Storybook
+
+The full catalogue — every component, every variant, both themes — is published
+at **[notyet-im.github.io/ui](https://notyet-im.github.io/ui/)**. Run
+`npm run storybook` for the same thing locally against your working tree.
+
+It deploys from `main` on every push, and only from a commit that passed the
+gate. That means it can briefly show a component or a prop that has not been
+released to npm yet — the published API is whatever `npm install` gives you,
+and `CHANGELOG.md` is the record of what changed when.
 
 ### Conventions worth knowing
 
@@ -157,6 +169,7 @@ demo series for a chart with no real data yet — not design-system API.
 |---|---|
 | `npm run dev` | showcase app on Vite |
 | `npm run storybook` | component catalogue |
+| `npm run build-storybook` | the static catalogue CI publishes to Pages |
 | `npm run build:lib` | the publishable `dist/` |
 | `npm run check` | **the gate** — biome, tsc and vitest, all zero-error |
 | `npm test` | vitest only |
