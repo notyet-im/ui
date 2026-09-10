@@ -163,6 +163,29 @@ render count before assuming it is fine.
   previously authored against the old global. Not repeatable — noted so the size
   of that diff isn't mistaken for a bug later.
 
+## Re-sync traps (2026-09-11)
+
+- **A component-source-only change is carried forward as verified — the driver
+  will not capture it.** Pagination's `.tsx` and `.css` both changed this run
+  (the native-button-border fix); its *story* did not. `sourceKeys` are keyed on
+  story sources, so the diff put Pagination in `unchanged` with 43 others —
+  "44 verified-by-upload (skip capture/grade)" — and it was never re-rendered
+  against the storybook reference. The verdict was `ok: true` either way.
+
+  This is the operational half of the 2026-08-11 `renderHashes` bullet below,
+  which explains the *mechanism*; the consequence is what bites. It is by
+  design (grades follow your sources, and `verification.canary` samples the
+  rest), but it means: **if you changed how a component renders, rebuild
+  `.design-sync/sb-reference` and grade that component by hand before the driver
+  run.** A scoped `compare.mjs --components <Name>` plus a written
+  `.grade.json` takes a minute; the alternative is shipping a component whose
+  verified-by-upload stamp was earned against the previous design.
+
+- **A skill/toolchain update alone does not invalidate grades.** `scriptsSha`
+  moved this run (`489fe541dac44703` → `305b4cbe288ffd65`) while `keyRecipe`
+  stayed at 7, and no component's `sourceKeys` moved because of it. Don't read a
+  changed `scriptsSha` as a reason to `--force`.
+
 ## Re-sync traps (2026-08-12)
 
 - **Renaming `pkg` re-uploads all 49 components while reporting `changed: 0`.**
