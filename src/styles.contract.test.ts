@@ -40,7 +40,12 @@ const stylesheets = files.filter((f) => f.endsWith('.css'))
  * it, so a class could be deleted, described in the comment explaining its
  * deletion, and still pass. Which is exactly what happened.
  */
-const css = stylesheets.map((f) => readFileSync(f, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '')).join('\n')
+const BLOCK_COMMENT = /\/\*[\s\S]*?\*\//g
+
+/** Each stylesheet, stripped, with its path — read once and shared by the checks below. */
+const sheets = stylesheets.map((f) => [f, readFileSync(f, 'utf8').replace(BLOCK_COMMENT, '')] as const)
+
+const css = sheets.map(([, text]) => text).join('\n')
 
 /** Class names a stylesheet defines a rule for. */
 const defined = new Set<string>()
@@ -94,7 +99,7 @@ const literals = new Map<string, string>()
 const prefixes = new Map<string, string>()
 
 function stripComments(text: string): string {
-  return text.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '')
+  return text.replace(BLOCK_COMMENT, '').replace(/\/\/[^\n]*/g, '')
 }
 
 for (const file of sources) {
@@ -136,5 +141,45 @@ describe('style contract', () => {
       .map(([prefix, file]) => `${prefix}*  (built in ${file})`)
 
     expect(orphaned, `no stylesheet defines any of:\n  ${orphaned.join('\n  ')}`).toEqual([])
+  })
+
+  /**
+   * The same failure as above wearing different clothes: CSS that jsdom cannot
+   * see, shipping past every behavioural and axe assertion the component has.
+   *
+   * A `<button>` carries a UA border — `2px outset ButtonBorder` — and clearing
+   * its background is what stops the native widget rendering and lets that
+   * border paint. `Pagination` overrode only `border-bottom`, so every page
+   * number sat in a three-sided grey box with an open bottom, and its two state
+   * rules set the `border-color` *shorthand*, which coloured all four sides:
+   * the current page rendered as a solid accent rectangle. The stylesheet's own
+   * comment said "a rule under the digit, not a box around it".
+   *
+   * `appearance: none` is deliberately not an exemption: it drops the native
+   * widget but leaves the UA border declaration standing, so such a rule still
+   * has to reset the box. Chrome computes `2px outset` either way.
+   *
+   * Keyed on `cursor: pointer`, which finds the rule that *is* a whole control.
+   * That is the limit, and it is deliberate: a bare background split into a
+   * separate modifier rule is not caught — `.ny-button--ghost` is one, and is
+   * correct only because `.ny-button` sets the border above it. The single-rule
+   * control is what this misses nothing on, and is how the bug got in.
+   */
+  it('resets the native border on every control that clears its own background', () => {
+    const unreset: string[] = []
+
+    for (const [file, text] of sheets) {
+      for (const rule of text.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const [, selector, body] = rule
+        if (!/background:\s*(none|transparent)/.test(body)) continue
+        if (!/cursor:\s*pointer/.test(body)) continue
+        // `(?<!-)` so a custom property does not read as a reset: `.ny-switch`
+        // declares `--ny-switch-track-border: 1px` beside its real `border: 0`.
+        if (/(?<!-)\bborder:\s*(0|none|\d)/.test(body)) continue
+        unreset.push(`${selector.trim()}  (in ${file.slice(SRC.length + 1)})`)
+      }
+    }
+
+    expect(unreset, `clears its background but leaves the UA border:\n  ${unreset.join('\n  ')}`).toEqual([])
   })
 })
