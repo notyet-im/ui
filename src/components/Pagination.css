@@ -17,9 +17,10 @@
  * control does not twitch while paging.
  *
  * The page marker is a rule under the digit, not a box around it. The rule is
- * always present and only its *colour* changes between states — a button that
- * grew a border on hover would shift its own text by a pixel, and across a row
- * of them that reads as the whole control twitching.
+ * always present and only its *colour* changes between states, and the states
+ * name `border-bottom-color` rather than the `border-color` shorthand: a button
+ * that grew a border on hover would shift its own text by a pixel, and across a
+ * row of them that reads as the whole control twitching.
  */
 .ny-pagination__button {
   display: inline-flex;
@@ -29,6 +30,10 @@
   min-width: var(--ny-control-height-sm);
   height: var(--ny-control-height-sm);
   padding: var(--ny-space-0) var(--ny-control-padding-x-sm);
+  /* A `<button>` carries a UA border, and clearing the background is what lets
+     it paint. Reset the box before drawing the one edge this control wants —
+     as `.ny-tabs__tab` does. */
+  border: 0;
   border-bottom: 2px solid transparent;
   /* Square: a radius would round the ends of a 2px rule into stubs, and the
      shared focus ring follows the radius, so it squares off with it. */
@@ -37,7 +42,10 @@
   cursor: pointer;
   color: var(--ny-text-muted);
   font-family: var(--ny-font-numeric);
-  font-size: var(--ny-font-size-sm);
+  /* The control ramp's third leg — not `--ny-font-size-sm`, which is what `md`
+     controls take and a step off every other `sm` control in a toolbar. */
+  font-size: var(--ny-control-font-size-sm);
+  font-weight: var(--ny-font-weight-medium);
   font-variant-numeric: tabular-nums;
   transition:
     border-color var(--ny-duration-fast) var(--ny-ease-standard),
@@ -47,14 +55,14 @@
 /* Hover previews the marker rather than tinting a box behind it — the two
    idioms together read as a box that also happens to be underlined. */
 .ny-pagination__button:hover:not(:disabled) {
-  border-color: var(--ny-border-strong);
+  border-bottom-color: var(--ny-border-strong);
   color: var(--ny-text);
 }
 
 /* State from the ARIA attribute, so the marked page and the styled page cannot
    drift apart. `base.css` owns the disabled colour — never opacity. */
 .ny-pagination__button[aria-current="page"] {
-  border-color: var(--ny-accent);
+  border-bottom-color: var(--ny-accent);
   color: var(--ny-text);
 }
 
@@ -65,6 +73,19 @@
   min-width: var(--ny-control-height-sm);
   height: var(--ny-control-height-sm);
   color: var(--ny-text-subtle);
-  font-size: var(--ny-font-size-sm);
+  font-size: var(--ny-control-font-size-sm);
   user-select: none;
+}
+
+/* Sized here rather than at the call site, following `Button.css`: the glyph
+   size belongs to the control that owns the box. */
+.ny-pagination__chevron {
+  flex: none;
+  width: var(--ny-icon-size-sm);
+  height: var(--ny-icon-size-sm);
+}
+
+/* Next is previous reflected, so the arrows cannot drift out of symmetry. */
+.ny-pagination__chevron--next {
+  transform: scaleX(-1);
 }

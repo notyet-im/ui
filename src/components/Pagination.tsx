@@ -61,6 +61,35 @@ export function paginationRange(
 }
 
 /**
+ * Prev/next, drawn rather than typed: a glyph typed as `‹`/`›` inherits the
+ * button's numeric face and reads thin and undersized beside the digits.
+ *
+ * One path, mirrored in CSS for `next`, rather than two coordinate strings that
+ * have to be kept reflections of each other by hand. Strokes `currentColor` so
+ * it rides the button's own muted → text → disabled ladder, where the chevron
+ * `Select` draws pins a single colour. Inline rather than in `icons.tsx`, which
+ * is for a shape used by more than one component; Select's carries its own affix
+ * classes, size and stroke, so sharing it would mean parameterising three things
+ * to save one path. `Pagination.css` sizes and flips it.
+ */
+function Chevron({ direction }: { direction: 'prev' | 'next' }) {
+  return (
+    <svg
+      className={cx('ny-pagination__chevron', direction === 'next' && 'ny-pagination__chevron--next')}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M14.5 6l-6 6 6 6" />
+    </svg>
+  )
+}
+
+/**
  * Page navigation for a paged collection: a `<nav>` wrapping a list of page
  * buttons, bracketed by previous/next.
  *
@@ -93,7 +122,7 @@ export function Pagination({
             disabled={current <= 1}
             onClick={() => onChange(current - 1)}
           >
-            <span aria-hidden="true">‹</span>
+            <Chevron direction="prev" />
           </button>
         </li>
 
@@ -130,7 +159,7 @@ export function Pagination({
             disabled={current >= total}
             onClick={() => onChange(current + 1)}
           >
-            <span aria-hidden="true">›</span>
+            <Chevron direction="next" />
           </button>
         </li>
       </ul>
