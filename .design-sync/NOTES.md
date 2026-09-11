@@ -163,6 +163,22 @@ render count before assuming it is fine.
   previously authored against the old global. Not repeatable — noted so the size
   of that diff isn't mistaken for a bug later.
 
+## The package version is a placeholder — expect it in the uploaded README
+
+`package.json` reads `0.0.0-development` on purpose. The release workflow
+takes the version from the git tag and writes it in CI, so the committed value
+is never the published one (see `.github/workflows/release.yml`).
+
+The converter stamps that value into the generated README's heading, so the
+design agent reads **`# NotYetUI (@notyet.im/ui@0.0.0-development)`** rather
+than a real version. That is expected, not a build defect — do not "fix" it by
+hand-editing the README or putting a real number back in `package.json`, which
+would reintroduce the tag/manifest drift the placeholder exists to remove.
+
+The real published version is whatever `npm view @notyet.im/ui version` says.
+If that heading ever needs to be accurate, the fix belongs in the converter's
+version source, not in the manifest.
+
 ## Re-sync traps (2026-09-11)
 
 - **A component-source-only change is carried forward as verified — the driver
