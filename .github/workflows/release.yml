@@ -62,7 +62,13 @@ jobs:
       - name: Publish to npm
         run: npm publish --provenance --access public
 
+      # Idempotent: a release cut from the GitHub UI creates the tag, which
+      # triggers this workflow, which would then fail creating a release that
+      # already exists - after a successful publish, so the run goes red for
+      # nothing. Fall back to editing whatever is already there.
       - name: Create the GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+        run: |
+          gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes \
+            || gh release edit "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME"
